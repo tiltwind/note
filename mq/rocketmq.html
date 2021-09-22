@@ -1,0 +1,223 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/markhtml.css">
+    <title>Index</title>
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="markdown-body main" id="app">
+<!---
+markmeta_author: wongoo
+markmeta_date: 2021-09-07
+markmeta_title: rocketmq
+markmeta_categories: MQ
+markmeta_tags: rocketmq,mq
+-->
+
+<h1 id="rocketmq">rocketmq</h1>
+<p><img src="https://rocketmq.apache.org/assets/images/rmq-basic-arc.png" alt=""></p>
+<ul>
+<li><code>Name Servers</code>: service discovery and routing. Each Name Server records full routing information.</li>
+<li><code>Brokers</code>: message storage by providing lightweight <code>TOPIC</code> and <code>QUEUE</code> mechanisms.</li>
+<li><code>Producers</code>: send messages to the Broker cluster through multiple load balancing modes.</li>
+<li><code>Consumers</code>: distributed cluster consumption and message broadcasting.</li>
+</ul>
+<h2 id="1-nameserver">1. NameServer</h2>
+<p>Two features:</p>
+<ul>
+<li><code>Broker Management</code>: accepts the register from Broker cluster and provides heartbeat mechanism to check whether a broker is alive.</li>
+<li><code>Routing Management</code>: each NameServer will hold whole routing info about the broker cluster and the queue info for clients query.</li>
+</ul>
+<h2 id="2-broker-server">2. Broker Server</h2>
+<p>Broker server is responsible for message store and delivery, message query, HA guarantee, and so on.</p>
+<p>As shown in image below, Broker server has several important sub modules:</p>
+<p><img src="https://rocketmq.apache.org/assets/images/rmq-basic-component.png" alt=""></p>
+<ul>
+<li><code>Remoting Module</code>: the entry of broker, handles the requests from clients.</li>
+<li><code>Client Manager</code>: manages the clients (Producer/Consumer) and maintains topic subscription of consumer.</li>
+<li><code>Store Service</code>: provides simple APIs to store or query message in physical disk.</li>
+<li><code>HA Service</code>: provides data sync feature between master broker and slave broker.</li>
+<li><code>Index Service</code>: builds index for messages by specified key and provides quick message query.</li>
+</ul>
+<h3 id="21-broker-role">2.1 Broker Role</h3>
+<ul>
+<li>ASYNC_MASTER</li>
+<li>SYNC_MASTER</li>
+<li>SLAVE</li>
+</ul>
+<p>Deploy strategy:</p>
+<ul>
+<li><code>NOT allow missing</code>: SYNC_MASTER with SLAVE. </li>
+<li><code>Allow missing but always available</code>: ASYNC_MASTER with SLAVE.</li>
+<li><code>Otherwise</code>: ASYNC_MASTER without SLAVE.</li>
+</ul>
+<h2 id="3-storage">3. Storage</h2>
+<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_1.png" alt=""></p>
+<ul>
+<li><code>CommitLog</code>: default 1G a file, the length of file name is 20, the format is <code>&lt;0 prefix&gt; + &lt;offset&gt;</code>. the first file name is  <code>00000000000000000000</code>, offset is 0，file size is 1G=1073741824, the second file name is <code>00000000001073741824</code>，offset is <code>1073741824</code>. One broker one commit log.</li>
+<li><code>ConsumeQueue</code>: logical consume queue, save at <code>$HOME/store/consumequeue/{topic}/{queueId}/{fileName}</code>,every message in consume queue is fixed format, <code>&lt;8 bytes commit log offset&gt; + &lt;4 bytes message length&gt; + &lt;8 bytes tag hash code&gt;</code>, total 30w messages for one file, so the file size is fixed 5.72M.</li>
+<li><code>IndexFile</code>: hash format index file, store at <code>$HOME \store\index${fileName}</code>, used to query message by key or time range.</li>
+</ul>
+<h3 id="31-index-file">3.1 Index File</h3>
+<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_13.png" alt=""></p>
+<ul>
+<li>Header: fixed 40 bytes, includes create timestamp.</li>
+<li>File Name: timestamp of create time</li>
+<li>File Size: <code>40+500W*4+2000W*20 = 420000040 bytes (400MB)</code></li>
+<li>Slot Table: hash slot, the value is the sequence number of the first index of the linked list.</li>
+<li>Index Struct:<ul>
+<li>Key Hash: the hash of the key</li>
+<li>Commit log offset</li>
+<li>Timestamp: seconds since the create timestamp in header</li>
+<li>Next Index Offset: the sequence number of next index</li>
+</ul>
+</li>
+</ul>
+<pre><code>key_hash = hash(&lt;topic&gt; + &quot;#&quot; + key)
+slot_num = key_hash % 500w
+slot_offset = 40 + 4 * slot_num
+index_sequence = Int4BytesAt(slot_offset)
+index_offset = 40 + 4 * 500w + 20 * index_sequence
+index_key_hash = Int4BytesAt(index_offset)
+index_commit_offset = Long8BytesAt(index_offset + 4)
+index_timestamp = Int4BytesAt(index_offset + 4 + 8) * 1000 + header_timestamp
+index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
+</code></pre>
+<h3 id="31-writeread-data">3.1 write/read data</h3>
+<p>Uses <code>PageCache</code> to flush data to disk to enhence write performance.
+<img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_2.png" alt=""></p>
+<p>Uses <code>MappedByteBuffer</code>(mmap) to enhence read performance.</p>
+<h2 id="4-message">4. Message</h2>
+<h3 id="41-topic">4.1 Topic</h3>
+<p>Topic, internally, is <code>logically partitioned</code> into one or more sub-topics. We call these sub-topics <code>message queues</code>. This concept plays a major role in implementing valuable features, including fail-over, maximum concurrency, etc.</p>
+<h3 id="42-tag">4.2 Tag</h3>
+<p>Consume tag filter is processed on broker side, only filter by tag hash code. So consumer SHOULD check whether the tag is matched for received messages.</p>
+<h3 id="43-message-format">4.3 Message Format</h3>
+<p>Field | Size(bytes) | Desc
+--- | --- | --- | 
+msgSize | 4 | message size
+MAGICCODE | 4 | fixed <code>daa320a7</code>
+BODY CRC | 4 | check when broker restarting to recover
+queueId | 4 | 
+flag | 4 | 
+QUEUEOFFSET | 8 | sequence in consumeQueue or tranStateTable; For none-transaction message or commit message，<code>QUEUEOFFSET * 20</code> is the offset in consume queue; For Prepared or Rollback Message，used to find data in tranStateTable.
+PHYSICALOFFSET | 8 | offset in commit log
+SYSFLAG | 4 | 4 bytes from lower to high;<code>1st byte=1</code> means compressed; <code>2nd byte = 1</code> means MultiTags; <code>3rd byte = 1</code> means prepared message; <code>4th byte = 1</code> means commit message; <code>3rd&amp;4th bytes = 1</code> means rollback message; <code>3rd&amp;4th bytes = 0</code> means none-transaction message; 
+BORNTIMESTAMP | 8 | producer timestamp
+BORNHOST | 8 |  producer address:port
+STORETIMESTAMP | 8 | store timestamp at broker
+STOREHOSTADDRESS | 8 | broker address:port
+RECONSUMETIMES | 8 | re-consumed times for a consume group (count separatedly), for retry-messages being send to topic <code>%retry%groupName</code>(queueId=0)
+PreparedTransaction Offset | 8 | transaction prepared message offset
+messagebodyLength | 4 | length of body
+messagebody | bodyLength | 
+topicLength | 1 |
+topic | topicLength |
+propertiesLength | 2 |
+properties | propertiesLength |</p>
+<h3 id="44-transaction-message">4.4 transaction message</h3>
+<p>Transaction message is based on 2PC and compensation check.</p>
+<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_10.png" alt=""></p>
+<p>Two inner topics:</p>
+<ul>
+<li><code>half msg topic</code>: save half message</li>
+<li><code>op topic</code>: commit/rollback message, the value is the offset of the half message. If it&#39;s commit op, generate a normal message to use topic.</li>
+</ul>
+<pre><code> --------------    offset    -----------
+ | half topic | &lt;---------- | op topic |
+ -------------              -----------
+                               |
+  --------------     commit    |
+ | user topic | &lt;---------------
+ -------------         
+</code></pre>
+<p>If not receive op message, try to check the state of local transaction. Retry maximum 15 times, otherwise rollback message.</p>
+<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_12.png" alt=""></p>
+<h3 id="45-message-id">4.5 Message Id</h3>
+<p>16 bytes: <code>&lt;broker ip&gt; + &lt;broker port&gt; + offset</code></p>
+<h2 id="5-communication">5. communication</h2>
+<p>communication between clients, brokers, nameservers.</p>
+<h3 id="51-communication-message">5.1 communication message</h3>
+<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_4.png" alt=""></p>
+<p>Format:
+<code>&lt;message length&gt;(4 bytes) + &lt;Serialization type&gt;(1 byte) + &lt;Header length&gt;(3 bytes) + &lt;Data Header&gt; + &lt;Message Body&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Header Field</th>
+<th>Type</th>
+<th>Request Desc</th>
+<th>Response Desc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>code</td>
+<td>int</td>
+<td>Request Operation Code</td>
+<td>Response code, 0:success, none-zero: fail</td>
+</tr>
+<tr>
+<td>language</td>
+<td>LanguageCode</td>
+<td>request language</td>
+<td>response language</td>
+</tr>
+<tr>
+<td>version</td>
+<td>int</td>
+<td>request version</td>
+<td>response version</td>
+</tr>
+<tr>
+<td>opaque</td>
+<td>int</td>
+<td>like requestId，different for requests on same connection</td>
+<td>response the original value</td>
+</tr>
+<tr>
+<td>flag</td>
+<td>int</td>
+<td>normal rpc or oneway</td>
+<td>normal rpc or oneway</td>
+</tr>
+<tr>
+<td>remark</td>
+<td>String</td>
+<td>custom info</td>
+<td>custom info</td>
+</tr>
+<tr>
+<td>extFields</td>
+<td>HashMap&lt;String, String&gt;</td>
+<td>custom info</td>
+<td>custom info</td>
+</tr>
+</tbody></table>
+<h3 id="52-communication-method">5.2 communication method</h3>
+<ul>
+<li>sync</li>
+<li>async</li>
+<li>oneway: send and not care response, eg heartbeat.</li>
+</ul>
+<h3 id="53-balance">5.3 balance</h3>
+<p>Balance is done on client side both for provider and consumer.</p>
+<ul>
+<li><code>provider send balance</code>: chose a message queue, support fault tolerance.</li>
+<li><code>consumer balance</code>: In fact, push is based on pull, and pull again immediately after pulling a batch of messages.</li>
+</ul>
+<h2 id="history">History</h2>
+<ul>
+<li>2021-09-13, first version</li>
+</ul>
+
+</div>
+<div class="main" id="gitalk"></div>
+<script src="/markrender.min.js"></script>
+</body>
+</html>
