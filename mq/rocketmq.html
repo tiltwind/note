@@ -99,28 +99,116 @@ index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
 <h3 id="42-tag">4.2 Tag</h3>
 <p>Consume tag filter is processed on broker side, only filter by tag hash code. So consumer SHOULD check whether the tag is matched for received messages.</p>
 <h3 id="43-message-format">4.3 Message Format</h3>
-<p>Field | Size(bytes) | Desc
---- | --- | --- | 
-msgSize | 4 | message size
-MAGICCODE | 4 | fixed <code>daa320a7</code>
-BODY CRC | 4 | check when broker restarting to recover
-queueId | 4 | 
-flag | 4 | 
-QUEUEOFFSET | 8 | sequence in consumeQueue or tranStateTable; For none-transaction message or commit message，<code>QUEUEOFFSET * 20</code> is the offset in consume queue; For Prepared or Rollback Message，used to find data in tranStateTable.
-PHYSICALOFFSET | 8 | offset in commit log
-SYSFLAG | 4 | 4 bytes from lower to high;<code>1st byte=1</code> means compressed; <code>2nd byte = 1</code> means MultiTags; <code>3rd byte = 1</code> means prepared message; <code>4th byte = 1</code> means commit message; <code>3rd&amp;4th bytes = 1</code> means rollback message; <code>3rd&amp;4th bytes = 0</code> means none-transaction message; 
-BORNTIMESTAMP | 8 | producer timestamp
-BORNHOST | 8 |  producer address:port
-STORETIMESTAMP | 8 | store timestamp at broker
-STOREHOSTADDRESS | 8 | broker address:port
-RECONSUMETIMES | 8 | re-consumed times for a consume group (count separatedly), for retry-messages being send to topic <code>%retry%groupName</code>(queueId=0)
-PreparedTransaction Offset | 8 | transaction prepared message offset
-messagebodyLength | 4 | length of body
-messagebody | bodyLength | 
-topicLength | 1 |
-topic | topicLength |
-propertiesLength | 2 |
-properties | propertiesLength |</p>
+<p>Fields in a message:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Bytes Size</th>
+<th>Desc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>msgSize</td>
+<td>4</td>
+<td>message size</td>
+</tr>
+<tr>
+<td>MAGICCODE</td>
+<td>4</td>
+<td>fixed <code>daa320a7</code></td>
+</tr>
+<tr>
+<td>BODY CRC</td>
+<td>4</td>
+<td>check when broker restarting to recover</td>
+</tr>
+<tr>
+<td>queueId</td>
+<td>4</td>
+<td>queue id</td>
+</tr>
+<tr>
+<td>flag</td>
+<td>4</td>
+<td>flag</td>
+</tr>
+<tr>
+<td>QUEUEOFFSET</td>
+<td>8</td>
+<td>sequence in consumeQueue or tranStateTable; For none-transaction message or commit message，<code>QUEUEOFFSET * 20</code> is the offset in consume queue; For Prepared or Rollback Message，used to find data in tranStateTable.</td>
+</tr>
+<tr>
+<td>PHYSICALOFFSET</td>
+<td>8</td>
+<td>offset in commit log</td>
+</tr>
+<tr>
+<td>SYSFLAG</td>
+<td>4</td>
+<td>4 bytes from lower to high;<code>1st byte=1</code> means compressed; <code>2nd byte = 1</code> means MultiTags; <code>3rd byte = 1</code> means prepared message; <code>4th byte = 1</code> means commit message; <code>3rd&amp;4th bytes = 1</code> means rollback message; <code>3rd&amp;4th bytes = 0</code> means none-transaction message;</td>
+</tr>
+<tr>
+<td>BORNTIMESTAMP</td>
+<td>8</td>
+<td>producer timestamp</td>
+</tr>
+<tr>
+<td>BORNHOST</td>
+<td>8</td>
+<td>producer address:port</td>
+</tr>
+<tr>
+<td>STORETIMESTAMP</td>
+<td>8</td>
+<td>store timestamp at broker</td>
+</tr>
+<tr>
+<td>STOREHOSTADDRESS</td>
+<td>8</td>
+<td>broker address:port</td>
+</tr>
+<tr>
+<td>RECONSUMETIMES</td>
+<td>8</td>
+<td>re-consumed times for a consume group (count separatedly), for retry-messages being send to topic <code>%retry%groupName</code>(queueId=0)</td>
+</tr>
+<tr>
+<td>PreparedTransaction Offset</td>
+<td>8</td>
+<td>transaction prepared message offset</td>
+</tr>
+<tr>
+<td>messagebodyLength</td>
+<td>4</td>
+<td>length of body</td>
+</tr>
+<tr>
+<td>messagebody</td>
+<td>bodyLength</td>
+<td>body</td>
+</tr>
+<tr>
+<td>topicLength</td>
+<td>1</td>
+<td>topic length</td>
+</tr>
+<tr>
+<td>topic</td>
+<td>topicLength</td>
+<td>topic</td>
+</tr>
+<tr>
+<td>propertiesLength</td>
+<td>2</td>
+<td>properties length</td>
+</tr>
+<tr>
+<td>properties</td>
+<td>propertiesLength</td>
+<td>properties</td>
+</tr>
+</tbody></table>
 <h3 id="44-transaction-message">4.4 transaction message</h3>
 <p>Transaction message is based on 2PC and compensation check.</p>
 <p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_10.png" alt=""></p>
