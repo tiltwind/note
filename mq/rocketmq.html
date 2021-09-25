@@ -299,8 +299,154 @@ index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
 <li><code>provider send balance</code>: chose a message queue, support fault tolerance.</li>
 <li><code>consumer balance</code>: In fact, push is based on pull, and pull again immediately after pulling a batch of messages.</li>
 </ul>
+<h2 id="6-cluster">6. Cluster</h2>
+<table>
+<thead>
+<tr>
+<th>Cluster Model</th>
+<th>Performance</th>
+<th>Available</th>
+<th>Message lose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mutiple Masters</td>
+<td>High Performance</td>
+<td>Not available when going down</td>
+<td>No message lose</td>
+</tr>
+<tr>
+<td>Multple Masters, Multiple Slaves<br>Async Replication</td>
+<td>High Performance (small replication latency for slaves)</td>
+<td>Available when master going down</td>
+<td>may lose some message when master going down</td>
+</tr>
+<tr>
+<td>Multple Masters, Multiple Slaves<br>Sync Replication</td>
+<td>RT is higher, thoughput 10% lower than others</td>
+<td>Available when master going down</td>
+<td>No message lose</td>
+</tr>
+</tbody></table>
+<h3 id="61-broker-configuration">6.1 broker configuration</h3>
+<pre><code class="language-bash"># cluster name
+brokerClusterName=rocketmq-cluster
+
+# must different for different broker， slaves have the same name.
+brokerName=broker-a
+
+# 0:Master，&gt;0:Slave
+brokerId=0
+
+# Broker IP
+brokerIP1=192.168.31.186
+
+# Broker listen port
+listenPort=10911
+
+# time to delete file, default 04:00
+deleteWhen=04
+
+# reserved time for files, default 48 hours
+fileReservedTime=120
+
+# Broker role，ASYNC_MASTER，SYNC_MASTER，SLAVE
+brokerRole=ASYNC_MASTER
+
+# flush disk type，ASYNC_FLUSH，SYNC_FLUSH
+flushDiskType=SYNC_FLUSH
+
+# nameServer addresses，format is ip1:port1;ip2:port2;ip3:port3
+namesrvAddr=192.168.31.186:9876;192.168.31.231:9876
+
+# queue numbers for topic, default 4. For load balance.
+defaultTopicQueueNums=8
+
+# whether create Topic automatically
+autoCreateTopicEnable=false
+
+# whether create subscription group automatically
+autoCreateSubscriptionGroup=false
+
+# store root path
+storePathRootDir=/data/rocketmq-all-4.9.1-bin-release/data/store-a
+
+# commitLog
+storePathCommitLog=/data/rocketmq-all-4.9.1-bin-release/data/store-a/commitlog
+
+# store path for consumer queue
+storePathConsumerQueue=/data/rocketmq-all-4.9.1-bin-release/data/store-a/consumequeue
+
+# store path for index
+storePathIndex=/data/rocketmq-all-4.9.1-bin-release/data/store-a/index
+
+# store path for checkpoints
+storeCheckpoint=/data/rocketmq-all-4.9.1-bin-release/data/store-a/checkpoint
+
+# store path for abort file
+abortFile=/data/rocketmq-all-4.9.1-bin-release/data/store-a/abort
+
+# size of one commitLog file, default 1G.
+mapedFileSizeCommitLog=1073741824
+
+# number of messages in one ConsumeQueue file, default 30W
+mapedFileSizeConsumeQueue=300000
+</code></pre>
+<h3 id="62-replication">6.2 replication</h3>
+<pre><code> ----------                                  ---------
+ |        | &lt;---- report slave offset ----- |        |
+ | master |                                 |  slave |
+ |        | ---- send batch messages  ----&gt; |        |
+ ----------                                  ---------
+</code></pre>
+<ul>
+<li>slave report commit log offset to master;</li>
+<li>master batch send messages to slave;</li>
+<li>slave write messages to commit log;</li>
+<li>slave report new offset to master;</li>
+<li>master messages is success if its offset is less than the slave report offset</li>
+</ul>
+<blockquote>
+<p>NOTE: master-slave cluster is not guarantee strong consistence between master and slaves.</p>
+</blockquote>
+<pre><code class="language-java">// CommitLog.java
+// public CompletableFuture&lt;PutMessageResult&gt; asyncPutMessage(final MessageExtBrokerInner msg) {
+// public CompletableFuture&lt;PutMessageResult&gt; asyncPutMessages(final MessageExtBatch messageExtBatch) {
+
+// 1. async flush to db 
+CompletableFuture&lt;PutMessageStatus&gt; flushResultFuture = submitFlushRequest(result, msg);
+// 2. async replicate to slave
+CompletableFuture&lt;PutMessageStatus&gt; replicaResultFuture = submitReplicaRequest(result, msg);
+return flushResultFuture.thenCombine(replicaResultFuture, (flushStatus, replicaStatus) -&gt; {
+    if (flushStatus != PutMessageStatus.PUT_OK) {
+        putMessageResult.setPutMessageStatus(flushStatus);
+    }
+    if (replicaStatus != PutMessageStatus.PUT_OK) {
+        putMessageResult.setPutMessageStatus(replicaStatus);
+        if (replicaStatus == PutMessageStatus.FLUSH_SLAVE_TIMEOUT) {
+            log.error(&quot;do sync transfer other node, wait return, but failed, topic: {} tags: {} client address: {}&quot;,
+                    msg.getTopic(), msg.getTags(), msg.getBornHostNameString());
+        }
+    }
+    return putMessageResult;
+});
+</code></pre>
+<h3 id="63-dledger-cluster">6.3 Dledger cluster</h3>
+<p>dledger is a raft-based java library for building high-available, high-durable, strong-consistent commitlog, which could act as the persistent layer for distributed storage system, i.e. messaging, streaming, kv, db, etc.</p>
+<p>rocketmq support to change storage to <a href="https://github.com/apache/rocketmq/tree/store_with_dledger">dledger</a>, to provide consistence between master and slaves.</p>
+<h2 id="a-reference">A. Reference</h2>
+<ul>
+<li>rocketmq features, <a href="https://github.com/apache/rocketmq/blob/master/docs/cn/features.md">https://github.com/apache/rocketmq/blob/master/docs/cn/features.md</a></li>
+<li>rocketmq concept, <a href="https://github.com/apache/rocketmq/blob/master/docs/cn/concept.md">https://github.com/apache/rocketmq/blob/master/docs/cn/concept.md</a></li>
+<li>rocketmq architecture, <a href="https://github.com/apache/rocketmq/blob/master/docs/cn/architecture.md">https://github.com/apache/rocketmq/blob/master/docs/cn/architecture.md</a></li>
+<li>rocketmq design, <a href="https://github.com/apache/rocketmq/blob/master/docs/cn/design.md">https://github.com/apache/rocketmq/blob/master/docs/cn/design.md</a></li>
+<li>rocketmq operation, <a href="https://github.com/apache/rocketmq/blob/master/docs/cn/operation.md">https://github.com/apache/rocketmq/blob/master/docs/cn/operation.md</a></li>
+<li>RocketMQ消息的主从复制机制, <a href="https://www.jianshu.com/p/73aea81c180d">https://www.jianshu.com/p/73aea81c180d</a></li>
+<li>raft-base commitlog store, <a href="https://github.com/openmessaging/dledger">https://github.com/openmessaging/dledger</a></li>
+</ul>
 <h2 id="history">History</h2>
 <ul>
+<li>2021-09-25, add chapter <code>cluster</code></li>
 <li>2021-09-13, first version</li>
 </ul>
 
