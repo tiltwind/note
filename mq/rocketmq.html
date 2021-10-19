@@ -59,12 +59,24 @@ markmeta_tags: rocketmq,mq
 </ul>
 <h2 id="3-storage">3. Storage</h2>
 <p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_1.png" alt=""></p>
+<h3 id="31-commitlog">3.1 CommitLog</h3>
 <ul>
-<li><code>CommitLog</code>: default 1G a file, the length of file name is 20, the format is <code>&lt;0 prefix&gt; + &lt;offset&gt;</code>. the first file name is  <code>00000000000000000000</code>, offset is 0，file size is 1G=1073741824, the second file name is <code>00000000001073741824</code>，offset is <code>1073741824</code>. One broker one commit log.</li>
-<li><code>ConsumeQueue</code>: logical consume queue, save at <code>$HOME/store/consumequeue/{topic}/{queueId}/{fileName}</code>,every message in consume queue is fixed format, <code>&lt;8 bytes commit log offset&gt; + &lt;4 bytes message length&gt; + &lt;8 bytes tag hash code&gt;</code>, total 30w messages for one file, so the file size is fixed 5.72M.</li>
-<li><code>IndexFile</code>: hash format index file, store at <code>$HOME \store\index${fileName}</code>, used to query message by key or time range.</li>
+<li>default 1G a file, the length of file name is 20, the format is <code>&lt;0 prefix&gt; + &lt;offset&gt;</code>. </li>
+<li>the first file name is  <code>00000000000000000000</code>, offset is 0，file size is 1G=1073741824, the second file name is <code>00000000001073741824</code>，offset is <code>1073741824</code>. </li>
+<li>One broker one commit log.</li>
 </ul>
-<h3 id="31-index-file">3.1 Index File</h3>
+<h3 id="32-consumequeue">3.2 ConsumeQueue</h3>
+<ul>
+<li>logical consume queue, save at <code>$HOME/store/consumequeue/{topic}/{queueId}/{fileName}</code></li>
+<li>every message in consume queue is fixed format, <code>&lt;8 bytes commit log offset&gt; + &lt;4 bytes message length&gt; + &lt;8 bytes tag hash code&gt;</code></li>
+<li>total 30w messages for one file, so the file size is fixed 5.72M.</li>
+</ul>
+<h3 id="33-index-file">3.3 Index File</h3>
+<ul>
+<li>hash format index file</li>
+<li>store at <code>$HOME \store\index${fileName}</code></li>
+<li>used to query message by key or time range.</li>
+</ul>
 <p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_13.png" alt=""></p>
 <ul>
 <li>Header: fixed 40 bytes, includes create timestamp.</li>
@@ -89,7 +101,7 @@ index_commit_offset = Long8BytesAt(index_offset + 4)
 index_timestamp = Int4BytesAt(index_offset + 4 + 8) * 1000 + header_timestamp
 index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
 </code></pre>
-<h3 id="31-writeread-data">3.1 write/read data</h3>
+<h3 id="34-writeread-data">3.4 write/read data</h3>
 <p>Uses <code>PageCache</code> to flush data to disk to enhence write performance.
 <img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_2.png" alt=""></p>
 <p>Uses <code>MappedByteBuffer</code>(mmap) to enhence read performance.</p>
@@ -393,7 +405,7 @@ mapedFileSizeCommitLog=1073741824
 mapedFileSizeConsumeQueue=300000
 </code></pre>
 <h3 id="62-replication">6.2 replication</h3>
-<pre><code> ----------                                  ---------
+<pre><code> _________                                  __________
  |        | &lt;---- report slave offset ----- |        |
  | master |                                 |  slave |
  |        | ---- send batch messages  ----&gt; |        |
