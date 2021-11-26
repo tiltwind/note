@@ -20,6 +20,7 @@ markmeta_tags: servicemesh,cloudnative,dapr
 -->
 
 <h1 id="dapr">dapr</h1>
+<p><strong>多运行时的微服务架构</strong> 被看做是微服务未来的发展方向，<code>dapr</code> 是microsoft发起的是一个多运行时的微服务架构实现，目前社区比较活跃。</p>
 <h2 id="1-service-mesh">1. service mesh</h2>
 <p>在 Servicemesh 的定义中，简短的描述了 Servicemesh 的关键特征：</p>
 <ol>
@@ -36,69 +37,60 @@ markmeta_tags: servicemesh,cloudnative,dapr
 </ul>
 <h2 id="2-multi-runtime">2. Multi-Runtime</h2>
 <p>2020年，Bilgin Ibryam 发表文章 “Multi-Runtime Microservices Architecture” ，正式提出了多运行时微服务架构（别名Mecha/机甲，非常帅气的名字），对基于 sidecar 模式的各种产品形态进行了实践总结和理论升华, 将分布式应用存在的四大类需求，作为 Multi-Runtime 的理论出发点: </p>
-<p><img src="https://imgopt.infoq.com/articles/multi-runtime-microservice-architecture/en/resources/1Multi-Runtime-Microservices-Architecture-1-1582629228248.jpg" alt=""></p>
-<ol>
-<li><p>生命周期(Lifecycle): 主要是通过 PaaS 平台如 kubernetes 来满足</p>
-<ul>
-<li>Packaging: 构建打包</li>
-<li>Healthcheck: 健康检查</li>
-<li>Deployment: 发布</li>
-<li>Scaling: 扩展</li>
-<li>Configuration: 配置</li>
-</ul>
-</li>
-<li><p>网络(Network): </p>
-<ul>
-<li>Service Discovery: 服务发现</li>
-<li>A/B Testing：A/B 测试</li>
-<li>Canary rollouts: 金丝雀滚动发布</li>
-<li>Retry: 重试</li>
-<li>Timeout: 超时</li>
-<li>Circuit Breaker: 熔断</li>
-<li>Point-to-point: 点对点访问</li>
-<li>Pub/Sub: 发布订阅</li>
-<li>Security: 安全</li>
-<li>Observability: 可观察性</li>
-</ul>
-</li>
-<li><p>状态(State): </p>
-<ul>
-<li>Workflow mgmt: 工作流管理</li>
-<li>Idempotency: 幂等性</li>
-<li>Temporal scheduling(cron jobs): 定时调度</li>
-<li>Caching: 缓存</li>
-<li>Application state: 应用状态</li>
-</ul>
-</li>
-<li><p>绑定(Binding): </p>
-<ul>
-<li>Connectors: 连接器</li>
-<li>Protocol conversion: 协议转换</li>
-<li>Message Transformation: 消息传递</li>
-<li>Message routing: 消息路由</li>
-<li>Transactionality: 事务</li>
-</ul>
-</li>
-</ol>
-<p><img src="https://imgopt.infoq.com/articles/multi-runtime-microservice-architecture/en/resources/1Multi-Runtime-Microservices-Architecture-2-1582629228912.jpg" alt=""></p>
+<p><img src="images/1Multi-Runtime-Microservices-Architecture-1-1582629228248.jpg" alt=""></p>
+<pre><code class="language-mindmap">- Multi-Runtime
+  - 生命周期(Lifecycle): 主要是通过 PaaS 平台如 kubernetes 来满足
+    * Packaging: 构建打包
+    * Healthcheck: 健康检查
+    * Deployment: 发布
+    * Scaling: 扩展
+    * Configuration: 配置
+  
+  - 网络(Network): 
+    * Service Discovery: 服务发现
+    * A/B Testing：A/B 测试
+    * Canary rollouts: 金丝雀滚动发布
+    * Retry: 重试
+    * Timeout: 超时
+    * Circuit Breaker: 熔断
+    * Point-to-point: 点对点访问
+    * Pub/Sub: 发布订阅
+    * Security: 安全
+    * Observability: 可观察性
+  
+  - 状态(State): 
+    * Workflow mgmt: 工作流管理
+    * Idempotency: 幂等性
+    * Temporal scheduling(cron jobs): 定时调度
+    * Caching: 缓存
+    * Application state: 应用状态
+  
+  - 绑定(Binding): 
+    * Connectors: 连接器
+    * Protocol conversion: 协议转换
+    * Message Transformation: 消息传递
+    * Message routing: 消息路由
+    * Transactionality: 事务
+</code></pre>
+<p><img src="images/1Multi-Runtime-Microservices-Architecture-2-1582629228912.jpg" alt=""></p>
 <p>将应用需要的分布式能力外移到各种runtime, 这些 runtime 会逐渐整合，只保留少量甚至只有一两个的 runtime。这种提供多种分布式能力的 runtime 也被称为 Mecha。
 每个微服务就会由至少一个 Mecha Runtime 和应用 Runtime 共同组成，也就是每个微服务都会有多个（至少两个）runtime，这也就是 Multi-Runtime / Mecha 名字的由来。</p>
-<p><img src="https://imgopt.infoq.com/fit-in/1200x2400/filters:quality(80)/filters:no_upscale()/articles/multi-runtime-microservice-architecture/en/resources/1Multi-Runtime-Microservices-Architecture-4-1582629229172.jpg" alt=""></p>
+<p><img src="images/1Multi-Runtime-Microservices-Architecture-4-1582629229172.jpg" alt=""></p>
 <p>Multi-Runtime 和 servicemesh 的差异总结如下图所示：
-<img src="https://skyao.io/talk/202103-dapr-from-servicemesh-to-cloudnative/images/difference-between-multi-runtime-and-servicemesh_huce123631e5f4755e17a396f2c12112ec_85116_1200x1200_fit_q75_lanczos.jpg" alt=""></p>
+<img src="images/difference-between-multi-runtime-and-servicemesh_huce123631e5f4755e17a396f2c12112ec_85116_1200x1200_fit_q75_lanczos.jpg" alt=""></p>
 <p><strong>Multi-Runtime的本质是面向云原生应用的 分布式能力抽象层</strong>
-<img src="https://skyao.io/talk/202103-dapr-from-servicemesh-to-cloudnative/images/nature-of-multi-runtime_hud23b41a33a32b215b19ef445300fe136_476076_1200x1200_fit_q75_lanczos.jpg" alt=""></p>
+<img src="images/nature-of-multi-runtime_hud23b41a33a32b215b19ef445300fe136_476076_1200x1200_fit_q75_lanczos.jpg" alt=""></p>
 <blockquote>
 <p>备注：分布式能力的通用标准API，将会是Multi-Runtime成败的关键。</p>
 </blockquote>
 <h2 id="3-dapr">3. Dapr</h2>
 <p>Dapr是一个可移植的、事件驱动的运行时，它使任何开发者都能轻松地构建运行在云和边缘的弹性、无状态和有状态的应用程序，并拥抱语言和开发者框架的多样性。</p>
 <p>Dapr提供的功能模块:
-<img src="https://docs.dapr.io/images/building_blocks.png" alt=""></p>
+<img src="images/building_blocks.png" alt=""></p>
 <p>Dapr有三个主要组成部分：API，Building Blocks 和Components:
-<img src="https://skyao.io/talk/202103-dapr-from-servicemesh-to-cloudnative/images/dapr-architecture-and-multi-runtime-nature_hu97da40a29b063108d5632c6168658baa_255593_1200x1200_fit_lanczos_3.png" alt=""></p>
+<img src="images/dapr-architecture-and-multi-runtime-nature_hu97da40a29b063108d5632c6168658baa_255593_1200x1200_fit_lanczos_3.png" alt=""></p>
 <p>运行架构:
-<img src="https://docs.dapr.io/images/overview_kubernetes.png" alt=""></p>
+<img src="images/overview_kubernetes.png" alt=""></p>
 <h2 id="4-dapr-example">4. Dapr Example</h2>
 <pre><code class="language-bash">
 # install dapr
@@ -132,12 +124,16 @@ curl http://localhost:3500/v1.0/state/statestore/name
 </code></pre>
 <h2 id="a-reference">A. Reference</h2>
 <ul>
-<li>Dapr Overview, <a href="https://docs.dapr.io/concepts/overview/">https://docs.dapr.io/concepts/overview/</a></li>
 <li>Multi-Runtime Microservices Architecture, Bilgin Ibryam, 2020-02-27, <a href="https://www.infoq.com/articles/multi-runtime-microservice-architecture/">https://www.infoq.com/articles/multi-runtime-microservice-architecture/</a></li>
+<li>Dapr Overview, <a href="https://docs.dapr.io/concepts/overview/">https://docs.dapr.io/concepts/overview/</a></li>
+<li>Dapr Github Page, <a href="https://github.com/dapr">https://github.com/dapr</a></li>
 <li>Dapr v1.0展望：从servicemesh到云原生, 敖小剑, 2021-03-20, <a href="https://skyao.io/talk/202103-dapr-from-servicemesh-to-cloudnative/">https://skyao.io/talk/202103-dapr-from-servicemesh-to-cloudnative/</a></li>
+<li>Dapr Demo, wongoo, <a href="https://github.com/wongoo/dapr-demo">https://github.com/wongoo/dapr-demo</a>, 范例包含http/grpc调用, 事件发布订阅, java/golang 跨语言调用。</li>
+<li>layotto, mosn, <a href="https://github.com/mosn/layotto">https://github.com/mosn/layotto</a>, 阿里应用运行时实现, 基于mosn servicemesh实现。</li>
 </ul>
 <h2 id="b-history">B. History</h2>
 <ul>
+<li>2021-11-26, add reference</li>
 <li>2021-10-12, first version</li>
 </ul>
 
