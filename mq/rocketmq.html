@@ -266,6 +266,23 @@ producer.send(msg);
 <li>send message to original Topic&amp;Queue.</li>
 <li>consumers consume from original Topic.</li>
 </ol>
+<h3 id="47-reconsume-message">4.7 reconsume message</h3>
+<p>RocketMQ allows reconsume a message if consuming failed and return status <code>ConsumeConcurrentlyStatus.RECONSUME_LATER</code>, 
+then the message will be send to delay message topic as a delay message, 
+the delay time level is default 3 (means delay 10s), which will increase 1 if requesting reconsume again.
+The message will be discarded if the delay time level exceeds the max.
+So the max consume retry time is 16.</p>
+<pre><code class="language-java">consumer.registerMessageListener(new MessageListenerConcurrently() {
+   @Override
+   public ConsumeConcurrentlyStatus consumeMessage(List&lt;MessageExt&gt; msgs,
+                                   ConsumeConcurrentlyContext context) {
+       // handle message failed
+
+       // return RECONSUME_LATER to reconsume later
+       return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+   }
+});
+</code></pre>
 <h2 id="5-communication">5. communication</h2>
 <p>communication between clients, brokers, nameservers.</p>
 <h3 id="51-communication-message">5.1 communication message</h3>
@@ -483,7 +500,7 @@ return flushResultFuture.thenCombine(replicaResultFuture, (flushStatus, replicaS
 </ul>
 <h2 id="history">History</h2>
 <ul>
-<li>2021-12-22, add chapter <code>delay message</code></li>
+<li>2021-12-22, add chapter <code>delay message</code>, <code>reconsume message</code></li>
 <li>2021-09-25, add chapter <code>cluster</code></li>
 <li>2021-09-13, first version</li>
 </ul>
