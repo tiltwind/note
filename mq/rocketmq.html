@@ -20,7 +20,7 @@ markmeta_tags: rocketmq,mq
 -->
 
 <h1 id="rocketmq">rocketmq</h1>
-<p><img src="https://rocketmq.apache.org/assets/images/rmq-basic-arc.png" alt=""></p>
+<p><img src="images/rmq-basic-arc.png" alt=""></p>
 <ul>
 <li><code>Name Servers</code>: service discovery and routing. Each Name Server records full routing information.</li>
 <li><code>Brokers</code>: message storage by providing lightweight <code>TOPIC</code> and <code>QUEUE</code> mechanisms.</li>
@@ -36,7 +36,7 @@ markmeta_tags: rocketmq,mq
 <h2 id="2-broker-server">2. Broker Server</h2>
 <p>Broker server is responsible for message store and delivery, message query, HA guarantee, and so on.</p>
 <p>As shown in image below, Broker server has several important sub modules:</p>
-<p><img src="https://rocketmq.apache.org/assets/images/rmq-basic-component.png" alt=""></p>
+<p><img src="images/rmq-basic-component.png" alt=""></p>
 <ul>
 <li><code>Remoting Module</code>: the entry of broker, handles the requests from clients.</li>
 <li><code>Client Manager</code>: manages the clients (Producer/Consumer) and maintains topic subscription of consumer.</li>
@@ -57,7 +57,7 @@ markmeta_tags: rocketmq,mq
 <li><code>Otherwise</code>: ASYNC_MASTER without SLAVE.</li>
 </ul>
 <h2 id="3-storage">3. Storage</h2>
-<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_1.png" alt=""></p>
+<p><img src="images/rocketmq_design_1.png" alt=""></p>
 <h3 id="31-commitlog">3.1 CommitLog</h3>
 <ul>
 <li>default 1G a file, the length of file name is 20, the format is <code>&lt;0 prefix&gt; + &lt;offset&gt;</code>. </li>
@@ -76,7 +76,7 @@ markmeta_tags: rocketmq,mq
 <li>store at <code>$HOME \store\index${fileName}</code></li>
 <li>used to query message by key or time range.</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_13.png" alt=""></p>
+<p><img src="images/rocketmq_design_13.png" alt=""></p>
 <ul>
 <li>Header: fixed 40 bytes, includes create timestamp.</li>
 <li>File Name: timestamp of create time</li>
@@ -102,11 +102,12 @@ index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
 </code></pre>
 <h3 id="34-writeread-data">3.4 write/read data</h3>
 <p>Uses <code>PageCache</code> to flush data to disk to enhence write performance.
-<img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_2.png" alt=""></p>
+<img src="images/rocketmq_design_2.png" alt=""></p>
 <p>Uses <code>MappedByteBuffer</code>(mmap) to enhence read performance.</p>
 <h2 id="4-message">4. Message</h2>
 <h3 id="41-topic">4.1 Topic</h3>
-<p>Topic, internally, is <code>logically partitioned</code> into one or more sub-topics. We call these sub-topics <code>message queues</code>. This concept plays a major role in implementing valuable features, including fail-over, maximum concurrency, etc.</p>
+<p>Topic, internally, is <code>logically partitioned</code> into one or more sub-topics. We call these sub-topics <code>message queues</code>. 
+This concept plays a major role in implementing valuable features, including fail-over, maximum concurrency, etc.</p>
 <h3 id="42-tag">4.2 Tag</h3>
 <p>Consume tag filter is processed on broker side, only filter by tag hash code. So consumer SHOULD check whether the tag is matched for received messages.</p>
 <h3 id="43-message-format">4.3 Message Format</h3>
@@ -220,9 +221,11 @@ index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
 <td>properties</td>
 </tr>
 </tbody></table>
-<h3 id="44-transaction-message">4.4 transaction message</h3>
+<h3 id="44-message-id">4.4 Message Id</h3>
+<p>16 bytes: <code>&lt;broker ip&gt; + &lt;broker port&gt; + offset</code></p>
+<h3 id="45-transaction-message">4.5 transaction message</h3>
 <p>Transaction message is based on 2PC and compensation check.</p>
-<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_10.png" alt=""></p>
+<p><img src="images/rocketmq_design_10.png" alt=""></p>
 <p>Two inner topics:</p>
 <ul>
 <li><code>half msg topic</code>: save half message</li>
@@ -237,13 +240,36 @@ index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
  -------------         
 </code></pre>
 <p>If not receive op message, try to check the state of local transaction. Retry maximum 15 times, otherwise rollback message.</p>
-<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_12.png" alt=""></p>
-<h3 id="45-message-id">4.5 Message Id</h3>
-<p>16 bytes: <code>&lt;broker ip&gt; + &lt;broker port&gt; + offset</code></p>
+<p><img src="images/rocketmq_design_12.png" alt=""></p>
+<h3 id="46-delay-message">4.6 delay message</h3>
+<p>RocketMQ an inner topic <code>SCHEDULE_TOPIC_XXXX</code> and 18 queues for different delay time level.
+1st level queue delays 1s, 18th level queue delays 2h.</p>
+<pre><code>messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
+</code></pre>
+<p>Set delay time level:</p>
+<pre><code class="language-java">Message msg = new Message();
+msg.setTopic(&quot;TopicA&quot;);
+msg.setTags(&quot;Tag&quot;);
+msg.setBody(&quot;this is a delay message&quot;.getBytes());
+// set delay level to 5, means delay 1m
+msg.setDelayTimeLevel(5);
+producer.send(msg);
+</code></pre>
+<p>Delay message process:</p>
+<ol>
+<li>change the Topic&amp;Queue to <code>SCHEDULE_TOPIC_XXXX</code> and delay time level queue, original Topic&amp;Queue will be saved in message properties.
+ calculate the <code>delivery time</code>, which equals <code>storeTimestamp + delay_level_time</code>, as the <code>tag hash code</code>.</li>
+<li>send message to delay ConsumeQueue.</li>
+<li><code>ScheduleMessageService</code> consume topic <code>SCHEDULE_TOPIC_XXXX</code>.
+ It will check the delivery time of the first message, and continue process next message if matches.</li>
+<li><code>ScheduleMessageService</code> change Topic&amp;Queue of the message to the original, then save message to CommitLog again.</li>
+<li>send message to original Topic&amp;Queue.</li>
+<li>consumers consume from original Topic.</li>
+</ol>
 <h2 id="5-communication">5. communication</h2>
 <p>communication between clients, brokers, nameservers.</p>
 <h3 id="51-communication-message">5.1 communication message</h3>
-<p><img src="https://raw.githubusercontent.com/apache/rocketmq/master/docs/cn/image/rocketmq_design_4.png" alt=""></p>
+<p><img src="images/rocketmq_design_4.png" alt=""></p>
 <p>Format:
 <code>&lt;message length&gt;(4 bytes) + &lt;Serialization type&gt;(1 byte) + &lt;Header length&gt;(3 bytes) + &lt;Data Header&gt; + &lt;Message Body&gt;</code></p>
 <table>
@@ -457,6 +483,7 @@ return flushResultFuture.thenCombine(replicaResultFuture, (flushStatus, replicaS
 </ul>
 <h2 id="history">History</h2>
 <ul>
+<li>2021-12-22, add chapter <code>delay message</code></li>
 <li>2021-09-25, add chapter <code>cluster</code></li>
 <li>2021-09-13, first version</li>
 </ul>
