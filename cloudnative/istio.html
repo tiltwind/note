@@ -20,9 +20,107 @@ markmeta_tags: mesh,service-mesh
 -->
 
 <h1 id="istio">Istio</h1>
+<h2 id="install-istio">install istio</h2>
 <pre><code class="language-bash">
+# Download Istio
 curl -L https://istio.io/downloadIstio | sh -
+
+wget -t 0 -T 60 -c https://github.com/istio/istio/releases/download/1.12.2/istio-1.12.2-linux-amd64.tar.gz
+tar -xvf istio-1.12.2-linux-amd64.tar.gz
+cp istio-1.12.2/bin/istioctl /usr/local/bin
+
+minikube start --cpus=4 --memory=4096
+
+# install 
+istioctl install --set profile=demo -y
+
+# Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later
+kubectl label namespace default istio-injection=enabled
 </code></pre>
+<h2 id="run-istio-demo">run istio demo</h2>
+<pre><code class="language-bash"># Deploy the Bookinfo sample application:
+kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
+
+kubectl get services
+
+kubectl get pods
+
+# Verify everything is working correctly up to this point. Run this command to see if the app is running inside the cluster and serving HTML pages by checking for the page title in the response:
+kubectl exec &quot;$(kubectl get pod -l app=ratings -o jsonpath=&#39;{.items[0].metadata.name}&#39;)&quot; -c ratings -- curl -sS productpage:9080/productpage | grep -o &quot;&lt;title&gt;.*&lt;/title&gt;&quot;
+
+# &lt;title&gt;Simple Bookstore App&lt;/title&gt;
+
+# Associate this application with the Istio gateway
+kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
+
+# Ensure that there are no issues with the configuration:
+istioctl analyze
+
+# Set the ingress ports:
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=&#39;{.spec.ports[?(@.name==&quot;http2&quot;)].nodePort}&#39;)
+echo &quot;$INGRESS_PORT&quot;
+
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=&#39;{.spec.ports[?(@.name==&quot;https&quot;)].nodePort}&#39;)
+echo &quot;$SECURE_INGRESS_PORT&quot;
+
+# Set the ingress IP:
+export INGRESS_HOST=$(minikube ip)
+echo &quot;$INGRESS_HOST&quot;
+</code></pre>
+<p>start minikube tunnel in new window:</p>
+<pre><code class="language-bash"># Run this command in a new terminal window to start a Minikube tunnel that sends traffic to your Istio Ingress Gateway:
+su - kube
+usermod -aG wheel kube
+minikube tunnel
+</code></pre>
+<p>browse the demo page:</p>
+<pre><code class="language-bash"># Set GATEWAY_URL:
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+echo &quot;$GATEWAY_URL&quot;
+
+# port forward
+socat tcp-listen:8000,reuseaddr,fork tcp:$GATEWAY_URL
+
+# local external host
+export LOCAL_EXTERNAL_HOST=10.225.46.24:8000
+
+echo &quot;http://$LOCAL_EXTERNAL_HOST/productpage&quot;
+# Paste the output from the previous command into your web browser and confirm that the Bookinfo product page is displayed.
+</code></pre>
+<p>view dashboard:</p>
+<pre><code class="language-bash">
+kubectl apply -f samples/addons
+kubectl rollout status deployment/kiali -n istio-system
+
+# request to generate trace data
+for i in $(seq 1 100); do curl -s -o /dev/null &quot;http://$GATEWAY_URL/productpage&quot;; done
+
+istioctl dashboard kiali
+
+# port forward
+socat tcp-listen:8000,reuseaddr,fork tcp:127.0.0.1:20001
+
+# browser http://10.225.46.24:8000 to see dashboard
+</code></pre>
+<h2 id="uninstall-istio">uninstall istio</h2>
+<pre><code class="language-bash">kubectl delete -f samples/addons
+istioctl manifest generate --set profile=demo | kubectl delete --ignore-not-found=true -f -
+istioctl tag remove default
+
+# The istio-system namespace is not removed by default. 
+# If no longer needed, use the following command to remove it:
+kubectl delete namespace istio-system
+
+# The label to instruct Istio to automatically inject Envoy sidecar proxies is not removed by default. 
+# If no longer needed, use the following command to remove it:
+kubectl label namespace default istio-injection-
+
+minikube stop
+</code></pre>
+<h2 id="reference">reference</h2>
+<ul>
+<li><a href="https://istio.io/latest/docs/setup/getting-started/">https://istio.io/latest/docs/setup/getting-started/</a></li>
+</ul>
 <h2 id="history">History</h2>
 <ul>
 <li>2021-12-22, first version</li>

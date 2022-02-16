@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/markhtml.css">
+    <title>Index</title>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="markdown-body main" id="app">
+<!---
+markmeta_title: golang性能分析工具pprof
+markmeta_author: 望哥
+markmeta_date: 2018-09-26 21:41:42
+markmeta_tags: golang,pprof,performance
+markmeta_categories: 编程语言
+-->
+
+<h1 id="golang性能分析工具pprof">golang性能分析工具pprof</h1>
+<h2 id="1-pprof-介绍">1. pprof 介绍</h2>
+<p>profiling一般翻译为画像，在计算机性能调试领域里就是对程序应用的画像，主要指应用使用 CPU 和内存等情况。</p>
+<p>golang自带pprof(program profile)工具可以收集并分析程序画像。</p>
+<p>pprof读取一组<a href="https://github.com/google/pprof/blob/master/proto/profile.proto">profile.proto</a>(protocol buffer格式)数据，产生可视化的数据分析报告。因此，它可以分析可以任意产生这种格式的程序，不管程序是什么语言开发的。</p>
+<p>pprof 采样数据主要有三种获取方式:</p>
+<ul>
+<li>runtime/pprof: 手动调用runtime.StartCPUProfile和runtime.StopCPUProfile等 API来生成和写入采样文件，灵活性高。参考<a href="https://golang.org/pkg/runtime/pprof/">范例</a></li>
+<li>net/http/pprof: 通过 http 服务获取Profile采样文件，简单易用，适用于对应用程序的整体监控。通过 runtime/pprof 实现。参考<a href="https://golang.org/pkg/net/http/pprof/">范例</a></li>
+<li>go test: 通过 <code>go test -bench . -cpuprofile cpu.prof -memprofile mem.prof</code> 生成采样文件 适用对函数进行针对性测试.</li>
+</ul>
+<p>使用pprof生产svg图时需要Graphviz工具，mac下可以通过此命令安装: <code>brew install Graphviz</code></p>
+<p>查看pprof工具的详细用法, 运行命令查看usage说明: <code>go tool pprof</code></p>
+<h2 id="2-pprof-画像类型">2. pprof 画像类型</h2>
+<p>如果http程序是通过添加 <code>import _ &quot;net/http/pprof&quot;</code> 支持抓取应用画像.</p>
+<pre><code>package main
+
+import (
+    &quot;net/http&quot;
+    _ &quot;net/http/pprof&quot;
+)
+
+func main() {
+    go func() {
+        log.Println(http.ListenAndServe(&quot;:6060&quot;, nil))
+    }()
+
+    // business
+
+    select {}
+}
+</code></pre>
+<p>则可以通过 <code>http://localhost:6060/debug/pprof/</code>地址查看各种画像的样例统计数量，
+并可以通过以下地址查看或下载对应的画像内容。</p>
+<pre><code>http://localhost:6060/debug/pprof/&lt;PROFILE_NAME&gt;
+</code></pre>
+<p>以上url地址中<code>&lt;PROFILE_NAME&gt;</code>参考下表：
+<img src="static/pprof-profiles.jpg" alt=""></p>
+<p><strong>debug参数</strong>:</p>
+<ul>
+<li>debug=0时(默认)，返回 pprof 工具所需数据格式文件。</li>
+<li>debug=1时，将函数地址转换为函数名，即脱离 pprof 在浏览器中直接查看。</li>
+<li>debug=2时，对goroutine来说，此时将以 unrecovered panic 的格式打印堆栈，可读性更高。</li>
+</ul>
+<p><strong>gc参数</strong>: 抓取heap画像时，指定gc=1时，会先进行gc再生成heap画像；</p>
+<p><strong>seconds参数</strong>: 针对cpu和trace两类画像，可以通过seconds指定要抓取分析的时间周期。</p>
+<h2 id="3-pprof-使用经验">3. pprof 使用经验</h2>
+<pre><code class="language-bash"># pprof工具支持直接对http服务画像地址抓取并分析
+go tool pprof http://localhost:6060/debug/pprof/profile?seconds=30
+
+# 分析heap
+# 1. top -cum
+# 2. list github.com/vogo/logger.init
+go tool pprof http://localhost:6060/debug/pprof/heap
+
+go tool pprof --inuse_objects http://localhost:6060/debug/pprof/heap
+go tool pprof --alloc_space http://localhost:6060/debug/pprof/heap
+go tool pprof --alloc_objects http://localhost:6060/debug/pprof/heap
+
+
+# 常常需要抓取各类profile并事后再仔细分析，这时可以先保存下profile文件，如:
+curl -o cpu.prof http://localhost:6060/debug/pprof/profile?seconds=30
+curl -o heap.prof http://localhost:6060/debug/pprof/heap
+curl -o block.prof http://localhost:6060/debug/pprof/block
+curl -o mutex.prof http://localhost:6060/debug/pprof/mutex
+curl -o trace.prof http://localhost:6060/debug/pprof/trace?seconds=5
+
+# pprof支持用http方式查看各类分析数据，而且从1.11版本开始http方式下还可以生成火焰图,更方便对程序性能进行分析:
+go tool pprof -http=:8080 cpu.prof
+go tool pprof -http=:8080 heap.prof
+go tool pprof -http=:8080 block.prof
+go tool pprof -http=:8080 mutex.prof
+go tool pprof -http=:8080 trace.prof
+
+# linux 命令查看进程信息
+ps -o &#39;rss,vsz,pcpu,comm&#39; -e  |grep logger
+ps -o &#39;rss,vsz,pcpu,comm&#39; -p 1234
+</code></pre>
+<h2 id="4-go-test-bench-性能测试参数">4. go test bench 性能测试参数</h2>
+<ul>
+<li><code>-benchmem</code>：打印用于基准的内存分配统计数据。</li>
+<li><code>-blockprofile block.out</code>：当所有的测试都完成时，在指定的文件中写入一个 goroutine 阻塞概要文件</li>
+<li><code>-blockprofilerate n</code>：goroutine 阻塞时候打点的纳秒数。默认不设置就相当于 -test.blockprofilerate=1，每一纳秒都打点记录一下。</li>
+<li><code>-coverprofile cover.out</code>：在所有测试通过后，将覆盖概要文件写到文件中。设置过 -cover。</li>
+<li><code>-cpuprofile cpu.out</code>：在退出之前，将一个 CPU 概要文件写入指定的文件。</li>
+<li><code>-memprofile mem.out</code>：在所有测试通过后，将内存概要文件写到文件中。</li>
+<li><code>-memprofilerate n</code>：开启更精确的内存配置。如果为 1，将会记录所有内存分配到 profile。</li>
+<li><code>-mutexprofile mutex.out</code>：当所有的测试都完成时，在指定的文件中写入一个互斥锁争用概要文件。指定 -c，将写入测试二进制文件。</li>
+<li><code>-mutexprofilefraction n</code>：样本 1 在 n 个堆栈中，goroutines 持有 a，争用互斥锁。</li>
+<li><code>-outputdir directory</code>：在指定的目录中放置输出文件，默认情况下，go test 正在运行的目录。</li>
+<li><code>-trace trace.out</code>：在退出之前，将执行跟踪写入指定文件。</li>
+</ul>
+<p>指定测试文件生成prof文件:</p>
+<pre><code>go test logger_test.go logger.go --bench . -cpuprofile cpu.prof  -memprofile mem.prof -blockprofile block.prof
+</code></pre>
+<h2 id="4-参考">4. 参考</h2>
+<ul>
+<li><a href="https://github.com/golang/go/blob/master/src/runtime/pprof/pprof.go">runtime/pprof/pprof.go</a></li>
+<li><a href="https://github.com/golang/go/blob/master/src/net/http/pprof/pprof.go">net/http/pprof/pprof.go</a></li>
+<li><a href="https://blog.golang.org/profiling-go-programs">Profiling Go Programs</a></li>
+</ul>
+
+</div>
+<script src="/markrender.min.js"></script>
+</body>
+</html>

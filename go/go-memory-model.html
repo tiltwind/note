@@ -32,7 +32,7 @@ markmeta_tags: golang,memory
 <p>如果存在多个goroutine同时修改数据的情况，则需要串行化请求来保护数据。串行化可以通过channel信道或如sync、sync/atomic包下的同步工具来实现。</p>
 <p>如果你需要读本文才能理解你的程序的行为，你正变得更聪明，但别自作聪明。</p>
 <blockquote>
-<p>译注: 你应该保持你的代码清晰简洁, 要明白语言同步特性，不要滥用，适得其反。</p>
+<p>译注: 你应该保持你的代码清晰简洁, 要明白语言同步特性，不要滥用，否则适得其反。</p>
 </blockquote>
 <h1 id="3-事件顺序">3. 事件顺序</h1>
 <p>在单个goroutine中，读取和写入的表现必须与代码指定的执行顺序相一致。按照Go语言规范，编译器和处理器可能会对单个goroutine中的读取和写入的代码进行重新排序，只要重新排序不会改变goroutine的行为。由于存在重新排序，一个goroutine中的执行顺序可能和另外一个goroutine中的执行顺序不一致。例如一个goroutine执行 <code>a = 1; b = 2;</code> 这个语句，另外一个goroutine可能会监测到变量<code>b</code>比变量<code>a</code>先更新。</p>
@@ -87,7 +87,7 @@ r2 之前的写入为 w2，但与其并发的有 w4，因此 r2 的值是不确�
 <p>译注: goroutine创建后，需要runtime去调度才会执行。</p>
 </blockquote>
 <p>例如:</p>
-<pre><code>var a string
+<pre><code class="language-golang">var a string
 
 func f() {
     print(a)
@@ -101,7 +101,7 @@ func hello() {
 <p>调用<code>hello()</code>方法将在之后的某一个时间点打印<code>“hello, world”</code>（可能是<code>hello()</code>方法已经返回了之后）。</p>
 <h2 id="43-goroutine-销毁">4.3 Goroutine 销毁</h2>
 <p>一个goroutine不保证在程序的任何事件之前退出，如下:</p>
-<pre><code>var a string
+<pre><code class="language-golang">var a string
 
 func hello() {
     go func() { a = &quot;hello&quot; }()
@@ -120,7 +120,7 @@ func hello() {
 <p>译注: 注意这里是<code>receive完成</code>前, 而不是<code>receive开始</code>前。channel通信是通过共享内存的方式实现，send动作会去唤醒receive的goroutine变为ready状态，send还没完receive可能已经开始了，channel的内部结构hchan本身包含锁机制，可以保证send对hchan的修改在receive的修改之前完成。</p>
 </blockquote>
 <p>例如:</p>
-<pre><code>var c = make(chan int, 10)
+<pre><code class="language-golang">var c = make(chan int, 10)
 var a string
 
 func f() {
@@ -150,7 +150,7 @@ func main() {
 <p>译注: 注意这里和缓冲channel的差异，非缓冲channel的receive动作比send先完成，而缓冲channel的send动作比receive先完成。</p>
 </blockquote>
 <p>以下例子同上例, 只是send和receive语句互换，并且使用非缓冲channel:</p>
-<pre><code>var c = make(chan int)
+<pre><code class="language-golang">var c = make(chan int)
 var a string
 
 func f() {
@@ -182,7 +182,7 @@ func main() {
 </blockquote>
 <p>这个规则是对于前面缓冲channel规则的概括。即缓冲channel建模了一个计数信号量：channel中元素个数表示channel正被使用的数量, channel的容量决定了最大同时使用数。send一个元素需要获取信号量,receive一个元素释放信号量。这就是一般用于限制并发的做法。</p>
 <p>以下代码对于每一个work列表项启动一个goroutine，这些goroutine通过一个channel限制，确保同一时间只有3个工作项在执行。</p>
-<pre><code>var limit = make(chan int, 3)
+<pre><code class="language-golang">var limit = make(chan int, 3)
 
 func main() {
     for _, w := range work {
@@ -204,7 +204,7 @@ func main() {
 <blockquote>
 <p>译注：<code>l.Lock()</code> 和 <code>l.Unlock()</code> 必须是成对依次调用的，下一次（或后续的某一次第m次）的<code>l.Lock()</code> 必须在上一次 <code>l.Unlock()</code> （第n次）完成之后才能完成。 <code>l.Lock()</code> 返回之前，上一次<code>l.Unlock()</code>就肯定已经先返回完成了。 这个m不一定等于n+1, 也就是同时有多个<code>l.Lock()</code>加锁请求 n+1,n+2 ... m,m+1 ...，但第n次解锁后，后续的随机某一个加锁请求成功了。</p>
 </blockquote>
-<pre><code>var l sync.Mutex
+<pre><code class="language-golang">var l sync.Mutex
 var a string
 
 func f() {
@@ -240,7 +240,7 @@ func main() {
 <blockquote>
 <p>译注: <code>once.Do(f)</code>保证只会有一个真正调用<code>f()</code>, 方法<code>f()</code>调用完成返回后，所有的once.Do(f)调用才会完成返回。</p>
 </blockquote>
-<pre><code>var a string
+<pre><code class="language-golang">var a string
 var once sync.Once
 
 func setup() {
@@ -264,7 +264,7 @@ func twoprint() {
 <h1 id="5-错误的同步">5. 错误的同步</h1>
 <p>注意，虽然某一次读r可能会监测到和它同步的某一次写w，但这并不表明r之后的读能够监测到在w之前的写。</p>
 <p>请看以下例子：</p>
-<pre><code>var a, b int
+<pre><code class="language-golang">var a, b int
 
 func f() {
     a = 1
@@ -284,7 +284,7 @@ func main() {
 <p>这个例子g()方法可能会先打印2然后打印0。</p>
 <p><strong>这个事实让一些惯用语法失效了。</strong></p>
 <p>请反复检查锁机制避免同步过多反而无效。例如，<code>twoprint</code>的例子可能错误的写为如下的形式:</p>
-<pre><code>var a string
+<pre><code class="language-golang">var a string
 var done bool
 
 func setup() {
@@ -306,7 +306,7 @@ func twoprint() {
 </code></pre>
 <p>这里并不保证在 <code>doprint</code> 方法中通过监测对变量<code>done</code>的写来间接监测到对变量<code>a</code>的写。这个版本可能会错误的打印空字符串而不是&quot;hello, world&quot;。</p>
 <p>另外一种错误的语法是忙等一个值，例如：</p>
-<pre><code>var a string
+<pre><code class="language-golang">var a string
 var done bool
 
 func setup() {
@@ -327,7 +327,7 @@ func main() {
 <p>译注: 其中 <code>不能确保对变量done的写能够被main监测到，因为两个goroutine之间没有同步事件</code> 需注意，在多核cpu中每个cpu有自己的高速缓存，变量会被拷贝到高速缓存中再进行操作。如果main goroutine的运行cpu已经获得done的值并拷贝到cpu高速缓存中，另外一个goroutine运行cpu对变量done的修改最终会更新到主存，但main goroutine运行cpu并不知道这个改变，不会更新自身缓存中的值，就会造成无限循环下去。可以通过atomic原子读取更新解决这个问题。 参考<a href="https://doc.sisopipo.com/#/cs/memory-model">内存模型</a>以及<a href="https://doc.sisopipo.com/#/cs/cas">CAS</a>。</p>
 </blockquote>
 <p>类似还有一些微妙的变体版本，例如这段代码:</p>
-<pre><code>type T struct {
+<pre><code class="language-golang">type T struct {
     msg string
 }
 

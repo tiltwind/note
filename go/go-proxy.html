@@ -54,10 +54,10 @@ export GOPRIVATE=gitlab.mycompany.com,*.mysubcompany.com,github.com/mycompany
 </blockquote>
 <p>下面选择 开源goproxy实现 <a href="https://github.com/gomods/athens">athens</a> 进行安装。</p>
 <h3 id="31-下载-athens">3.1. 下载 athens</h3>
-<p>从 <a href="https://github.com/gomods/athens/releases">这里</a> 下周athens最新版本, 解压后得到 athens 可执行文件.</p>
+<p>从 <a href="https://github.com/gomods/athens/releases">这里</a> 下载athens最新版本, 解压后得到 athens 可执行文件.</p>
 <h3 id="32-创建-athens-配置文件">3.2. 创建 athens 配置文件</h3>
 <p>创建一个配置文件  config.toml: </p>
-<pre><code class="language-conf">Port = &quot;:3000&quot;
+<pre><code class="language-toml">Port = &quot;:3000&quot;
 GoBinary = &quot;go&quot;
 GoEnv = &quot;development&quot;
 GoProxy = &quot;&quot;
@@ -90,9 +90,9 @@ StorageType = &quot;disk&quot;
 <h3 id="34-启动代理">3.4. 启动代理</h3>
 <pre><code class="language-bash">./athens -config_file ./config.toml
 </code></pre>
-<p>假设访问地址为 <a href="http://192.168.15.212:3000">http://192.168.15.212:3000</a>.</p>
+<p>访问地址为 <code>http://&lt;ip&gt;:3000</code>.</p>
 <h3 id="35-访问代理">3.5. 访问代理</h3>
-<p>jenkins或本地开发设置 <code>export GOPROXY=http://192.168.15.212:3000,direct</code> 即可。</p>
+<p>jenkins或本地开发设置 <code>export GOPROXY=http://&lt;ip&gt;:3000,direct</code> 即可。</p>
 <h2 id="a-参考">A. 参考</h2>
 <ul>
 <li>goproxy protocol, <a href="https://golang.org/ref/mod#goproxy-protocol">https://golang.org/ref/mod#goproxy-protocol</a></li>
