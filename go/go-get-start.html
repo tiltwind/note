@@ -740,8 +740,9 @@ if err != nil {
 }
 </code></pre>
 <h2 id="17-go包">17. Go包</h2>
-<p>Go 中的包用于隔离封装隔离代码模块逻辑，并控制对外可见性。
-以大写字母开头的变量或函数对包外可见(exported)，小写字母开头的变量和函数则是私有的(unexported)，仅在同一个包内可以访问。</p>
+<p>Go 中的包用于封装隔离代码模块逻辑，并控制对外可见性。
+以大写字母开头的变量或函数对包外可见(exported)，
+小写字母开头的变量和函数则是私有的(unexported)，仅在同一个包内可以访问。</p>
 <p>包名和文件命名规范:</p>
 <ul>
 <li>包名用小写,使用短命名,尽量和标准库不要冲突。</li>
@@ -786,7 +787,12 @@ func privateMethod(){
 var GlobalVariable = &quot;exported var&quot;
 var privateVariable = &quot;unexported var&quot;
 </code></pre>
-<h3 id="171-包初始化函数">17.1. 包初始化函数</h3>
+<h3 id="171-内部包-internal">17.1. 内部包 internal</h3>
+<p>包管理方便了模块化，要让模块之间能够访问就需要 exported 相关的方法或变量。
+但一个模块一旦 exported 了，其他所有模块都可以对其进行访问。
+Go从v1.4开始引入内部包 <code>internal包</code>, 来进一步限制包访问权限。</p>
+<p><code>.../a/b/c/internal/d/e/f</code>包只能被包名以 <code>.../a/b/c</code> 开始的包访问， 而 <code>.../a/b/g</code> 则不可以访问。</p>
+<h3 id="172-包初始化函数">17.2. 包初始化函数</h3>
 <p><code>init()</code> 函数用于 程序运行前 的进行包初始化（自定义变量、实例化通信连接）工作.</p>
 <pre><code class="language-golang">func init()  {
     println(&quot;init() 1&quot;)
@@ -1150,7 +1156,7 @@ func main() {
 <ul>
 <li><a href="go-memory-model.html">Go内存模型</a></li>
 </ul>
-<h3 id="201-select-语法">20.1. select 语法</h3>
+<h3 id="215-select-语法">21.5. select 语法</h3>
 <p>select 的语法与 switch 的语法非常相似，由 select 开始一个新的选择块，每个选择条件有 case 语句来描述。
 其大致的结构如下：</p>
 <pre><code class="language-golang">select {
@@ -1272,7 +1278,7 @@ func main() {
 <p>从TPS数据看，Go网关 是 Java网关 的3倍左右, 且CPU消耗更低。</p>
 <h1 id="a-编辑历史">A. 编辑历史</h1>
 <ol>
-<li>2022-02-17, wangoo, 增加泛型、select用法、包初始化函数</li>
+<li>2022-02-17, wangoo, 增加泛型、select用法、内部包 internal、包初始化函数</li>
 <li>2022-02-16, wangoo, 初版</li>
 </ol>
 
