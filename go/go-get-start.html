@@ -114,7 +114,7 @@ import &quot;fmt&quot;
 
 // main func
 func main() {
-    fmt.Println(&quot;Hello, &quot; + &quot;World&quot;)
+    println(&quot;Hello, &quot; + &quot;World&quot;)
 }
 </code></pre>
 <p>运行</p>
@@ -231,26 +231,26 @@ any
 <pre><code class="language-golang">func main() {
     // 指定类型定义
     var x string = &quot;Hello World&quot;
-    fmt.Println(x)
+    println(x)
 
     // 编译器自动判断类型
     name := &quot;wongoo&quot;
-    fmt.Println(name)
+    println(name)
 }
 </code></pre>
 <h3 id="72-全局变量">7.2. 全局变量</h3>
 <pre><code class="language-golang">var x string = &quot;Hello World&quot;
 func main() {
-    fmt.Println(x)
+    println(x)
 }
 </code></pre>
 <h3 id="73-静态变量">7.3. 静态变量</h3>
 <pre><code class="language-golang">const x := &quot;Hello World&quot;
 func main() {
-    fmt.Println(x)
+    println(x)
 
     const name string = &quot;wongoo&quot;
-    fmt.Println(name)
+    println(name)
 }
 </code></pre>
 <h3 id="74-定义多个变量">7.4. 定义多个变量</h3>
@@ -289,12 +289,12 @@ a, b, c := 5, 10, 15
 <pre><code class="language-golang">func main() {
     i := 1
     for i &lt;= 10 {
-        fmt.Println(i)
+        println(i)
         i = i + 1 
     }
 
     for j:=1; j &lt;= 10; j++ {
-        fmt.Println(j)
+        println(j)
     }
 }
 </code></pre>
@@ -309,23 +309,23 @@ a, b, c := 5, 10, 15
 </code></pre>
 <h3 id="83-switch-控制语句">8.3. switch 控制语句</h3>
 <pre><code class="language-golang">switch i {
-    case 0: fmt.Println(&quot;Zero&quot;)
-    case 1: fmt.Println(&quot;One&quot;)
-    case 2: fmt.Println(&quot;Two&quot;)
-    case 3: fmt.Println(&quot;Three&quot;)
-    case 4: fmt.Println(&quot;Four&quot;)
-    case 5: fmt.Println(&quot;Five&quot;)
-    default: fmt.Println(&quot;Unknown Number&quot;)
+    case 0: println(&quot;Zero&quot;)
+    case 1: println(&quot;One&quot;)
+    case 2: println(&quot;Two&quot;)
+    case 3: println(&quot;Three&quot;)
+    case 4: println(&quot;Four&quot;)
+    case 5: println(&quot;Five&quot;)
+    default: println(&quot;Unknown Number&quot;)
 }
 
 switch {
-    case i == 0: fmt.Println(&quot;Zero&quot;)
-    case i == 1: fmt.Println(&quot;One&quot;)
-    case i == 2: fmt.Println(&quot;Two&quot;)
-    case i == 3: fmt.Println(&quot;Three&quot;)
-    case i == 4: fmt.Println(&quot;Four&quot;)
-    case i == 5: fmt.Println(&quot;Five&quot;)
-    default: fmt.Println(&quot;Unknown Number&quot;)
+    case i == 0: println(&quot;Zero&quot;)
+    case i == 1: println(&quot;One&quot;)
+    case i == 2: println(&quot;Two&quot;)
+    case i == 3: println(&quot;Three&quot;)
+    case i == 4: println(&quot;Four&quot;)
+    case i == 5: println(&quot;Five&quot;)
+    default: println(&quot;Unknown Number&quot;)
 }
 
 </code></pre>
@@ -333,8 +333,8 @@ switch {
 <h3 id="91-数组-array">9.1. 数组 Array</h3>
 <pre><code class="language-golang">var x [5]int
 x[4] = 100
-fmt.Println(x)  // [0 0 0 0 100]
-fmt.Println(len(x)) // 4 
+println(x)  // [0 0 0 0 100]
+println(len(x)) // 4 
 
 // 直接赋值
 x := [5]int{ 98, 93, 77, 82, 83 }
@@ -345,56 +345,56 @@ x := [5]int{ 98, 93, 77, 82, 83 }
 x := make([]int, 5) // 长度为5
 
 x := make([]int, 5, 10) // 长度为5, 容量为10
-fmt.Println(len(x)) // 5
-fmt.Println(cap(x)) // 10
+println(len(x)) // 5
+println(cap(x)) // 10
 x = x[:4]
-fmt.Println(len(x)) // 4
-fmt.Println(cap(x)) // 10
+println(len(x)) // 4
+println(cap(x)) // 10
 x = x[:10]
-fmt.Println(len(x)) // 10
-fmt.Println(cap(x)) // 10
+println(len(x)) // 10
+println(cap(x)) // 10
 x = x[5:]
-fmt.Println(len(x)) // 5
-fmt.Println(cap(x)) // 5
+println(len(x)) // 5
+println(cap(x)) // 5
 
 
 slice1 := []int{1, 2, 3}
 slice2 := make([]int, 2)
 copy(slice2, slice1)
-fmt.Println(slice1)      // [1,2,3]
-fmt.Println(slice2)      // [1,2]
-fmt.Println(len(slice2)) // 2
-fmt.Println(cap(slice2)) // 2
+println(slice1)      // [1,2,3]
+println(slice2)      // [1,2]
+println(len(slice2)) // 2
+println(cap(slice2)) // 2
 
 slice3 := append(slice2, 4, 5, 6)
-fmt.Println(slice3)      // [1,2,4,5,6]
-fmt.Println(len(slice3)) // 4
-fmt.Println(cap(slice3)) // 6
+println(slice3)      // [1,2,4,5,6]
+println(len(slice3)) // 4
+println(cap(slice3)) // 6
 </code></pre>
 <h3 id="93-map">9.3. Map</h3>
 <pre><code class="language-golang">x := make(map[string]int)
 x[&quot;key&quot;] = 10
-fmt.Println(x[&quot;key&quot;]) // 10
+println(x[&quot;key&quot;]) // 10
 
 y := make(map[int]int)
 y[1] = 10
-fmt.Println(y[1]) // 10
+println(y[1]) // 10
 
 // 判断map中是否存在某一个key再进行操作
 if v, ok := y[1]; ok {
-    fmt.Println(v) // 10
+    println(v) // 10
 }
 
 // 从map删除一个key
 delete(y, 1)
-fmt.Println(y[1]) // 0
+println(y[1]) // 0
 
 // 直接赋值
 elements := map[string]string{
     &quot;H&quot;:  &quot;Hydrogen&quot;,
     &quot;He&quot;: &quot;Helium&quot;,
 }
-fmt.Println(elements) // map[H:Hydrogen He:Helium]
+println(elements) // map[H:Hydrogen He:Helium]
 
 innerMap := map[string]map[string]string{
     &quot;H&quot;: map[string]string{
@@ -406,7 +406,7 @@ innerMap := map[string]map[string]string{
         &quot;state&quot;: &quot;gas&quot;,
     },
 }
-fmt.Println(innerMap) // map[H:map[name:Hydrogen state:gas] He:map[name:Helium state:gas]]
+println(innerMap) // map[H:map[name:Hydrogen state:gas] He:map[name:Helium state:gas]]
 </code></pre>
 <h2 id="10-函数-functions">10. 函数 Functions</h2>
 <h3 id="101-一般函数">10.1. 一般函数</h3>
@@ -431,10 +431,10 @@ func sum(x ...int) int {
 }
 
 func main() {
-    fmt.Println(add(5, 2))       // 7
-    fmt.Println(sub(5, 2))       // 3
-    fmt.Println(addAndSub(5, 2)) // 7 3
-    fmt.Println(sum(1, 2, 3, 4)) // 10
+    println(add(5, 2))       // 7
+    println(sub(5, 2))       // 3
+    println(addAndSub(5, 2)) // 7 3
+    println(sum(1, 2, 3, 4)) // 10
 }
 </code></pre>
 <h3 id="102-闭包">10.2. 闭包</h3>
@@ -444,8 +444,8 @@ func main() {
         x++
         return x
     }
-    fmt.Println(increment()) // 1
-    fmt.Println(increment()) // 2
+    println(increment()) // 1
+    println(increment()) // 2
 }
 </code></pre>
 <h3 id="103-递归">10.3. 递归</h3>
@@ -458,20 +458,20 @@ func factorial(x uint) uint {
 }
 
 func main() {
-    fmt.Println(factorial(5)) // 120
+    println(factorial(5)) // 120
 }
 </code></pre>
 <h3 id="103-defer">10.3. Defer</h3>
 <pre><code class="language-golang">func first() {
-    fmt.Println(&quot;first&quot;)
+    println(&quot;first&quot;)
 }
 func last() {
-    fmt.Println(&quot;last&quot;)
+    println(&quot;last&quot;)
 }
 func main() {
     defer last()
     defer first()
-    fmt.Println(&quot;hello world&quot;)
+    println(&quot;hello world&quot;)
 }
 
 // hello world
@@ -485,7 +485,7 @@ func main() {
 <pre><code class="language-golang">func recoverPanic() {
     defer func() {
         r := recover()
-        fmt.Println(&quot;recover:&quot;, r)
+        println(&quot;recover:&quot;, r)
     }()
     panic(&quot;panic error&quot;)
 }
@@ -511,11 +511,11 @@ func resetZero(x *int) {
 func main() {
     x := 5
     toZero(x)
-    fmt.Println(x) // x is still 5
+    println(x) // x is still 5
 
     // 通过&amp;符号获取x变量的指针位置
     resetZero(&amp;x)
-    fmt.Println(x) // x is 0
+    println(x) // x is 0
 }
 </code></pre>
 <h3 id="111-new-操作">11.1. new 操作</h3>
@@ -527,7 +527,7 @@ func main() {
     // new 创建一个指定类型实例, 并返回其指针
     xPtr := new(int)
     one(xPtr)
-    fmt.Println(*xPtr) // x is 1
+    println(*xPtr) // x is 1
 }
 </code></pre>
 <h2 id="12-结构体-struct">12. 结构体 struct</h2>
@@ -544,11 +544,11 @@ type Employee struct {
 }
 
 func (e Employee) Work() {
-    fmt.Println(e.Name, &quot;work&quot;)
+    println(e.Name, &quot;work&quot;)
 }
 
 func (e *Employee) Rest() {
-    fmt.Println(e.Name, &quot;rest&quot;)
+    println(e.Name, &quot;rest&quot;)
 }
 
 func main() {
@@ -565,7 +565,7 @@ func main() {
         Depart: researchCenter,
     }
 
-    fmt.Println(wongoo.Name, wongoo.Depart.Name) // wongoo Research Center
+    println(wongoo.Name, wongoo.Depart.Name) // wongoo Research Center
     wongoo.Work() // wongoo work
     wongoo.Rest() // wongoo rest
 }
@@ -619,7 +619,7 @@ type Writer interface {
 }
 
 func (e Employee) Work() {
-    fmt.Println(e.Name, &quot;work&quot;)
+    println(e.Name, &quot;work&quot;)
 }
 
 type Developer struct {
@@ -629,7 +629,7 @@ type Developer struct {
 
 // 实现重写
 func (d Developer) Work() {
-    fmt.Println(d.Name, &quot;work on projects&quot;, d.Projects)
+    println(d.Name, &quot;work on projects&quot;, d.Projects)
 }
 
 type Worker interface {
@@ -736,7 +736,7 @@ func main() {
 // 调用方显示的判断错误并进行处理
 result, err:= Sqrt(-1)
 if err != nil {
-   fmt.Println(err)
+   println(err)
 }
 </code></pre>
 <h2 id="17-go包">17. Go包</h2>
@@ -763,22 +763,22 @@ import &quot;pkg1&quot;
 import &quot;pkg2&quot;
 
 func main(){
-    fmt.Println(pkg1.Hello())
-    // fmt.Println(pkg1.privateMethod()) // unexported 方法无法调用 (可以理解为private方法)
+    println(pkg1.Hello())
+    // println(pkg1.privateMethod()) // unexported 方法无法调用 (可以理解为private方法)
 
-    fmt.Println(pkg2.GlobalVariable)
-    // fmt.Println(pkg2.privateVariable) // unexported 变量无法访问 (可以理解为private变量)
+    println(pkg2.GlobalVariable)
+    // println(pkg2.privateVariable) // unexported 变量无法访问 (可以理解为private变量)
 }
 </code></pre>
 <p><strong>pkg1.go</strong></p>
 <pre><code class="language-golang">package pkg1
 
 func Hello(){
-    fmt.Println(&quot;hello&quot;)
+    println(&quot;hello&quot;)
 }
 
 func privateMethod(){
-    fmt.Println(&quot;private&quot;)
+    println(&quot;private&quot;)
 }
 </code></pre>
 <p><strong>module.go</strong></p>
@@ -874,7 +874,7 @@ func readFile() {
         return
     }
     str := string(bs)
-    fmt.Println(str)
+    println(str)
 }
 </code></pre>
 <h2 id="19-go-测试">19. Go 测试</h2>
@@ -1175,7 +1175,7 @@ func main() {
 wongoo := Person{Name: &quot;wongoo&quot;, Sex: 1}
 
 typ := reflect.TypeOf(wongoo)       // 获取结构体实例的反射类型对象
-fmt.Println(typ.Name(), typ.Kind()) // Person struct
+println(typ.Name(), typ.Kind()) // Person struct
 
 // 遍历结构体所有成员
 for i := 0; i &lt; typ.NumField(); i++ {
@@ -1186,16 +1186,16 @@ for i := 0; i &lt; typ.NumField(); i++ {
     // name: Type  tag: &#39;json:&quot;type&quot; id:&quot;100&quot;&#39;
 }
 
-fmt.Println(wongoo) // {wongoo 1}
+println(wongoo) // {wongoo 1}
 
 value := reflect.Indirect(reflect.ValueOf(&amp;wongoo)) // 反射获取实例值对象
 nameValue := value.FieldByName(&quot;Name&quot;)              // 获取实例字段的值对象
 
 name := nameValue.Interface() // 通过反射获得变量值
-fmt.Println(name)             // wongoo
+println(name)             // wongoo
 
 nameValue.SetString(&quot;Yang&quot;) // 反射修改变量值
-fmt.Println(wongoo)         // {Yang 1}
+println(wongoo)         // {Yang 1}
 </code></pre>
 <p>也可以运行时创建动态函数，实现类似代理的效果:</p>
 <pre><code class="language-golang">// Joiner 定义一个方法类型
@@ -1223,7 +1223,7 @@ func main() {
 
     result := results[0].String()
 
-    fmt.Println(result) // 200: ok
+    println(result) // 200: ok
 }
 </code></pre>
 <h2 id="23-go-gc">23. Go GC</h2>
