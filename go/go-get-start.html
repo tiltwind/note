@@ -64,12 +64,12 @@ markmeta_tags: golang
 <h2 id="2-go-安装">2. Go 安装</h2>
 <p>从 <a href="https://go.dev/dl/">https://go.dev/dl/</a> 下载最新版本安装，也可以通过以下命令安装:</p>
 <p>Mac环境安装:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.17.6.darwin-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.17.6.darwin-amd64.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.18.2.darwin-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.18.2.darwin-amd64.tar.gz
 </code></pre>
 <p>Linux环境安装:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.17.6.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.17.6.linux-amd64.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.18.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.18.2.linux-amd64.tar.gz
 </code></pre>
 <p>配置环境变量:</p>
 <pre><code class="language-bash">&gt; sudo vi /etc/profile
@@ -86,12 +86,13 @@ export GOPROXY=https://goproxy.cn,direct
 export GOPRIVATE=gitlab.mycompany.com
 </code></pre>
 <p>升级: </p>
-<pre><code class="language-bash">sudo rm -rf /usr/local/go
-# then install the latest
+<pre><code class="language-bash"># 1. 删除旧版本
+sudo rm -rf /usr/local/go
+# 2. 按照上面方式下载最新版本安装
 </code></pre>
 <p>检查安装情况:</p>
 <pre><code class="language-bash">go version
-# go version go1.17.6 darwin/amd64
+# go version go1.18.2 darwin/amd64
 </code></pre>
 <p>参考:</p>
 <ol>
@@ -115,7 +116,7 @@ import &quot;fmt&quot;
 
 // main func
 func main() {
-    println(&quot;Hello, &quot; + &quot;World&quot;)
+    fmt.Println(&quot;Hello, &quot; + &quot;World&quot;)
 }
 </code></pre>
 <p>运行</p>
@@ -1281,8 +1282,9 @@ func main() {
 <p>从TPS数据看，Go网关 是 Java网关 的3倍左右, 且CPU消耗更低。</p>
 <h1 id="a-编辑历史">A. 编辑历史</h1>
 <ol>
-<li>2022-02-17, wangoo, 增加泛型、select用法、内部包 internal、包初始化函数</li>
-<li>2022-02-16, wangoo, 初版</li>
+<li>2022-02-16, wongoo, 初版</li>
+<li>2022-02-17, wongoo, 增加泛型、select用法、内部包 internal、包初始化函数</li>
+<li>2022-05-19, wongoo, 升级go版本号, helloworld 例子修改</li>
 </ol>
 
 </div>
