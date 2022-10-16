@@ -667,6 +667,22 @@ type Worker interface {
 </code></pre>
 <h2 id="15-泛型">15. 泛型</h2>
 <p>Go 因为一开始不支持泛型而被吐槽，但从 v1.18 版本开始可以使用泛型了。</p>
+<p>泛型结构体:</p>
+<pre><code class="language-golang">// 定义一个泛型结构体
+type BaseResponse[T any] struct{
+    Code int
+    Msg  string
+    Data T
+}
+
+// 实例指定具体泛型类型
+resp := &amp;BaseResponse[string]{
+    Code: 200,
+    Msg:  &quot;ok&quot;,
+    Data: &quot;this is data&quot;,
+}
+</code></pre>
+<p>泛型函数:</p>
 <pre><code class="language-golang">// 在函数名后通过中括号定义类型约束，此处是类型列表
 func add[T int | int32 | int64 | float32 | float64](a T, b T) T {
     return a + b
@@ -682,7 +698,6 @@ func main() {
     println(sub(5, 2))
     println(sub(1.5, 1.2))
 }
-
 // 7
 // +2.700000e+000
 // 3
