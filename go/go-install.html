@@ -21,13 +21,13 @@ markmeta_tags: golang,installation
 
 <h1 id="go-installation">go installation</h1>
 <p>Mac:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.19.darwin-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.19.darwin-amd64.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.19.3.darwin-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.19.3.darwin-amd64.tar.gz
 </code></pre>
 <p>Linux:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.19.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.19.linux-amd64.tar.gz
-sudo tar -C /tmp/go/local -xzf go1.19.linux-amd64.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.19.3.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.19.3.linux-amd64.tar.gz
+sudo tar -C /tmp/go/local -xzf go1.19.3.linux-amd64.tar.gz
 </code></pre>
 <p>config env:</p>
 <pre><code class="language-bash">&gt; sudo vi /etc/profile
@@ -49,8 +49,8 @@ export GOPRIVATE=gitlab.homeking365.com
 # then install the latest
 </code></pre>
 <p>Install from source:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.19.src.tar.gz
-tar -C /usr/local -xzf go1.19.src.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.19.3.src.tar.gz
+tar -C /usr/local -xzf go1.19.3.src.tar.gz
 cd /usr/local/go/src
 time sudo ./make.bash
 </code></pre>
