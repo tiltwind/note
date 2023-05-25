@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/markhtml.css">
+    <title>Index</title>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="markdown-body main" id="app">
+<!---
+markmeta_author: tiltwind
+markmeta_date: 2020-01-23
+markmeta_title: Protocol Buffer Help
+markmeta_categories: 工具
+markmeta_tags: protobuf,protoc
+-->
+
+<h1 id="protocol-buffer-help">Protocol Buffer Help</h1>
+<h2 id="install">install</h2>
+<p>Mac:</p>
+<pre><code class="language-bash">curl -L -C - -O https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-osx-x86_64.zip
+sudo tar -C /usr/local -xzf protoc-21.12-osx-x86_64.zip
+
+# install protobuf rust codegen
+cargo install protobuf-codegen
+</code></pre>
+<p>Linux:</p>
+<pre><code class="language-bash">curl -L -C - -O https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-linux-x86_64.zip
+sudo tar -C /usr/local -xzf protoc-21.12-linux-x86_64.zip
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="rust-cargo-ssh-error">rust cargo ssh error</h3>
+<pre><code class="language-bash">cargo install protobuf-codegen
+#     Updating crates.io index
+# error: failed to fetch `https://github.com/rust-lang/crates.io-index`
+# 
+# Caused by:
+#   failed to authenticate when downloading repository: git@github.com:rust-lang/crates.io-index
+# 
+#   * attempted ssh-agent authentication, but no usernames succeeded: `git`
+# 
+#   if the git CLI succeeds then `net.git-fetch-with-cli` may help here
+#   https://doc.rust-lang.org/cargo/reference/config.html#netgit-fetch-with-cli
+# 
+# Caused by:
+#   no authentication available
+
+
+eval `ssh-agent -s`
+# Agent pid 27236
+
+ssh-add
+# Identity added: /Users/sathia/.ssh/id_rsa
+#   uzhaippu git:(master) ✗ cargo build
+</code></pre>
+
+</div>
+<script src="/markrender.min.js"></script>
+</body>
+</html>

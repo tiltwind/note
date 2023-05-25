@@ -60,6 +60,24 @@ markmeta_tags: think
 </ul>
 <h2 id="2-企业对程序员的要求">2. 企业对程序员的要求</h2>
 <p>程序员要实现自我修养首先得符合企业对软件开发的要求，掌握基本功，并能不断学习行业新知识。</p>
+<p>企业对程序员的要求来源于业务需求，而要满足业务需求，大多情况需要程序员能够正确、高效的写出稳定、可扩展、可维护的程序。</p>
+<p>要写出正确的程序也并不容易，需要学习了解公司的业务，需要</p>
+<h2 id="3-对代码精益求精的态度">3. 对代码精益求精的态度</h2>
+<pre><code class="language-java">// 20230113
+long delay = spu.getAddedTime().getTime() - new Date().getTime() &lt; 0 ? 0 :
+                spu.getAddedTime().getTime() - new Date().getTime();
+
+// Problems:
+// 1. the delay value may be negative
+// 2. depulicated code
+// 
+// should change to: 
+
+long delay = spu.getAddedTime().getTime() - new Date().getTime();
+if ( delay &lt; 0 ) { 
+    delay = 0 
+}
+</code></pre>
 <h2 id="a-参考">A. 参考</h2>
 <ol>
 <li>《程序员的自我修养.链接、装载与库》, 作者: 俞甲子/石凡/潘爱民, 出版年: 2009-4, ISBN: 9787121085116, 内容: 程序运行背后的机制和由来，重点介绍链接、装载与库, 网址: <a href="https://book.douban.com/subject/3652388/">https://book.douban.com/subject/3652388/</a> ;</li>
