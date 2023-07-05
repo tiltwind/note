@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/markhtml.css">
+    <title>Index</title>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="markdown-body main" id="app">
+<!---
+markmeta_author: titlwind
+markmeta_date: 2023-06-20
+markmeta_title: Prompt Engineering
+markmeta_categories: ai
+markmeta_tags: ai,prompt-engineering
+-->
+
+<h1 id="prompt-engineering">Prompt Engineering</h1>
+<h2 id="来自chatgpt的学习路径的建议">来自ChatGPT的学习路径的建议</h2>
+<blockquote>
+<p>如果你想学习和掌握 Prompt Engineering（提示工程）技巧，下面是一个学习路径的建议：</p>
+<ol>
+<li><p>理解GPT模型和Prompt Engineering的基本概念：</p>
+<ul>
+<li>学习GPT模型的原理和工作机制，包括生成式预训练和微调等。</li>
+<li>了解Prompt Engineering的定义和目标，即如何设计和优化模型输入的提示。</li>
+</ul>
+</li>
+<li><p>学习模型架构和配置：</p>
+<ul>
+<li>研究不同版本的GPT模型（如GPT-3、GPT-4等）的架构和配置，了解它们的特点和应用场景。</li>
+<li>学习模型参数和超参数的含义，以及它们对模型性能的影响。</li>
+</ul>
+</li>
+<li><p>掌握Prompt Engineering的核心技巧：</p>
+<ul>
+<li>学习如何设计有效的提示语，包括问题格式、上下文设置、特定关键词的使用等。</li>
+<li>理解如何调整提示语的语言风格和语气，使其与特定任务或用户需求相匹配。</li>
+</ul>
+</li>
+<li><p>学习Prompt Engineering的调试和优化方法：</p>
+<ul>
+<li>掌握评估模型输出的技巧，包括人工评估、指标评估和对话交互评估等。</li>
+<li>学习使用对抗训练（Adversarial Training）等方法来改进模型的生成质量和鲁棒性。</li>
+</ul>
+</li>
+<li><p>实践和迭代改进：</p>
+<ul>
+<li>在实际应用中使用Prompt Engineering技巧，并通过实践来验证和改进模型的表现。</li>
+<li>尝试不同的Prompt Engineering策略和技术，比较它们的效果和适用性。</li>
+</ul>
+</li>
+<li><p>学习和分享经验：</p>
+<ul>
+<li>参与Prompt Engineering社区和论坛，与其他研究者和从业者交流经验和最佳实践。</li>
+<li>阅读和研究相关的研究论文和技术博客，关注最新的Prompt Engineering研究动态。</li>
+</ul>
+</li>
+<li><p>持续学习和关注最新发展：</p>
+<ul>
+<li>随着研究和技术的不断进展，保持持续学习的态度，关注最新的Prompt Engineering方法和技术。</li>
+</ul>
+</li>
+</ol>
+<p>请记住，Prompt Engineering是一个不断发展和演进的领域，因此保持对最新研究和实践的关注是非常重要的。通过不断实践和改进，你将逐渐掌握并提升自己在Prompt Engineering方面的技能</p>
+</blockquote>
+<h2 id="2-prompt-guide">2. Prompt Guide</h2>
+<ul>
+<li><a href="https://github.com/brexhq/prompt-engineering">Brex&#39;s Prompt Engineering Guide</a>: Brex&#39;s introduction to language models and prompt engineering.</li>
+<li><a href="https://www.promptingguide.ai/">promptingguide.ai</a>: A prompt engineering guide that demonstrates many techniques.</li>
+<li><a href="https://github.com/openai/openai-cookbook/blob/main/techniques_to_improve_reliability.md">OpenAI Cookbook: Techniques to improve reliability</a>: A slightly dated (Sep 2022) review of techniques for prompting language models.</li>
+<li><a href="https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/">Lil&#39;Log Prompt Engineering</a>: An OpenAI researcher&#39;s review of the prompt engineering literature (as of March 2023).</li>
+<li><a href="https://learnprompting.org/">learnprompting.org</a>: An introductory course to prompt engineering.</li>
+</ul>
+<h2 id="3-prompt-video-course">3. Prompt Video Course</h2>
+<ul>
+<li><a href="https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/">Andrew Ng&#39;s DeepLearning.AI</a>: A short course on prompt engineering for developers.</li>
+<li><a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">Andrej Karpathy&#39;s Let&#39;s build GPT</a>: A detailed dive into the machine learning underlying GPT.</li>
+<li><a href="https://www.youtube.com/watch?v=dOxUroR57xs">Prompt Engineering by DAIR.AI</a>: A one-hour video on various prompt engineering techniques.</li>
+</ul>
+<h2 id="4-papers-on-advanced-prompting-to-improve-reasoning">4. Papers on advanced prompting to improve reasoning</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (2022)</a>: Using few-shot prompts to ask models to think step by step improves their reasoning. PaLM&#39;s score on math word problems (GSM8K) rises from 18% to 57%.</li>
+<li><a href="https://arxiv.org/abs/2203.11171">Self-Consistency Improves Chain of Thought Reasoning in Language Models (2022)</a>: Taking votes from multiple outputs improves accuracy even more. Voting across 40 outputs raises PaLM&#39;s score on math word problems further, from 57% to 74%, and <code>code-davinci-002</code>&#39;s from 60% to 78%.</li>
+<li><a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts: Deliberate Problem Solving with Large Language Models (2023)</a>: Searching over trees of step by step reasoning helps even more than voting over chains of thought. It lifts <code>GPT-4</code>&#39;s scores on creative writing and crosswords.</li>
+<li><a href="https://arxiv.org/abs/2205.11916">Language Models are Zero-Shot Reasoners (2022)</a>: Telling instruction-following models to think step by step improves their reasoning. It lifts <code>text-davinci-002</code>&#39;s score on math word problems (GSM8K) from 13% to 41%.</li>
+<li><a href="https://arxiv.org/abs/2211.01910">Large Language Models Are Human-Level Prompt Engineers (2023)</a>: Automated searching over possible prompts found a prompt that lifts scores on math word problems (GSM8K) to 43%, 2 percentage points above the human-written prompt in Language Models are Zero-Shot Reasoners.</li>
+<li><a href="https://arxiv.org/abs/2305.09993">Reprompting: Automated Chain-of-Thought Prompt Inference Through Gibbs Sampling (2023)</a>: Automated searching over possible chain-of-thought prompts improved ChatGPT&#39;s scores on a few benchmarks by 0–20 percentage points.</li>
+<li><a href="https://arxiv.org/abs/2208.14271">Faithful Reasoning Using Large Language Models (2022)</a>: Reasoning can be improved by a system that combines: chains of thought generated by alternative selection and inference prompts, a halter model that chooses when to halt selection-inference loops, a value function to search over multiple reasoning paths, and sentence labels that help avoid hallucination.</li>
+<li><a href="https://arxiv.org/abs/2203.14465">STaR: Bootstrapping Reasoning With Reasoning (2022)</a>: Chain of thought reasoning can be baked into models via fine-tuning. For tasks with an answer key, example chains of thoughts can be generated by language models.</li>
+<li><a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models (2023)</a>: For tasks with tools or an environment, chain of thought works better you prescriptively alternate between <strong>Re</strong>asoning steps (thinking about what to do) and <strong>Act</strong>ing (getting information from a tool or environment).</li>
+<li><a href="https://arxiv.org/abs/2303.11366">Reflexion: an autonomous agent with dynamic memory and self-reflection (2023)</a>: Retrying tasks with memory of prior failures improves subsequent performance.</li>
+<li><a href="https://arxiv.org/abs/2212.14024">Demonstrate-Search-Predict: Composing retrieval and language models for knowledge-intensive NLP (2023)</a>: Models augmented with knowledge via a &quot;retrieve-then-read&quot; can be improved with multi-hop chains of searches.</li>
+<li><a href="https://arxiv.org/abs/2305.14325">Improving Factuality and Reasoning in Language Models through Multiagent Debate (2023)</a>: Generating debates between a few ChatGPT agents over a few rounds improves scores on various benchmarks. Math word problem scores rise from 77% to 85%.</li>
+</ul>
+<h2 id="a-reference">A. Reference</h2>
+<ul>
+<li>Examples and guides for using the OpenAI API, <a href="https://github.com/openai/openai-cookbook">https://github.com/openai/openai-cookbook</a></li>
+</ul>
+
+</div>
+<script src="/markrender.min.js"></script>
+</body>
+</html>
