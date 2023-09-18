@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/markhtml.css">
+    <title>Index</title>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="markdown-body main" id="app">
+<!---
+markmeta_author: titlwind
+markmeta_date: 2023-09-16
+markmeta_title: AI提示词 —— 代码生成（redis task queue）
+markmeta_categories: ai
+markmeta_tags: ai,prompt-engineering
+-->
+<h1 id="ai提示词--代码生成（redis-task-queue）">AI提示词 —— 代码生成（redis task queue）</h1>
+<h2 id="代码生成询问ai">代码生成(询问AI)</h2>
+<p>我需要使用 redis zset 来模拟任务队列， zset 的key为任务 id，value 为任务待处理时间戳。请根据以下需求，生成使用 spring redistTemplate 操作 redis的 java 代码：</p>
+<ol>
+<li>生成添加任务 id 的方法，value 默认为当前时间戳加上60000毫秒；</li>
+<li>生成删除任务 id 的方法；</li>
+<li>生成获取任务 id 的方法。每次请求的时候获得 value 最小且 value 小于当前时间的第一个任务 id，并同时更新 value 值为当前时间戳加60000毫秒。以上获取任务 id 和更新动作需是原子操作，所以最好放在一个RedisScript中执行。 如果不存在这样的任务 id 则返回空。</li>
+</ol>
+<h2 id="代码生成ai回答">代码生成(AI回答)</h2>
+<p>你可以使用Spring的RedisTemplate来操作Redis，实现上述需求。以下是针对每个需求的Java代码：</p>
+<p>生成添加任务 id 的方法，value 默认为当前时间戳加上 60000 毫秒：</p>
+<pre><code class="language-java">import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import java.util.concurrent.TimeUnit;
+
+@Service
+public class TaskQueueService {
+    private final RedisTemplate&lt;String, String&gt; redisTemplate;
+    private static final String ZSET_KEY = &quot;task_queue&quot;;
+
+    public TaskQueueService(RedisTemplate&lt;String, String&gt; redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    public void addTask(String taskId) {
+        long currentTimeMillis = System.currentTimeMillis();
+        long delayedTimeMillis = currentTimeMillis + 60000; // 默认延迟 60000 毫秒
+        redisTemplate.opsForZSet().add(ZSET_KEY, taskId, delayedTimeMillis);
+    }
+}
+</code></pre>
+<p>生成删除任务 id 的方法：</p>
+<pre><code class="language-java">public void removeTask(String taskId) {
+    redisTemplate.opsForZSet().remove(ZSET_KEY, taskId);
+}
+</code></pre>
+<p>生成获取任务 id 的方法，每次请求获得 value 最小且 value 小于当前时间的第一个任务 id，并同时更新 value 值为当前时间戳加 60000 毫秒。这需要使用 Lua 脚本来实现原子操作：</p>
+<pre><code class="language-java">public String getAndRenewTask() {
+    String luaScript = &quot;local task = redis.call(&#39;ZRANGEBYSCORE&#39;, KEYS[1], &#39;-inf&#39;, ARGV[1], &#39;LIMIT&#39;, 0, 1)\n&quot; +
+            &quot;if #task &gt; 0 then\n&quot; +
+            &quot;    local taskId = task[1]\n&quot; +
+            &quot;    redis.call(&#39;ZREM&#39;, KEYS[1], taskId)\n&quot; +
+            &quot;    local newTime = ARGV[1] + &quot; + 60000 + &quot;\n&quot; +
+            &quot;    redis.call(&#39;ZADD&#39;, KEYS[1], newTime, taskId)\n&quot; +
+            &quot;    return taskId\n&quot; +
+            &quot;else\n&quot; +
+            &quot;    return nil\n&quot; +
+            &quot;end&quot;;
+    
+    List&lt;String&gt; keys = Collections.singletonList(ZSET_KEY);
+    long currentTimeMillis = System.currentTimeMillis();
+    Object taskId = redisTemplate.execute(new DefaultRedisScript&lt;&gt;(luaScript, String.class), keys, currentTimeMillis);
+    
+    return taskId != null ? taskId.toString() : null;
+}
+</code></pre>
+<p>上述代码中，我们使用 Lua 脚本进行了原子操作，首先获取并移除符合条件的任务 id，然后重新添加一个新的带有更新后的时间戳的任务 id。这确保了获取和更新操作的原子性。</p>
+
+</div>
+<script src="/markrender.min.js"></script>
+</body>
+</html>
