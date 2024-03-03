@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="/markhtml.css">
+    <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
 <body>
@@ -992,39 +992,42 @@ f2()  # f2
 <li>第2行注释表示.py文件本身使用标准UTF-8编码；</li>
 <li>第4行是一个字符串，表示模块的文档注释，任何模块代码的第一个字符串都被视为模块的文档注释；</li>
 <li>第6行使用 <code>__author__</code> 变量把作者写进去，这样当你公开源代码后别人就可以瞻仰你的大名；</li>
-<li>当在命令行运行模块文件时，Python解释器把一个特殊变量<code>__name__</code>置为<code>__main__</code>.
-```python
-#!/usr/bin/env python3<h1 id="---coding-utf-8---">-<em>- coding: utf-8 -</em>-</h1>
-</li>
+<li>当在命令行运行模块文件时，Python解释器把一个特殊变量<code>__name__</code>置为<code>__main__</code>.</li>
 </ul>
-<p>&#39; a test module &#39;</p>
-<p><strong>author</strong> = &#39;Michael Liao&#39;</p>
-<p>import sys</p>
-<p>def test():
+<pre><code class="language-python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+&#39; a test module &#39;
+
+__author__ = &#39;Michael Liao&#39;
+
+import sys
+
+def test():
     args = sys.argv
     if len(args)==1:
         print(&#39;Hello, world!&#39;)
     elif len(args)==2:
         print(&#39;Hello, %s!&#39; % args[1])
     else:
-        print(&#39;Too many arguments!&#39;)</p>
-<p>if <strong>name</strong>==&#39;<strong>main</strong>&#39;:
-    test()</p>
-<pre><code>
-模块包含可执行语句及函数定义。这些语句用于初始化模块，且仅在 import 语句 第一次 遇到模块名时执行
+        print(&#39;Too many arguments!&#39;)
 
-
-### 11.2. 模块搜索路径
-
-解释器搜索模块名称的路径先后顺序: 
-- `sys.builtin_module_names` 指定的路径, 如果未找到，它将在变量 `sys.path` 所给出的目录列表中搜索
-- `sys.path` 是从这些位置初始化的:
-    - 被命令行直接运行的脚本所在的目录
-    - `PYTHONPATH` 指定目录
-    - 依赖于安装的默认值
-
-```python
-import sys
+if __name__==&#39;__main__&#39;:
+    test()
+</code></pre>
+<p>模块包含可执行语句及函数定义。这些语句用于初始化模块，且仅在 import 语句 第一次 遇到模块名时执行</p>
+<h3 id="112-模块搜索路径">11.2. 模块搜索路径</h3>
+<p>解释器搜索模块名称的路径先后顺序: </p>
+<ul>
+<li><code>sys.builtin_module_names</code> 指定的路径, 如果未找到，它将在变量 <code>sys.path</code> 所给出的目录列表中搜索</li>
+<li><code>sys.path</code> 是从这些位置初始化的:<ul>
+<li>被命令行直接运行的脚本所在的目录</li>
+<li><code>PYTHONPATH</code> 指定目录</li>
+<li>依赖于安装的默认值</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-python">import sys
 
 # 增加搜索路径 
 sys.path.append(&#39;/ufs/guido/lib/python&#39;)
@@ -1043,33 +1046,33 @@ sys.path.append(&#39;/ufs/guido/lib/python&#39;)
 <p>为了让一个库能以隐藏源代码的形式分发（通过将所有源代码变为编译后的版本），编译后的模块必须放在源目录而非缓存目录中，并且源目录绝不能包含同名的未编译的源模块。</p>
 <h3 id="114-包">11.4. 包</h3>
 <ul>
-<li>必须要有 <code>__init__.py</code> 文件才能让 Python 将包含该文件的目录当作包来处理. <code>__init__.py</code> 可以只是一个空文件<pre><code>sound/                          Top-level package
-    __init__.py               Initialize the sound package
-    formats/                  Subpackage for file format conversions
-            __init__.py
-            wavread.py
-            wavwrite.py
-            aiffread.py
-            aiffwrite.py
-            auread.py
-            auwrite.py
-            ...
-    effects/                  Subpackage for sound effects
-            __init__.py
-            echo.py
-            surround.py
-            reverse.py
-            ...
-    filters/                  Subpackage for filters
-            __init__.py
-            echo.py
-            equalizer.py
-            vocoder.py
-            karaoke.py
-            ...
-</code></pre>
-</li>
+<li>必须要有 <code>__init__.py</code> 文件才能让 Python 将包含该文件的目录当作包来处理. <code>__init__.py</code> 可以只是一个空文件</li>
 </ul>
+<pre><code>sound/                          Top-level package
+      __init__.py               Initialize the sound package
+      formats/                  Subpackage for file format conversions
+              __init__.py
+              wavread.py
+              wavwrite.py
+              aiffread.py
+              aiffwrite.py
+              auread.py
+              auwrite.py
+              ...
+      effects/                  Subpackage for sound effects
+              __init__.py
+              echo.py
+              surround.py
+              reverse.py
+              ...
+      filters/                  Subpackage for filters
+              __init__.py
+              echo.py
+              equalizer.py
+              vocoder.py
+              karaoke.py
+              ...
+</code></pre>
 <p>引用说明:</p>
 <pre><code class="language-python"># 这将加载子模块 sound.effects.echo。 它必须通过其全名来引用。
 import sound.effects.echo
@@ -1661,14 +1664,7 @@ t2.join()
         if not n:
             return
         print(&#39;Consuming %s...&#39; % n)
-        r = &#39;200 OK&#39;
-
-def produce(c):
-    c.send(None)
-    n = 0
-    while n &lt; 5:
-        n = n + 1
-        r = c.send(n)  # 发送消</div>
-<script src="/markrender.min.js"></script>
+        r = &#39;200 O</div>
+<script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>
 </html>
