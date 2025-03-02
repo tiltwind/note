@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
+    <title>Index</title>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="markdown-body main" id="app">
+<!---
+markmeta_author: titlwind
+markmeta_date: 2025-02-19
+markmeta_title: LLM 格式及模块
+markmeta_categories: ai
+markmeta_tags: ai,llm
+-->
+
+
+<h1>LLM 格式及模块</h1>
+<blockquote>
+<p>注意: 部分内容来自AI生成，可能存在错误，如有发现，欢迎指正！</p>
+</blockquote>
+<h3><strong>一、标准模型文件格式</strong></h3>
+<p>大模型文件通常以以下格式存储：</p>
+<ol>
+<li><strong>PyTorch 格式</strong> (<code>.pth</code>, <code>.pt</code>)<ul>
+<li>包含完整的模型架构（<code>state_dict</code>保存参数）或仅参数</li>
+<li>支持动态计算图</li>
+</ul>
+</li>
+<li><strong>TensorFlow 格式</strong> (<code>.pb</code>, SavedModel)<ul>
+<li>包含计算图（GraphDef）、参数和元数据</li>
+</ul>
+</li>
+<li><strong>HDF5 格式</strong> (<code>.h5</code>, <code>.hdf5</code>)<ul>
+<li>支持分层存储参数和元数据（Keras 常用）</li>
+</ul>
+</li>
+<li><strong>ONNX 格式</strong> (<code>.onnx</code>)<ul>
+<li>跨框架的标准化中间表示，支持模型导出和部署</li>
+</ul>
+</li>
+<li><strong>GGUF/GGML 格式</strong> (<code>.gguf</code>, <code>.ggml</code>)<ul>
+<li>专为CPU推理优化的量化格式（Llama.cpp等使用）</li>
+</ul>
+</li>
+</ol>
+<h3><strong>二、模型内部核心模块</strong></h3>
+<p>以Transformer架构为例，典型模块包括：</p>
+<ol>
+<li><strong>输入嵌入层</strong> (Embedding Layer)<ul>
+<li>将输入Token映射为高维向量</li>
+</ul>
+</li>
+<li><strong>位置编码模块</strong> (Positional Encoding)<ul>
+<li>添加位置信息（如绝对/相对位置编码）</li>
+</ul>
+</li>
+<li><strong>编码器/解码器堆叠层</strong><ul>
+<li><strong>自注意力子层</strong> (Self-Attention)<ul>
+<li>计算Query、Key、Value，生成上下文相关表示</li>
+</ul>
+</li>
+<li><strong>前馈网络子层</strong> (Feed-Forward Network, FFN)<ul>
+<li>非线性变换（如两层全连接+激活函数）</li>
+</ul>
+</li>
+<li><strong>残差连接与层归一化</strong> (Residual + LayerNorm)<ul>
+<li>稳定训练，缓解梯度消失</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>交叉注意力层</strong> (Decoder特有)<ul>
+<li>在解码器中融合编码器输出信息</li>
+</ul>
+</li>
+<li><strong>输出层</strong> (Output Projection)<ul>
+<li>将隐状态映射到词表空间（Logits）</li>
+</ul>
+</li>
+</ol>
+<h3><strong>三、从输入到输出的处理流程</strong></h3>
+<p>以文本生成任务为例（如GPT类模型）：</p>
+<h4><strong>1. 输入处理阶段</strong></h4>
+<ul>
+<li><strong>分词</strong> (Tokenization)<ul>
+<li>将原始文本切分为Token序列（如BPE算法）</li>
+</ul>
+</li>
+<li><strong>嵌入层</strong> (Embedding Layer)<ul>
+<li>Token → 向量表示（<code>[batch_size, seq_len, dim]</code>）</li>
+</ul>
+</li>
+<li><strong>位置编码</strong> (Positional Encoding)<ul>
+<li>添加位置信息（如旋转位置编码RoPE）</li>
+</ul>
+</li>
+</ul>
+<h4><strong>2. 编码器处理阶段</strong>（仅Encoder或Encoder-Decoder架构）</h4>
+<ul>
+<li><strong>多头自注意力计算</strong><ul>
+<li>输入：嵌入向量 + 位置编码</li>
+<li>输出：上下文感知的隐状态</li>
+</ul>
+</li>
+<li><strong>前馈网络变换</strong><ul>
+<li>通过全连接层（可能含激活函数如GeLU）</li>
+</ul>
+</li>
+<li><strong>残差连接与归一化</strong><ul>
+<li><code>输出 = LayerNorm(输入 + 子层输出)</code></li>
+</ul>
+</li>
+</ul>
+<h4><strong>3. 解码器处理阶段</strong>（仅Decoder或Encoder-Decoder架构）</h4>
+<ul>
+<li><strong>掩码自注意力</strong><ul>
+<li>防止未来信息泄漏（使用因果掩码）</li>
+</ul>
+</li>
+<li><strong>交叉注意力</strong>（Encoder-Decoder架构）<ul>
+<li>融合编码器的输出信息</li>
+</ul>
+</li>
+<li><strong>前馈网络与归一化</strong></li>
+</ul>
+<h4><strong>4. 输出生成阶段</strong></h4>
+<ul>
+<li><strong>Logits计算</strong><ul>
+<li>通过输出层将隐状态映射到词表空间（<code>[batch_size, seq_len, vocab_size]</code>）</li>
+</ul>
+</li>
+<li><strong>概率分布生成</strong><ul>
+<li>Softmax归一化得到概率分布</li>
+</ul>
+</li>
+<li><strong>采样策略</strong><ul>
+<li>贪婪搜索（Greedy Search）、束搜索（Beam Search）或温度采样（Temperature Sampling）</li>
+</ul>
+</li>
+</ul>
+<h3><strong>四、附加模块与优化技术</strong></h3>
+<ol>
+<li><strong>缓存机制</strong> (KV Cache)<ul>
+<li>推理时缓存Key/Value矩阵，加速自回归生成</li>
+</ul>
+</li>
+<li><strong>量化压缩模块</strong><ul>
+<li>参数精度压缩（如FP16→INT8）</li>
+</ul>
+</li>
+<li><strong>分布式训练模块</strong><ul>
+<li>参数分片（如ZeRO优化）</li>
+</ul>
+</li>
+<li><strong>适配器模块</strong> (Adapter)<ul>
+<li>微调时插入小型可训练模块（如LoRA）</li>
+</ul>
+</li>
+</ol>
+<h3><strong>五、典型架构差异</strong></h3>
+<ul>
+<li><strong>纯Encoder模型</strong>（如BERT）：
+仅保留编码器，适用于理解任务（分类、NER）</li>
+<li><strong>纯Decoder模型</strong>（如GPT）：
+仅保留解码器，适用于生成任务</li>
+<li><strong>Encoder-Decoder模型</strong>（如T5）：
+两者结合，适用于翻译、摘要等任务</li>
+</ul>
+<h3><strong>六、训练与推理差异</strong></h3>
+<table>
+<thead>
+<tr>
+<th><strong>阶段</strong></th>
+<th><strong>关键操作</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>训练</strong></td>
+<td>反向传播、梯度更新、Dropout激活</td>
+</tr>
+<tr>
+<td><strong>推理</strong></td>
+<td>禁用Dropout、使用KV缓存、内存优化</td>
+</tr>
+</tbody></table>
+<p>通过这一流程，模型将原始输入逐步转化为高层次的语义表示，最终生成结构化输出。
+不同框架和模型的具体实现可能有所不同，但核心模块和流程遵循类似模式。</p>
+
+</div>
+<script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
+</body>
+</html>
