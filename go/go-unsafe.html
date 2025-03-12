@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-03-12
@@ -19,8 +19,8 @@ markmeta_categories: 编程语言
 markmeta_tags: golang
 -->
 
-<h1 id="go-unsafe">Go unsafe</h1>
-<h2 id="1-概览">1. 概览</h2>
+<h1>Go unsafe</h1>
+<h2>1. 概览</h2>
 <p>unsafe包包含三个方法,两个类型:</p>
 <pre><code class="language-go">func Alignof(x ArbitraryType) uintptr
 func Offsetof(x ArbitraryType) uintptr
@@ -35,22 +35,22 @@ type Pointer *ArbitraryType
 <li><code>Offsetof()</code>: 返回变量指定属性的偏移量，所以如果变量是一个struct类型，不能直接将这个struct类型的变量当作参数，只能将这个struct类型变量的属性当作参数。</li>
 <li><code>Sizeof()</code>:  返回变量在内存中占用的字节数，切记，如果是slice，则不会返回这个slice在内存中的实际占用长度。</li>
 </ul>
-<h2 id="2-uintptr和unsafepointer的区别">2. uintptr和unsafe.Pointer的区别</h2>
+<h2>2. uintptr和unsafe.Pointer的区别</h2>
 <ul>
 <li>unsafe.Pointer只是单纯的通用指针类型，用于转换不同类型指针，它不可以参与指针运算；</li>
 <li>而uintptr是用于指针运算的，GC 不把 uintptr 当指针，也就是说 uintptr 无法持有对象， uintptr 类型的目标会被回收；</li>
 <li>unsafe.Pointer 可以和 普通指针 进行相互转换；</li>
 <li>unsafe.Pointer 可以和 uintptr 进行相互转换。</li>
 </ul>
-<h2 id="3-内存对齐、偏移量、内存大小">3. 内存对齐、偏移量、内存大小</h2>
-<h3 id="31-为什么要内存对齐">3.1 为什么要内存对齐?</h3>
+<h2>3. 内存对齐、偏移量、内存大小</h2>
+<h3>3.1 为什么要内存对齐?</h3>
 <ul>
 <li>很多CPU只从对齐的地址开始加载数据，而有的CPU这样做，只是更快一点。</li>
 <li>外部总线从内存一次获取的数据往往不是1byte，而是4bytes或许8bytes,或者更多。</li>
 </ul>
 <p>这意味着CPU不是一次仅仅抓取一个byte，而是很4个或者8个byte。
 这样的话，假设你请求2到3bytes的内容，其实CPU一次抓取了4或8byte的内容。</p>
-<h3 id="32-对齐准则">3.2 对齐准则</h3>
+<h3>3.2 对齐准则</h3>
 <p>结构体字节对齐的细节和具体编译器实现相关，但一般而言满足三个准则：</p>
 <ol>
 <li>结构体变量的首地址能够被其最宽基本类型成员的大小所整除；</li>
@@ -64,7 +64,7 @@ type Pointer *ArbitraryType
 <li>第三条：结构体总大小是包括填充字节，最后一个成员满足上面两条以外，还必须满足第三条，否则就必须在最后填充几个字节以达到本条要求。</li>
 </ul>
 <p>内存地址详细的分析可以参考<sup>4</sup>.</p>
-<h3 id="33-golang-变量对齐字节数">3.3 golang 变量对齐字节数</h3>
+<h3>3.3 golang 变量对齐字节数</h3>
 <pre><code>Alignof string :  8
 Sizeof  string :  16
 Alignof bool :  1
@@ -90,16 +90,16 @@ Sizeof  float32 :  4
 Alignof float64 :  8
 Sizeof  float64 :  8
 </code></pre>
-<h3 id="34-范例">3.4 范例</h3>
+<h3>3.4 范例</h3>
 <pre><code class="language-go">type t1 struct {
-    b   bool
-    i16 int16
-    i32 int32
+	b   bool
+	i16 int16
+	i32 int32
 }
 type t2 struct {
-    b   bool
-    i32 int32
-    i16 int16
+	b   bool
+	i32 int32
+	i16 int16
 }
 
 x1 := t1{}
@@ -118,7 +118,7 @@ t.Logf(&quot;t2 Offsetof b: %d , i32: %d, i16: %d&quot;, unsafe.Offsetof(x2.b), 
 <li>对于t1, 其分配内存的首地址需要能够被t1的对齐值4整除；首先分配b从相对0的位置开始占1个字节； 分配i16时需要其首地址需要能够被2整除，刚分配b的时候只占一个字节，需要再填充一个字节，故i16分配从相对位置2的地方开始分配2个字节；分配i32的时候首地址需要能够被4整除，前面b和i16已经分配了4个字节刚好够整，所以i32就在相对位置4的地方开始分配； 总结b,i16,i32三个字段的offset分别为0，2，4。此时已分配8字节，刚好能被4整除，不用再其后填充字节。</li>
 <li>对于t2，b占一个字节；分配i32时为使得起始地址能被4整除前填充3个字节；分配i16其前面不用再填充字节；b、i32、i16三个字段的offset分别为0，4，8； 此时已分配10个字节，10不能被4整除，故在最后填充两个字节，使得t2占用12个字节。</li>
 </ul>
-<h2 id="4-pointer-操作">4. Pointer 操作</h2>
+<h2>4. Pointer 操作</h2>
 <p>uintptr是Go 语言的内置类型，是能存储指针的整型， uintptr 的底层类型是int，它和unsafe.Pointer可相互转换。</p>
 <p>提供四类操作:</p>
 <ul>
@@ -127,7 +127,7 @@ t.Logf(&quot;t2 Offsetof b: %d , i32: %d, i16: %d&quot;, unsafe.Offsetof(x2.b), 
 <li><code>uintptr</code> 转换为 <code>Pointer</code></li>
 <li><code>Pointer</code> 转换为 <code>uintptr</code></li>
 </ul>
-<h3 id="51-t1的指针-转换为-指向-t2-的pointer">5.1 <code>*T1</code>的指针 转换为 指向 <code>*T2</code> 的Pointer</h3>
+<h3>5.1 <code>*T1</code>的指针 转换为 指向 <code>*T2</code> 的Pointer</h3>
 <p>如果类型T2所占内存空间不超过类型T1, 且它们能适应相同的内存数据结构，则可以进行类型转换.</p>
 <pre><code class="language-go">func Float64bits(f float64) uint64 {
   return *(*uint64)(unsafe.Pointer(&amp;f))
@@ -172,14 +172,14 @@ t.Logf(&quot;x1 addr: %p, value: %v&quot;, &amp;x1, x1) // x1 addr: 0xc0000903d0
 
 t.Log(*x1.f2) // panic: runtime error: invalid memory address or nil pointer dereference 
 </code></pre>
-<h3 id="52-pointer-转换为-uintptr-不能转换回pointer">5.2 Pointer 转换为 uintptr (不能转换回Pointer)</h3>
+<h3>5.2 Pointer 转换为 uintptr (不能转换回Pointer)</h3>
 <p>转换Pointer为uintptr, 即获取其值指向的内存地址整形值。 通常使用uinptr只是为了打印显示。</p>
 <p>一般将uintptr转换回Pointer是非法的。</p>
 <p>uintptr是整形，不是引用。
 转换Pointer为uintptr创建了一个整形，其没有指针语义. 
 尽管uintptr包含某个对象的地址，但对象移动的时候垃圾回收器并不会更新uintptr的值，也不会让对象避免被回收。</p>
 <p>接下来这些方法模式才是合法的从uintptr到Pointer的转换。</p>
-<h3 id="53-pointer-转换为-uintptr-再转换回来算术操作">5.3 Pointer 转换为 uintptr 再转换回来(算术操作)</h3>
+<h3>5.3 Pointer 转换为 uintptr 再转换回来(算术操作)</h3>
 <blockquote>
 <p><code>算术操作</code>: 指操作只能在一个表达式里面</p>
 </blockquote>
@@ -219,7 +219,7 @@ p = unsafe.Pointer(u + offset)
 u := unsafe.Pointer(nil)
 p := unsafe.Pointer(uintptr(u) + offset)
 </code></pre>
-<h3 id="54-调用syscallsyscall时将pointer转换为uintptr">5.4 调用syscall.Syscall时将Pointer转换为uintptr</h3>
+<h3>5.4 调用syscall.Syscall时将Pointer转换为uintptr</h3>
 <p>syscall包下面的Syscall方法传递uintptr参数给操作系统，接下来可能根据调用情况将其中一些参数转换为指针。
 也就是系统调用隐式的将某些参数由uintptr转换回指针。</p>
 <p>如果指针必须转换为uintptr参数，转换必须在调用表达式中。</p>
@@ -234,7 +234,7 @@ syscall.Syscall(SYS_READ, uintptr(fd), u, uintptr(n))
 <blockquote>
 <p>上面翻译有点难懂，保留原文: The compiler handles a Pointer converted to a uintptr in the argument list of a call to a function implemented in assembly by arranging that the referenced allocated object, if any, is retained and not moved until the call completes, even though from the types alone it would appear that the object is no longer needed during the call.</p>
 </blockquote>
-<h3 id="55-reflectvaluepointer或者reflectvalueunsafeaddr-的结果-uintptr-转换为-pointer">5.5 reflect.Value.Pointer或者reflect.Value.UnsafeAddr 的结果 uintptr 转换为 Pointer.</h3>
+<h3>5.5 reflect.Value.Pointer或者reflect.Value.UnsafeAddr 的结果 uintptr 转换为 Pointer.</h3>
 <p>reflect包中的Value的<code>Pointer()</code>和<code>UnsafeAddr()</code>两个方法返回uintptr类型，而不是unsafe.Pointer类型， 
 这样可以避免调用者在引入unsafe包操作前将结果转变为一个任意类型。
 这意味着，方法结果是不稳定的，需要调用后立刻转变为Pointer类型。</p>
@@ -246,7 +246,7 @@ syscall.Syscall(SYS_READ, uintptr(fd), u, uintptr(n))
 u := reflect.ValueOf(new(int)).Pointer()
 p := (*int)(unsafe.Pointer(u))
 </code></pre>
-<h3 id="56-reflectsliceheader-或者-reflectstringheader-的数据字段-转换为-pointer（或从pointer转换回）">5.6 reflect.SliceHeader 或者 reflect.StringHeader 的数据字段 转换为 Pointer（或从Pointer转换回）.</h3>
+<h3>5.6 reflect.SliceHeader 或者 reflect.StringHeader 的数据字段 转换为 Pointer（或从Pointer转换回）.</h3>
 <p>上一种情况， reflect数据结构 <code>SliceHeader</code> 和 <code>StringHeader</code> 定义了字段一个uintptr类型的字段Data， 让调用者在引入unsafe操作之前将结果转换为任意类型。
 这意味着  <code>SliceHeader</code> 和 <code>StringHeader</code> 是唯一合法的方式（将uintptr赋值给一个变量），但只有指向的实际内容是slice或者string的时候。 </p>
 <pre><code class="language-go">var s string
@@ -307,7 +307,7 @@ t.Logf(&quot;a addr: %p, value: %s&quot;, &amp;a, a) // a addr: 0xc0000c6000, va
 t.Logf(&quot;b addr: %p, value: %s&quot;, &amp;b, b) // b addr: 0xc0000c6010, value: world
 // 以上a、b 地址不同，但值相同,实际数据指向也只有一份
 </code></pre>
-<h2 id="reference">Reference</h2>
+<h2>Reference</h2>
 <ol>
 <li>Matt Layher, unsafe.Pointer and system calls, <a href="https://blog.gopheracademy.com/advent-2017/unsafe-pointer-and-system-calls/">https://blog.gopheracademy.com/advent-2017/unsafe-pointer-and-system-calls/</a></li>
 <li>package unsafe, <a href="https://golang.org/pkg/unsafe/">https://golang.org/pkg/unsafe/</a></li>

@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-09-10
@@ -19,8 +19,8 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,linux
 -->
 
-<h1 id="go-linux">go linux</h1>
-<h2 id="接收父进程死掉的信号">接收父进程死掉的信号</h2>
+<h1>go linux</h1>
+<h2>接收父进程死掉的信号</h2>
 <pre><code>// Child can ask kernel to deliver SIGHUP (or other signal) when parent dies
 // by specifying option PR_SET_PDEATHSIG in prctl() syscall like this:
 //
@@ -30,16 +30,16 @@ markmeta_tags: golang,linux
 //
 //Edit: This is Linux-only
 func setParentDeathSignal(sig uintptr) error {
-    if err := unix.Prctl(unix.PR_SET_PDEATHSIG, sig, 0, 0, 0); err != nil {
-        return err
-    }
-    return nil
+	if err := unix.Prctl(unix.PR_SET_PDEATHSIG, sig, 0, 0, 0); err != nil {
+		return err
+	}
+	return nil
 }
 
 
 err = setParentDeathSignal(uintptr(syscall.SIGINT))
 if err != nil {
-    log.Fatalf(&quot;setParentDeathSignal error: %v&quot;, err)
+	log.Fatalf(&quot;setParentDeathSignal error: %v&quot;, err)
 }
 </code></pre>
 

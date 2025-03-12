@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_title: 贝叶斯推断及实例
 markmeta_date: 2018-09-21
@@ -19,9 +19,9 @@ markmeta_categories: 算法与数学
 markmeta_author: tiltwind
 -->
 
-<h1 id="1-贝叶斯定理（bayes-theorem）">1. 贝叶斯定理（Bayes&#39; Theorem）</h1>
+<h1>1. 贝叶斯定理（Bayes&#39; Theorem）</h1>
 <p>英国数学家托马斯·贝叶斯（Thomas Bayes）在1763年发表的一篇论文中，首先提出了这个定理。</p>
-<h2 id="11-条件概率公式formula-of-conditional-probability">1.1 条件概率公式(Formula of Conditional Probability)</h2>
+<h2>1.1 条件概率公式(Formula of Conditional Probability)</h2>
 <ul>
 <li><code>P(B)</code> : 指发生事件B的概率；</li>
 <li><code>P(A|B)</code> : 指在事件B发生的情况下，事件A发生的概率；</li>
@@ -42,7 +42,7 @@ markmeta_author: tiltwind
 <p><img src="images/bayes/bayes_conditional_formula.png" alt=""></p>
 <p><strong>设互斥事件 <code>A1,A2,...An</code> 是样本空间Ω (Omega)的一个划分，B为任一事件，则广义的条件概率公式为：</strong></p>
 <p><img src="images/bayes/bayes_conditional_formula_pub.png" alt=""></p>
-<h2 id="12-全概率公式formula-of-total-probability">1.2 全概率公式(Formula of Total Probability)</h2>
+<h2>1.2 全概率公式(Formula of Total Probability)</h2>
 <p>假定样本空间S，是两个互不交叉事件A与A&#39;的和。</p>
 <p>当事件B发的概率即为 <code>B和A及A&#39;相交</code> 的部分,即: <code>P(B) = P(BA) + P(BA&#39;)</code></p>
 <p>由上节推导可得: <code>P(BA) = P(B|A)P(A)</code></p>
@@ -56,7 +56,7 @@ markmeta_author: tiltwind
 <blockquote>
 <p>实例：某车间用甲、乙、丙三台机床进行生产，各台机床次品率分别为5%，4%，2%，它们各自的产品分别占总量的25%，35%，40%，将它们的产品混在一起，求任取一个产品是次品的概率。 解：<code>P(B) = 25%*5% + 4%*35% + 2%*40% = 0.0345</code></p>
 </blockquote>
-<h2 id="13-贝叶斯公式bayes-formula">1.3 贝叶斯公式(Bayes Formula)</h2>
+<h2>1.3 贝叶斯公式(Bayes Formula)</h2>
 <p>与全概率公式解决的问题相反，贝叶斯公式是建立在条件概率的基础上寻找事件发生的原因.</p>
 <p><strong>根据条件概率公式和全概率公式可以导出贝叶斯公式:</strong></p>
 <p><img src="images/bayes/bayes_formula.png" alt=""></p>
@@ -65,7 +65,7 @@ markmeta_author: tiltwind
 <blockquote>
 <p>实例：发报台分别以概率0.6和0.4发出信号“∪”和“—”。由于通信系统受到干扰，当发出信号“∪”时，收报台分别以概率0.8和0.2受到信号“∪”和“—”；又当发出信号“—”时，收报台分别以概率0.9和0.1收到信号“—”和“∪”。求当收报台收到信号“∪”时，发报台确系发出“∪”的概率。解：P(A1|B）= (0.6 * 0.8)/(0.6 * 0.8 + 0.4 * 0.1) = 0.923</p>
 </blockquote>
-<h1 id="2-贝叶斯推断（bayesian-inference）">2. 贝叶斯推断（Bayesian Inference）</h1>
+<h1>2. 贝叶斯推断（Bayesian Inference）</h1>
 <p>贝叶斯推断（Bayesian inference）是一种统计学方法，用来估计统计量的某种性质。贝叶斯推断与其他统计学推断方法截然不同。它建立在主观判断的基础上，也就是说，你可以不需要客观证据，先估计一个值，然后根据实际结果不断修正。</p>
 <p>对条件 概率公式 进行变形，可以得到如下形式：</p>
 <p><img src="images/bayes/bayes_inference_formula.png" alt=""></p>
@@ -79,8 +79,8 @@ markmeta_author: tiltwind
 <p><strong>这就是贝叶斯推断的含义。我们先预估一个&quot;先验概率&quot;，然后加入实验结果，看这个实验到底是增强还是削弱了&quot;先验概率&quot;，由此得到更接近事实的&quot;后验概率&quot;。</strong></p>
 <p>在这里，如果&quot;可能性函数&quot;P(B|A)/P(B)&gt;1，意味着&quot;先验概率&quot;被增强，事件A的发生的可能性变大；如果&quot;可能性函数&quot;=1，意味着B事件无助于判断事件A的可能性；如果&quot;可能性函数&quot;&lt;1，意味着&quot;先验概率&quot;被削弱，事件A的可能性变小。</p>
 <p>因为贝叶斯推断的主观性太强，曾经遭到许多统计学家的诟病。它需要大量的计算，因此历史上很长一段时间，无法得到广泛应用。只有计算机诞生以后，它才获得真正的重视。人们发现，许多统计量是无法事先进行客观判断的，而互联网时代出现的大型数据集，再加上高速运算能力，为验证这些统计量提供了方便，也为应用贝叶斯推断创造了条件，它的威力正在日益显现。</p>
-<h1 id="3-实例">3. 实例</h1>
-<h2 id="31-黑球白球问题">3.1 黑球白球问题</h2>
+<h1>3. 实例</h1>
+<h2>3.1 黑球白球问题</h2>
 <p><strong>问题描述：A壶和B壶外表一样，A壶里有9个白球1个黑球，B壶里有2个白球8个黑球，现从其中一个壶取出一个球是黑球，那这个壶是A壶或B壶的概率分别多少?</strong></p>
 <p>首先, 根据理由不充分原理，设定相同的先验概率: P(A) = P(B) = 0.5</p>
 <p>如果用X来表示摸出的球是黑色的，现在实际上要求后验概率 P(A|X) 和 P(B|X)的概率。
@@ -89,7 +89,7 @@ markmeta_author: tiltwind
 <p>根据已知壶里的球的数量可知， P(X|A) = 0.1 , P(X|B) = 0.8 .</p>
 <p>则当前这个壶是A壶的后验概率 P(A|X) = (0.5 * 0.1) / (0.1 * 0.5 + 0.8 * 0.5) ≈ 0.11</p>
 <p>同理可求得当前这个壶是B壶的后验概率 P(B|X) ≈ 0.89</p>
-<h2 id="32-升级的黑球白球问题">3.2 升级的黑球白球问题</h2>
+<h2>3.2 升级的黑球白球问题</h2>
 <p><strong>问题描述: 接着上一个问题，将摸出的黑球重新放回这个壶中，重新取出一个球任然是黑球。这时候这个壶是A壶或B壶的概率分别多少?</strong></p>
 <p><strong>贝叶斯推理符合 &quot;序贯理性&quot; 特性，即通过同时利用两个事件X1,X2求出的后验概率， 和将事件X1得出的后验概率作为事件X2的先验概率再求出后验概率，两者是完全一致的。</strong></p>
 <p>也就是说我们可以将上面计算的后验概率作为现在的先验概率: P(A) = 0.11, P(B) = 0.89</p>
@@ -97,7 +97,7 @@ markmeta_author: tiltwind
 <p>则当前这个壶是A壶的后验概率 P(A|X2) = (0.11 * 0.1) / (0.1 * 0.11 + 0.8 * 0.89) ≈ 0.02</p>
 <p>同理可求得当前这个壶是B壶的后验概率 P(B|X2) ≈ 0.98</p>
 <p><strong>可见再次摸出黑球让黑球更多的壶的概率提升了。获得更多信息可以让贝叶斯推理更精确一些！</strong></p>
-<h2 id="33-蒙蒂霍尔问题">3.3 蒙蒂霍尔问题</h2>
+<h2>3.3 蒙蒂霍尔问题</h2>
 <p><strong>问题描述：A,B,C三道帘子，其中一道帘子后面停着一辆轿车作为奖品。你选择其中一道，如果揭开后面有轿车，那么轿车就归你所有了。当你选了A后，主持人会从剩下两道帘子中，选择B帘打开，而B帘后面没有轿车。这时，主持人问你：现在只能从A和C中选择，你是否要改变主意？这时，你该不该改变最初的选择呢？</strong></p>
 <p>这个问题源于美国一个现场观众参加游戏的电视节目，节目主持人叫蒙蒂霍尔。这就是“蒙蒂霍尔问题”、“蒙蒂霍尔悖论”得名的由来。</p>
 <p>首先, 根据理由不充分原理，设定相同的先验概率: P(A) = P(B) = P(C) = 1/3</p>
@@ -117,7 +117,7 @@ markmeta_author: tiltwind
 <p>重新计算结果: P(A|X) = 1/2 , P(C|X) = 1/2 , 也就是说轿车在A帘和C帘的概率是一样的。</p>
 <p>但如果将条件改为：<strong>轿车在A帘就开C帘，轿车在B帘就开C帘，轿车在C帘就开B帘。</strong> , 则有: P(X|A) = 0 , P(X|B) = 0 , P(X|C) = 1 , 相应计算结果为P(A|X) = 0 , P(C|X) = 1 ，汽车百分百在C帘后。</p>
 <p><strong>可见，概率性推论存在“主观”因素，即对概率现象结构的想象，不同模型的构建方式会有不同的结论。</strong></p>
-<h1 id="4-更多阅读">4. 更多阅读</h1>
+<h1>4. 更多阅读</h1>
 <ul>
 <li><a href="http://www.ruanyifeng.com/blog/2011/08/bayesian_inference_part_one.html">贝叶斯推断及其互联网应用（一）：定理简介</a></li>
 <li><a href="http://www.ruanyifeng.com/blog/2011/08/bayesian_inference_part_two.html">贝叶斯推断及其互联网应用（二）：过滤垃圾邮件</a></li>

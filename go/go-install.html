@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-01-16
@@ -19,15 +19,21 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,installation
 -->
 
-<h1 id="go-installation">go installation</h1>
+<h1>go installation</h1>
+<p>check new versions: <a href="https://github.com/golang/go/tags">https://github.com/golang/go/tags</a></p>
 <p>Mac:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.22.0.darwin-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.22.0.darwin-amd64.tar.gz
+<pre><code class="language-bash"># intel
+curl -C - -O https://dl.google.com/go/go1.23.4.darwin-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.23.4.darwin-amd64.tar.gz
+
+# ARM
+curl -C - -O https://dl.google.com/go/go1.23.4.darwin-arm64.tar.gz
+sudo tar -C /usr/local -xzf go1.23.4.darwin-arm64.tar.gz
 </code></pre>
 <p>Linux:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.22.0.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz
-sudo tar -C /tmp/go/local -xzf go1.22.0.linux-amd64.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.23.4.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.23.4.linux-amd64.tar.gz
+sudo tar -C /tmp/go/local -xzf go1.23.4.linux-amd64.tar.gz
 </code></pre>
 <p>config env:</p>
 <pre><code class="language-bash">&gt; sudo vi /etc/profile
@@ -49,12 +55,12 @@ export GOPRIVATE=gitlab.homeking365.com
 # then install the latest
 </code></pre>
 <p>Install from source:</p>
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.22.0.src.tar.gz
-tar -C /usr/local -xzf go1.22.0.src.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.23.4.src.tar.gz
+tar -C /usr/local -xzf go1.23.4.src.tar.gz
 cd /usr/local/go/src
 time sudo ./make.bash
 </code></pre>
-<h2 id="go-tools">go tools</h2>
+<h2>go tools</h2>
 <pre><code class="language-bash"># golang tools
 # cd $GOPATH/src/github.com/golang/tools &amp;&amp; git pull -v &amp;&amp; go install ./...
 go install golang.org/x/tools/cmd/...@latest

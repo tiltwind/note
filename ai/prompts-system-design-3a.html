@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: titlwind
 markmeta_date: 2023-07-06
@@ -18,11 +18,11 @@ markmeta_title: AI提示词 —— 系统设计之经营竞赛系统
 markmeta_categories: ai
 markmeta_tags: ai,prompt-engineering
 -->
-<h1 id="ai提示词--系统设计之经营竞赛系统">AI提示词 —— 系统设计之经营竞赛系统</h1>
+<h1>AI提示词 —— 系统设计之经营竞赛系统</h1>
 <blockquote>
 <p>团队要做经营竞赛系统，时间紧，任务重，让 AI 助理帮我设计一下！</p>
 </blockquote>
-<h2 id="系统架构设计询问ai-1">系统架构设计(询问AI 1)</h2>
+<h2>系统架构设计(询问AI 1)</h2>
 <p>你现在是一个资深的系统架构师和产品经理，我会逐步提供给足够的产品信息给你，你的任务是根据我提供的信息生成系统模型设计。</p>
 <p>你的架构设计要符合简单、可扩展的要求。</p>
 <p>如果你识别到模型和模型之间有通用的概念，需要将其进行抽象为一个新的底层模型。</p>
@@ -45,7 +45,7 @@ markmeta_tags: ai,prompt-engineering
 <li>“冠军杯”赛事前3名给予指定奖金；</li>
 </ol>
 <p>生成的模型设计按照 mermaid 格式进行输出。</p>
-<h2 id="系统架构设计ai回答-1">系统架构设计(AI回答 1)</h2>
+<h2>系统架构设计(AI回答 1)</h2>
 <p>根据产品信息,我理解到以下几点需求:</p>
 <ol>
 <li>需要对公司内部的站点进行组织和管理</li>
@@ -160,7 +160,7 @@ class Match{
 </ul>
 <p>该模型通过继承和组合来抽象出共性概念,可以灵活地支持新增赛事类型。每种赛事类型都实现了evaluate()方法用于按需评分。</p>
 <p>请您检查该模型设计是否符合产品需求,如果有需要调整的地方请指出,我会进行优化。</p>
-<h2 id="系统架构设计询问ai-2">系统架构设计(询问AI 2)</h2>
+<h2>系统架构设计(询问AI 2)</h2>
 <p>请按照如下调整要求和补充产品信息重新生成系统模型设计。</p>
 <p>调整要求:</p>
 <ol>
@@ -177,7 +177,7 @@ class Match{
 <li>每个赛事档位指定了奖励规则，即多少倍的报名费的奖金；</li>
 <li>每个站点都可以查看自己的获奖记录及其奖金；</li>
 </ol>
-<h2 id="系统架构设计ai回答-2">系统架构设计(AI回答 2)</h2>
+<h2>系统架构设计(AI回答 2)</h2>
 <p>感谢您的反馈,我根据您的调整要求和补充产品信息,重新设计了系统模型:</p>
 <pre><code class="language-mermaid">classDiagram
 
@@ -317,7 +317,7 @@ class MonthlyScore {
 <li>去掉MonthlyLeaderboard,在MonthlyRound中增加排名逻辑</li>
 </ul>
 <p>请检查是否符合要求,如有需要调整请指出,我会继续优化模型。</p>
-<h2 id="系统架构设计询问ai-3">系统架构设计(询问AI 3)</h2>
+<h2>系统架构设计(询问AI 3)</h2>
 <p>请再按照如下调整要求和补充产品信息重新生成系统模型设计。</p>
 <p>调整要求:</p>
 <ol>
@@ -337,7 +337,7 @@ class MonthlyScore {
 <li>奖励是当月发放，但要求获得奖励的站点需要保持一定时间的指标情况，否则会产生扣除奖金的情况。</li>
 <li>负向的奖金也是记录在RaceAward(赛事奖励)模型中，只是奖金值为负值。</li>
 </ol>
-<h2 id="系统架构设计ai回答-3">系统架构设计(AI回答 3)</h2>
+<h2>系统架构设计(AI回答 3)</h2>
 <p>您提供了很好的优化建议,我根据您的要求做了调整:</p>
 <pre><code class="language-mermaid">classDiagram
 
@@ -473,7 +473,7 @@ class RaceScore {
 <li>调整评分记录为RaceScore</li>
 </ul>
 <p>请确认是否符合要求,我会继续对模型进行优化。非常感谢您的反馈!</p>
-<h2 id="系统架构设计询问ai-4">系统架构设计(询问AI 4)</h2>
+<h2>系统架构设计(询问AI 4)</h2>
 <p>请再按照如下调整要求重新生成系统模型设计。</p>
 <p>调整要求:</p>
 <ol>
@@ -485,7 +485,7 @@ class RaceScore {
 <li>去掉 score模型，它只是一个字段；</li>
 <li>保留 RaceRegistration(站点赛事注册)模型，它和 RegistrationOrder 是一对多关系;</li>
 </ol>
-<h2 id="系统架构设计ai回答-4">系统架构设计(AI回答 4)</h2>
+<h2>系统架构设计(AI回答 4)</h2>
 <p>您提供的调整建议非常合理,我已经根据您的要求对模型进行调整:</p>
 <pre><code class="language-mermaid">classDiagram
 

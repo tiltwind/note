@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: titlwind
 markmeta_date: 2023-07-06
@@ -18,11 +18,11 @@ markmeta_title: AI提示词 —— 系统设计之经营竞赛系统
 markmeta_categories: ai
 markmeta_tags: ai,prompt-engineering
 -->
-<h1 id="ai提示词--系统设计之经营竞赛系统-v2">AI提示词 —— 系统设计之经营竞赛系统 v2</h1>
+<h1>AI提示词 —— 系统设计之经营竞赛系统 v2</h1>
 <blockquote>
 <p>团队要做经营竞赛系统，时间紧，任务重，让 AI 助理帮我设计一下！</p>
 </blockquote>
-<h2 id="系统架构设计询问ai-1">系统架构设计(询问AI 1)</h2>
+<h2>系统架构设计(询问AI 1)</h2>
 <p>你现在是一个资深的系统架构师和产品经理，我会逐步提供给足够的产品信息给你，你需要按照我的要求生成系统模型设计，我会不断反馈你哪些需要做调整，你再不断输出优化后的设计。</p>
 <p>如果你识别到模型和模型之间有通用的概念，需要将其进行抽象为一个新的底层模型。</p>
 <p>产品信息如下：</p>
@@ -48,7 +48,7 @@ markmeta_tags: ai,prompt-engineering
 <li>每个站点都可以查看自己的获奖记录及其总的奖金；</li>
 </ol>
 <p>你的第一个任务是分析并列出所有存在的模型，按照 &quot;模型名称&quot;，&quot;模型描述&quot; 依次列出。</p>
-<h2 id="系统架构设计ai回答-1">系统架构设计(AI回答 1)</h2>
+<h2>系统架构设计(AI回答 1)</h2>
 <p>根据产品需求,我首先识别出以下模型:</p>
 <p>站点模型(Site)</p>
 <ul>
@@ -82,7 +82,7 @@ markmeta_tags: ai,prompt-engineering
 <ul>
 <li>站点的总体获奖信息汇总,包含获奖次数、累计奖金等</li>
 </ul>
-<h2 id="系统架构设计询问ai-2">系统架构设计(询问AI 2)</h2>
+<h2>系统架构设计(询问AI 2)</h2>
 <p>请按照如下反馈重新生成模型列表，按照 &quot;模型名称&quot;，&quot;模型描述&quot; 依次列出。</p>
 <p>反馈内容:</p>
 <ol>
@@ -93,7 +93,7 @@ markmeta_tags: ai,prompt-engineering
 <li>无需 排名(Ranking) 模型，在 参赛(Participation)模型中加入一个 rank 排名信息即可；</li>
 <li>获奖记录(Award Record)模型记录的是站长获奖信息汇总，应该改名为 获奖账号(AwardAccount)</li>
 </ol>
-<h2 id="系统架构设计ai回答-2">系统架构设计(AI回答 2)</h2>
+<h2>系统架构设计(AI回答 2)</h2>
 <p>好的,已按照要求调整模型列表:</p>
 <p>站点(Site)  </p>
 <ul>
@@ -136,7 +136,7 @@ markmeta_tags: ai,prompt-engineering
 <li>站点的总体获奖信息汇总,包含获奖次数、累计奖金等</li>
 </ul>
 <p>请检查模型列表是否符合要求,谢谢!</p>
-<h2 id="系统架构设计询问ai-3">系统架构设计(询问AI 3)</h2>
+<h2>系统架构设计(询问AI 3)</h2>
 <p>请保留以上模型信息，并参考如下反馈重新生成模型列表，按照 &quot;模型名称&quot;，&quot;模型描述&quot; 依次列出。</p>
 <p>反馈内容:</p>
 <ol>
@@ -144,7 +144,7 @@ markmeta_tags: ai,prompt-engineering
 <li>缺少 比赛指标(Metric)模型，在奖励规则设置的时候需要进行关联；</li>
 <li>比赛(Match) 改名为 淘汰赛对战(Knockout Match)模型；</li>
 </ol>
-<h2 id="系统架构设计ai回答-3">系统架构设计(AI回答 3)</h2>
+<h2>系统架构设计(AI回答 3)</h2>
 <p>您好,已根据反馈调整模型列表,更新后的模型如下:</p>
 <p>站点(Site)</p>
 <ul>
@@ -195,14 +195,14 @@ markmeta_tags: ai,prompt-engineering
 <li>站点的总体获奖信息汇总,包含获奖次数、累计奖金等</li>
 </ul>
 <p>请确认模型列表是否符合要求,感谢您的反馈。</p>
-<h2 id="系统架构设计询问ai-4">系统架构设计(询问AI 4)</h2>
+<h2>系统架构设计(询问AI 4)</h2>
 <p>请记录以上生成的模型信息，按照之前提供的产品信息，分析每一个模型所有可能的信息，按照 &quot;模型名称&quot;，&quot;模型字段列表&quot; 依次列出。</p>
 <p>比如: </p>
 <ul>
 <li>站点(Site): 站点ID、站点名称、站点logo、所属事业部</li>
 <li>比赛指标(Metric): 指标ID、指标名称、指标描述</li>
 </ul>
-<h2 id="系统架构设计ai回答-4">系统架构设计(AI回答 4)</h2>
+<h2>系统架构设计(AI回答 4)</h2>
 <p>好的,已记录模型信息,并按照要求分析每个模型的字段,结果如下:</p>
 <p>站点(Site):</p>
 <ul>
@@ -253,7 +253,7 @@ markmeta_tags: ai,prompt-engineering
 <li>账号ID、站点ID、累计获奖次数、累计奖金</li>
 </ul>
 <p>请确认模型字段是否正确,如果有需要调整的地方请指出,非常感谢!</p>
-<h2 id="系统架构设计询问ai-5">系统架构设计(询问AI 5)</h2>
+<h2>系统架构设计(询问AI 5)</h2>
 <p>请记录以上生成的模型以及模型字段信息，根据以下调整要求，按照 &quot;模型名称&quot;，&quot;模型字段列表&quot; 依次列出。</p>
 <p>调整要求: </p>
 <ul>
@@ -265,7 +265,7 @@ markmeta_tags: ai,prompt-engineering
 <li>挑战赛(Challenge Race) 需增加 “赛事ID” 字段 ；</li>
 <li>淘汰赛对战(Knockout Match) 需增加 “赛事ID”,&quot;冠军杯ID&quot;,&quot;月份&quot;,&quot;获胜方&quot; 字段；</li>
 </ul>
-<h2 id="系统架构设计ai回答-5">系统架构设计(AI回答 5)</h2>
+<h2>系统架构设计(AI回答 5)</h2>
 <p>好的,已记录先前模型信息,并按照要求调整模型字段,更新后的模型列表如下:</p>
 <p>站点(Site):  </p>
 <ul>
@@ -320,9 +320,9 @@ markmeta_tags: ai,prompt-engineering
 <li>账号ID、站点ID、累计获奖次数、累计奖金</li>
 </ul>
 <p>请确认调整后的模型是否满足要求,感谢!</p>
-<h2 id="系统架构设计询问ai-6">系统架构设计(询问AI 6)</h2>
+<h2>系统架构设计(询问AI 6)</h2>
 <p>请记住以上生成的模型以及模型字段信息，将字段名称转变为英文, 根据字段关联建立模型之间的关系, 按照 mermaid 格式进行输出。</p>
-<h2 id="系统架构设计ai回答-6">系统架构设计(AI回答 6)</h2>
+<h2>系统架构设计(AI回答 6)</h2>
 <p>好的,我已经记住之前生成的模型和字段信息,将字段转为英文,并根据字段关联建立了模型之间的关系,按照 mermaid 格式输出如下:</p>
 <pre><code class="language-mermaid">classDiagram
 Site &quot;1&quot; --&gt; &quot;N&quot; Participation
@@ -433,7 +433,7 @@ class AwardAccount {
 }
 </code></pre>
 <p>请确认关系建模是否正确,如有需要调整的地方请指出,非常感谢!</p>
-<h2 id="系统架构设计询问ai-7">系统架构设计(询问AI 7)</h2>
+<h2>系统架构设计(询问AI 7)</h2>
 <p>请记录以上生成的模型以及模型字段信息，根据以下调整要求，按照 &quot;模型名称&quot;，&quot;模型字段列表&quot; 依次列出。</p>
 <p>调整要求:</p>
 <ul>
@@ -442,7 +442,7 @@ class AwardAccount {
 <li>挑战赛(Challenge Race) 需增加 “赛事ID” 字段 ；</li>
 <li>淘汰赛对战(Knockout Match) 需增加 “赛事ID”,&quot;冠军杯ID&quot;,&quot;月份&quot;,&quot;获胜方&quot; 字段；</li>
 </ul>
-<h2 id="系统架构设计ai回答-7">系统架构设计(AI回答 7)</h2>
+<h2>系统架构设计(AI回答 7)</h2>
 <p>好的,我已经记住之前的模型信息,并按照要求调整了模型字段,更新后的模型列表如下:</p>
 <p>站点(Site):</p>
 <ul>
@@ -497,9 +497,9 @@ class AwardAccount {
 <li>accountId, siteId, totalWinTimes, totalBonusAmount</li>
 </ul>
 <p>请确认调整后的模型是否符合要求,非常感谢!</p>
-<h2 id="系统架构设计询问ai-8">系统架构设计(询问AI 8)</h2>
+<h2>系统架构设计(询问AI 8)</h2>
 <p>请记住以上生成的模型以及模型字段信息, 根据字段关联建立模型之间的关系, 按照 mermaid 格式进行输出。</p>
-<h2 id="系统架构设计ai回答-8">系统架构设计(AI回答 8)</h2>
+<h2>系统架构设计(AI回答 8)</h2>
 <p>好的,我已经记住调整后的模型信息,并根据字段关联建立了模型之间的关系,按照 mermaid 格式输出如下:</p>
 <pre><code class="language-mermaid">classDiagram
 Site &quot;1&quot; --&gt; &quot;N&quot; Participation
@@ -622,9 +622,9 @@ class AwardAccount {
 }
 </code></pre>
 <p>请确认关系建模是否正确,如有需要调整的地方请指出,非常感谢!</p>
-<h2 id="系统架构设计询问ai-9">系统架构设计(询问AI 9)</h2>
+<h2>系统架构设计(询问AI 9)</h2>
 <p>根据以上生成的模型以及模型字段信息, 生成 mysql 建表sql 语法。</p>
-<h2 id="系统架构设计ai回答-9">系统架构设计(AI回答 9)</h2>
+<h2>系统架构设计(AI回答 9)</h2>
 <p>好的,已根据之前生成的模型和字段信息,生成了mysql建表语句,代码如下:</p>
 <pre><code class="language-sql">--站点表
 CREATE TABLE `site` (
@@ -752,13 +752,13 @@ CREATE TABLE `award_account` (
 );
 </code></pre>
 <p>请检查sql语句是否正确,如有需要调整的地方请指出,非常感谢!</p>
-<h2 id="系统架构设计询问ai-10">系统架构设计(询问AI 10)</h2>
+<h2>系统架构设计(询问AI 10)</h2>
 <p>根据以上生成的模型以及模型字段信息, 生成 java 模型对象, 模型对象满足如下要求:</p>
 <ul>
 <li>使用 mybatis 注解, 指定 table 名称, table名称使用英文字母小写和下划线组合；</li>
 <li>使用 lombok 注解，尽量减少代码量。</li>
 </ul>
-<h2 id="系统架构设计ai回答-10">系统架构设计(AI回答 10)</h2>
+<h2>系统架构设计(AI回答 10)</h2>
 <p>好的,已根据要求对之前的Java模型对象进行调整:</p>
 <pre><code class="language-java">@Data
 @TableName(&quot;site&quot;)  
@@ -972,7 +972,7 @@ public class AwardAccount {
 }
 </code></pre>
 <p>请检查调整后的Java模型类是否符合要求,如有需要修改的地方请指出,非常感谢!</p>
-<h2 id="系统架构设计询问ai-11">系统架构设计(询问AI 11)</h2>
+<h2>系统架构设计(询问AI 11)</h2>
 <p>java 服务代码实现 包含 三层：</p>
 <ol>
 <li>Mapper 层, 继承 mybatisplus 库的 BaseMapper 类, 实现对象 ORM 映射, 如 RaceMapper;</li>
@@ -980,7 +980,7 @@ public class AwardAccount {
 <li>Service 层, 调用 DAO 层实现 CRUD 操作, 如 RaceService;</li>
 </ol>
 <p>请用 java 生成 Race 模型的服务实现代码。</p>
-<h2 id="系统架构设计ai回答-11">系统架构设计(AI回答 11)</h2>
+<h2>系统架构设计(AI回答 11)</h2>
 <p>好的,已根据要求使用Java生成了Race模型的三层服务实现代码:</p>
 <pre><code class="language-java">// Mapper层 
 public interface RaceMapper extends BaseMapper&lt;Race&gt; {

@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: titlwind
 markmeta_date: 2023-09-16
@@ -18,15 +18,15 @@ markmeta_title: AI提示词 —— 代码生成（redis task queue）
 markmeta_categories: ai
 markmeta_tags: ai,prompt-engineering
 -->
-<h1 id="ai提示词--代码生成（redis-task-queue）">AI提示词 —— 代码生成（redis task queue）</h1>
-<h2 id="代码生成询问ai">代码生成(询问AI)</h2>
+<h1>AI提示词 —— 代码生成（redis task queue）</h1>
+<h2>代码生成(询问AI)</h2>
 <p>我需要使用 redis zset 来模拟任务队列， zset 的key为任务 id，value 为任务待处理时间戳。请根据以下需求，生成使用 spring redistTemplate 操作 redis的 java 代码：</p>
 <ol>
 <li>生成添加任务 id 的方法，value 默认为当前时间戳加上60000毫秒；</li>
 <li>生成删除任务 id 的方法；</li>
 <li>生成获取任务 id 的方法。每次请求的时候获得 value 最小且 value 小于当前时间的第一个任务 id，并同时更新 value 值为当前时间戳加60000毫秒。以上获取任务 id 和更新动作需是原子操作，所以最好放在一个RedisScript中执行。 如果不存在这样的任务 id 则返回空。</li>
 </ol>
-<h2 id="代码生成ai回答">代码生成(AI回答)</h2>
+<h2>代码生成(AI回答)</h2>
 <p>你可以使用Spring的RedisTemplate来操作Redis，实现上述需求。以下是针对每个需求的Java代码：</p>
 <p>生成添加任务 id 的方法，value 默认为当前时间戳加上 60000 毫秒：</p>
 <pre><code class="language-java">import org.springframework.data.redis.core.RedisTemplate;

@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2021-09-07
@@ -19,7 +19,7 @@ markmeta_categories: MQ
 markmeta_tags: rocketmq,mq
 -->
 
-<h1 id="rocketmq">rocketmq</h1>
+<h1>rocketmq</h1>
 <p><img src="images/rmq-basic-arc.png" alt=""></p>
 <ul>
 <li><code>Name Servers</code>: service discovery and routing. Each Name Server records full routing information.</li>
@@ -27,13 +27,13 @@ markmeta_tags: rocketmq,mq
 <li><code>Producers</code>: send messages to the Broker cluster through multiple load balancing modes.</li>
 <li><code>Consumers</code>: distributed cluster consumption and message broadcasting.</li>
 </ul>
-<h2 id="1-nameserver">1. NameServer</h2>
+<h2>1. NameServer</h2>
 <p>Two features:</p>
 <ul>
 <li><code>Broker Management</code>: accepts the register from Broker cluster and provides heartbeat mechanism to check whether a broker is alive.</li>
 <li><code>Routing Management</code>: each NameServer will hold whole routing info about the broker cluster and the queue info for clients query.</li>
 </ul>
-<h2 id="2-broker-server">2. Broker Server</h2>
+<h2>2. Broker Server</h2>
 <p>Broker server is responsible for message store and delivery, message query, HA guarantee, and so on.</p>
 <p>As shown in image below, Broker server has several important sub modules:</p>
 <p><img src="images/rmq-basic-component.png" alt=""></p>
@@ -44,7 +44,7 @@ markmeta_tags: rocketmq,mq
 <li><code>HA Service</code>: provides data sync feature between master broker and slave broker.</li>
 <li><code>Index Service</code>: builds index for messages by specified key and provides quick message query.</li>
 </ul>
-<h3 id="21-broker-role">2.1 Broker Role</h3>
+<h3>2.1 Broker Role</h3>
 <ul>
 <li>ASYNC_MASTER</li>
 <li>SYNC_MASTER</li>
@@ -56,21 +56,21 @@ markmeta_tags: rocketmq,mq
 <li><code>Allow missing but always available</code>: ASYNC_MASTER with SLAVE.</li>
 <li><code>Otherwise</code>: ASYNC_MASTER without SLAVE.</li>
 </ul>
-<h2 id="3-storage">3. Storage</h2>
+<h2>3. Storage</h2>
 <p><img src="images/rocketmq_design_1.png" alt=""></p>
-<h3 id="31-commitlog">3.1 CommitLog</h3>
+<h3>3.1 CommitLog</h3>
 <ul>
 <li>default 1G a file, the length of file name is 20, the format is <code>&lt;0 prefix&gt; + &lt;offset&gt;</code>. </li>
 <li>the first file name is  <code>00000000000000000000</code>, offset is 0，file size is 1G=1073741824, the second file name is <code>00000000001073741824</code>，offset is <code>1073741824</code>. </li>
 <li>One broker one commit log.</li>
 </ul>
-<h3 id="32-consumequeue">3.2 ConsumeQueue</h3>
+<h3>3.2 ConsumeQueue</h3>
 <ul>
 <li>logical consume queue, save at <code>$HOME/store/consumequeue/{topic}/{queueId}/{fileName}</code></li>
 <li>every message in consume queue is fixed format, <code>&lt;8 bytes commit log offset&gt; + &lt;4 bytes message length&gt; + &lt;8 bytes tag hash code&gt;</code></li>
 <li>total 30w messages for one file, so the file size is fixed 5.72M.</li>
 </ul>
-<h3 id="33-index-file">3.3 Index File</h3>
+<h3>3.3 Index File</h3>
 <ul>
 <li>hash format index file</li>
 <li>store at <code>$HOME \store\index${fileName}</code></li>
@@ -100,17 +100,17 @@ index_commit_offset = Long8BytesAt(index_offset + 4)
 index_timestamp = Int4BytesAt(index_offset + 4 + 8) * 1000 + header_timestamp
 index_next_sequence = Int4BytesAt(index_offset + 4 + 8 + 4)
 </code></pre>
-<h3 id="34-writeread-data">3.4 write/read data</h3>
+<h3>3.4 write/read data</h3>
 <p>Uses <code>PageCache</code> to flush data to disk to enhence write performance.
 <img src="images/rocketmq_design_2.png" alt=""></p>
 <p>Uses <code>MappedByteBuffer</code>(mmap) to enhence read performance.</p>
-<h2 id="4-message">4. Message</h2>
-<h3 id="41-topic">4.1 Topic</h3>
+<h2>4. Message</h2>
+<h3>4.1 Topic</h3>
 <p>Topic, internally, is <code>logically partitioned</code> into one or more sub-topics. We call these sub-topics <code>message queues</code>. 
 This concept plays a major role in implementing valuable features, including fail-over, maximum concurrency, etc.</p>
-<h3 id="42-tag">4.2 Tag</h3>
+<h3>4.2 Tag</h3>
 <p>Consume tag filter is processed on broker side, only filter by tag hash code. So consumer SHOULD check whether the tag is matched for received messages.</p>
-<h3 id="43-message-format">4.3 Message Format</h3>
+<h3>4.3 Message Format</h3>
 <p>Fields in a message:</p>
 <table>
 <thead>
@@ -221,9 +221,9 @@ This concept plays a major role in implementing valuable features, including fai
 <td>properties</td>
 </tr>
 </tbody></table>
-<h3 id="44-message-id">4.4 Message Id</h3>
+<h3>4.4 Message Id</h3>
 <p>16 bytes: <code>&lt;broker ip&gt; + &lt;broker port&gt; + offset</code></p>
-<h3 id="45-transaction-message">4.5 transaction message</h3>
+<h3>4.5 transaction message</h3>
 <p>Transaction message is based on 2PC and compensation check.</p>
 <p><img src="images/rocketmq_design_10.png" alt=""></p>
 <p>Two inner topics:</p>
@@ -241,7 +241,7 @@ This concept plays a major role in implementing valuable features, including fai
 </code></pre>
 <p>If not receive op message, try to check the state of local transaction. Retry maximum 15 times, otherwise rollback message.</p>
 <p><img src="images/rocketmq_design_12.png" alt=""></p>
-<h3 id="46-delay-message">4.6 delay message</h3>
+<h3>4.6 delay message</h3>
 <p>RocketMQ an inner topic <code>SCHEDULE_TOPIC_XXXX</code> and 18 queues for different delay time level.
 1st level queue delays 1s, 18th level queue delays 2h.</p>
 <pre><code>messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
@@ -266,7 +266,7 @@ producer.send(msg);
 <li>send message to original Topic&amp;Queue.</li>
 <li>consumers consume from original Topic.</li>
 </ol>
-<h3 id="47-reconsume-message">4.7 reconsume message</h3>
+<h3>4.7 reconsume message</h3>
 <p>RocketMQ allows reconsuming a message if consuming failed and returning status <code>ConsumeConcurrentlyStatus.RECONSUME_LATER</code>, 
 then the message will be send to delay message topic as a delay message.</p>
 <p>The delay time level is default 3 (means delay 10s), and will be increased 1 if requesting to reconsume again.
@@ -283,9 +283,9 @@ So the max consume retry time is 16.</p>
    }
 });
 </code></pre>
-<h2 id="5-communication">5. communication</h2>
+<h2>5. communication</h2>
 <p>communication between clients, brokers, nameservers.</p>
-<h3 id="51-communication-message">5.1 communication message</h3>
+<h3>5.1 communication message</h3>
 <p><img src="images/rocketmq_design_4.png" alt=""></p>
 <p>Format:
 <code>&lt;message length&gt;(4 bytes) + &lt;Serialization type&gt;(1 byte) + &lt;Header length&gt;(3 bytes) + &lt;Data Header&gt; + &lt;Message Body&gt;</code></p>
@@ -341,19 +341,19 @@ So the max consume retry time is 16.</p>
 <td>custom info</td>
 </tr>
 </tbody></table>
-<h3 id="52-communication-method">5.2 communication method</h3>
+<h3>5.2 communication method</h3>
 <ul>
 <li>sync</li>
 <li>async</li>
 <li>oneway: send and not care response, eg heartbeat.</li>
 </ul>
-<h3 id="53-balance">5.3 balance</h3>
+<h3>5.3 balance</h3>
 <p>Balance is done on client side both for provider and consumer.</p>
 <ul>
 <li><code>provider send balance</code>: chose a message queue, support fault tolerance.</li>
 <li><code>consumer balance</code>: In fact, push is based on pull, and pull again immediately after pulling a batch of messages.</li>
 </ul>
-<h2 id="6-cluster">6. Cluster</h2>
+<h2>6. Cluster</h2>
 <table>
 <thead>
 <tr>
@@ -382,7 +382,7 @@ So the max consume retry time is 16.</p>
 <td>No message lose</td>
 </tr>
 </tbody></table>
-<h3 id="61-broker-configuration">6.1 broker configuration</h3>
+<h3>6.1 broker configuration</h3>
 <pre><code class="language-bash"># cluster name
 brokerClusterName=rocketmq-cluster
 
@@ -446,7 +446,7 @@ mapedFileSizeCommitLog=1073741824
 # number of messages in one ConsumeQueue file, default 30W
 mapedFileSizeConsumeQueue=300000
 </code></pre>
-<h3 id="62-replication">6.2 replication</h3>
+<h3>6.2 replication</h3>
 <pre><code> _________                                  __________
  |        | &lt;---- report slave offset ----- |        |
  | master |                                 |  slave |
@@ -485,10 +485,10 @@ return flushResultFuture.thenCombine(replicaResultFuture, (flushStatus, replicaS
     return putMessageResult;
 });
 </code></pre>
-<h3 id="63-dledger-cluster">6.3 Dledger cluster</h3>
+<h3>6.3 Dledger cluster</h3>
 <p>dledger is a raft-based java library for building high-available, high-durable, strong-consistent commitlog, which could act as the persistent layer for distributed storage system, i.e. messaging, streaming, kv, db, etc.</p>
 <p>rocketmq support to change storage to <a href="https://github.com/apache/rocketmq/tree/store_with_dledger">dledger</a>, to provide consistence between master and slaves.</p>
-<h2 id="a-reference">A. Reference</h2>
+<h2>A. Reference</h2>
 <ul>
 <li>rocketmq features, <a href="https://github.com/apache/rocketmq/blob/master/docs/cn/features.md">https://github.com/apache/rocketmq/blob/master/docs/cn/features.md</a></li>
 <li>rocketmq concept, <a href="https://github.com/apache/rocketmq/blob/master/docs/cn/concept.md">https://github.com/apache/rocketmq/blob/master/docs/cn/concept.md</a></li>
@@ -498,7 +498,7 @@ return flushResultFuture.thenCombine(replicaResultFuture, (flushStatus, replicaS
 <li>RocketMQ消息的主从复制机制, <a href="https://www.jianshu.com/p/73aea81c180d">https://www.jianshu.com/p/73aea81c180d</a></li>
 <li>raft-base commitlog store, <a href="https://github.com/openmessaging/dledger">https://github.com/openmessaging/dledger</a></li>
 </ul>
-<h2 id="history">History</h2>
+<h2>History</h2>
 <ul>
 <li>2021-12-22, add chapter <code>delay message</code>, <code>reconsume message</code></li>
 <li>2021-09-25, add chapter <code>cluster</code></li>

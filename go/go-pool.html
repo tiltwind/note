@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_title: golang pool
 markmeta_author: 望哥
@@ -19,8 +19,8 @@ markmeta_tags: golang,pool
 markmeta_categories: lang
 -->
 
-<h1 id="golang-pool">golang pool</h1>
-<h2 id="1-syncpool">1. sync.Pool</h2>
+<h1>golang pool</h1>
+<h2>1. sync.Pool</h2>
 <p>golang sdk已经提供了性能优良的pool工具 <code>sync.Pool</code>, 在实践过程需要使用pool的尽量使用<code>sync.Pool</code>即可。</p>
 <p><code>sync.Pool</code>关键实现：</p>
 <ul>

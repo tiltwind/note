@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: 望哥
 markmeta_date: 2018-08-01
@@ -19,7 +19,7 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,GC
 -->
 
-<h1 id="go-gc-算法">Go GC 算法</h1>
+<h1>Go GC 算法</h1>
 <p>Go GC算法基本特征：</p>
 <ul>
 <li>非分代</li>
@@ -50,13 +50,13 @@ markmeta_tags: golang,GC
 </ul>
 </li>
 </ul>
-<h1 id="go各版本gc算法及stw耗时-：">Go各版本GC算法及STW耗时 ：</h1>
-<h2 id="go-10">Go 1.0</h2>
+<h1>Go各版本GC算法及STW耗时 ：</h1>
+<h2>Go 1.0</h2>
 <p>GC算法:</p>
 <ul>
 <li>same as Go 1.1, but instead of being mostly precise the garbage collector is conservative. The conservative GC is able to ignore objects such as []byte.  ：同1.1版本，但不是大多数精确回收，而是采用保守的方式，会忽略一些对象(如[]byte对象)</li>
 </ul>
-<h2 id="go-11">Go 1.1</h2>
+<h2>Go 1.1</h2>
 <p>GC算法:</p>
 <ul>
 <li>mark-and-sweep (parallel implementation) ：标记回收算法(并行实现)</li>
@@ -69,7 +69,7 @@ markmeta_tags: golang,GC
 <li>supports finalizers on objects  ：支持对象析构器</li>
 <li>there is no support for weak references  ：不支持弱引用</li>
 </ul>
-<h2 id="go-13">Go 1.3</h2>
+<h2>Go 1.3</h2>
 <p>GC算法:</p>
 <ul>
 <li>Mark (STW)  ：Mark阶段STW</li>
@@ -77,7 +77,7 @@ markmeta_tags: golang,GC
 <li>fully precise：完全精确回收</li>
 <li>updates on top of Go 1.1：基于1.1版本升级</li>
 </ul>
-<h2 id="go-14">Go 1.4</h2>
+<h2>Go 1.4</h2>
 <p>GC STW耗时: 300ms</p>
 <p>GC算法:</p>
 <ul>
@@ -91,26 +91,26 @@ markmeta_tags: golang,GC
 <li>incurs a small cost if the program is moving pointers around ：程序如果正在移动指针会有额外一点消耗</li>
 <li>lower latency, but most likely also lower throughput, than Go 1.3 GC ：比1.3更少延迟，一般也会更少吞吐量</li>
 </ul>
-<h2 id="go-15">Go 1.5</h2>
+<h2>Go 1.5</h2>
 <p>GC STW耗时: 40ms</p>
 <p>GC算法:</p>
 <ul>
 <li>三色标记法</li>
 </ul>
-<h2 id="go-16">Go 1.6</h2>
+<h2>Go 1.6</h2>
 <p>GC STW耗时: 3ms</p>
 <p>GC算法:</p>
 <ul>
 <li>三色标记法</li>
 </ul>
-<h2 id="go-17">Go 1.7</h2>
+<h2>Go 1.7</h2>
 <p>GC STW耗时: 1.5 ms</p>
 <p>GC算法:</p>
 <ul>
 <li>三色标记法混合write barrier</li>
 <li>write barrier 使用的经典的 Dijkstra-style insertion write barrier [Dijkstra ‘78]， STW 的主要耗时就在 stack re-scan 的过程;</li>
 </ul>
-<h2 id="go-18">Go 1.8</h2>
+<h2>Go 1.8</h2>
 <p>GC STW耗时: 50µs</p>
 <p>GC算法:</p>
 <ul>
@@ -118,9 +118,9 @@ markmeta_tags: golang,GC
 <li>采用一种混合的 write barrier 方式 （Yuasa-style deletion write barrier [Yuasa ‘90] 和 Dijkstra-style insertion write barrier [Dijkstra ‘78]）来避免 re-scan。参考 <a href="https://github.com/golang/proposal/blob/master/design/17503-eliminate-rescan.md">17503-eliminate-rescan</a>。</li>
 <li>stack re-scanning concurrent, 参考<a href="https://github.com/golang/proposal/blob/master/design/17505-concurrent-rescan.md">17505-concurrent-rescan</a></li>
 </ul>
-<h2 id="go-19、110">Go 1.9、1.10</h2>
+<h2>Go 1.9、1.10</h2>
 <p>基于以前版本没有太大变化。</p>
-<h1 id="参考">参考:</h1>
+<h1>参考:</h1>
 <ul>
 <li><a href="https://talks.golang.org/2015/go-gc.pdf">GO GC PDF</a></li>
 <li><a href="https://stackoverflow.com/questions/7823725/what-kind-of-garbage-collection-does-go-use">What kind of Garbage Collection does Go use?</a></li>
@@ -130,7 +130,7 @@ markmeta_tags: golang,GC
 <li><a href="https://segmentfault.com/a/1190000007926782">译文-现代垃圾回收</a></li>
 <li><a href="http://holys.im/2016/07/01/monitor-golang-gc/">如何监控 golang 程序的垃圾回收</a></li>
 </ul>
-<h1 id="history">History</h1>
+<h1>History</h1>
 <ol>
 <li>2018-08-01, wongoo, created</li>
 </ol>

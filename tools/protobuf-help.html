@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: tiltwind
 markmeta_date: 2020-01-23
@@ -19,8 +19,8 @@ markmeta_categories: 工具
 markmeta_tags: protobuf,protoc
 -->
 
-<h1 id="protocol-buffer-help">Protocol Buffer Help</h1>
-<h2 id="install">install</h2>
+<h1>Protocol Buffer Help</h1>
+<h2>install</h2>
 <p>Mac:</p>
 <pre><code class="language-bash">curl -L -C - -O https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-osx-x86_64.zip
 sudo tar -C /usr/local -xzf protoc-21.12-osx-x86_64.zip
@@ -32,8 +32,8 @@ cargo install protobuf-codegen
 <pre><code class="language-bash">curl -L -C - -O https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-linux-x86_64.zip
 sudo tar -C /usr/local -xzf protoc-21.12-linux-x86_64.zip
 </code></pre>
-<h2 id="troubleshooting">Troubleshooting</h2>
-<h3 id="rust-cargo-ssh-error">rust cargo ssh error</h3>
+<h2>Troubleshooting</h2>
+<h3>rust cargo ssh error</h3>
 <pre><code class="language-bash">cargo install protobuf-codegen
 #     Updating crates.io index
 # error: failed to fetch `https://github.com/rust-lang/crates.io-index`

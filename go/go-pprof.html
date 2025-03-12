@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_title: golang性能分析工具pprof
 markmeta_author: wongoo
@@ -19,8 +19,8 @@ markmeta_tags: golang,pprof,performance
 markmeta_categories: 编程语言
 -->
 
-<h1 id="golang性能分析工具pprof">golang性能分析工具pprof</h1>
-<h2 id="1-pprof-介绍">1. pprof 介绍</h2>
+<h1>golang性能分析工具pprof</h1>
+<h2>1. pprof 介绍</h2>
 <p>profiling一般翻译为画像，在计算机性能调试领域里就是对程序应用的画像，主要指应用使用 CPU 和内存等情况。</p>
 <p>golang自带pprof(program profile)工具可以收集并分析程序画像。</p>
 <p>pprof读取一组<a href="https://github.com/google/pprof/blob/master/proto/profile.proto">profile.proto</a>(protocol buffer格式)数据，产生可视化的数据分析报告。因此，它可以分析可以任意产生这种格式的程序，不管程序是什么语言开发的。</p>
@@ -32,23 +32,23 @@ markmeta_categories: 编程语言
 </ul>
 <p>使用pprof生产svg图时需要Graphviz工具，mac下可以通过此命令安装: <code>brew install Graphviz</code></p>
 <p>查看pprof工具的详细用法, 运行命令查看usage说明: <code>go tool pprof</code></p>
-<h2 id="2-pprof-画像类型">2. pprof 画像类型</h2>
+<h2>2. pprof 画像类型</h2>
 <p>如果http程序是通过添加 <code>import _ &quot;net/http/pprof&quot;</code> 支持抓取应用画像.</p>
 <pre><code>package main
 
 import (
-    &quot;net/http&quot;
-    _ &quot;net/http/pprof&quot;
+	&quot;net/http&quot;
+	_ &quot;net/http/pprof&quot;
 )
 
 func main() {
-    go func() {
-        log.Println(http.ListenAndServe(&quot;:6060&quot;, nil))
-    }()
+	go func() {
+		log.Println(http.ListenAndServe(&quot;:6060&quot;, nil))
+	}()
 
-    // business
+	// business
 
-    select {}
+	select {}
 }
 </code></pre>
 <p>则可以通过 <code>http://localhost:6060/debug/pprof/</code>地址查看各种画像的样例统计数量，
@@ -65,7 +65,7 @@ func main() {
 </ul>
 <p><strong>gc参数</strong>: 抓取heap画像时，指定gc=1时，会先进行gc再生成heap画像；</p>
 <p><strong>seconds参数</strong>: 针对cpu和trace两类画像，可以通过seconds指定要抓取分析的时间周期。</p>
-<h2 id="3-pprof-使用经验">3. pprof 使用经验</h2>
+<h2>3. pprof 使用经验</h2>
 <pre><code class="language-bash"># pprof工具支持直接对http服务画像地址抓取并分析
 go tool pprof http://localhost:6060/debug/pprof/profile?seconds=30
 
@@ -97,7 +97,7 @@ go tool pprof -http=:8080 trace.prof
 ps -o &#39;rss,vsz,pcpu,comm&#39; -e  |grep logger
 ps -o &#39;rss,vsz,pcpu,comm&#39; -p 1234
 </code></pre>
-<h2 id="4-go-test-bench-性能测试参数">4. go test bench 性能测试参数</h2>
+<h2>4. go test bench 性能测试参数</h2>
 <ul>
 <li><code>-benchmem</code>：打印用于基准的内存分配统计数据。</li>
 <li><code>-blockprofile block.out</code>：当所有的测试都完成时，在指定的文件中写入一个 goroutine 阻塞概要文件</li>
@@ -114,7 +114,7 @@ ps -o &#39;rss,vsz,pcpu,comm&#39; -p 1234
 <p>指定测试文件生成prof文件:</p>
 <pre><code>go test logger_test.go logger.go --bench . -cpuprofile cpu.prof  -memprofile mem.prof -blockprofile block.prof
 </code></pre>
-<h2 id="4-参考">4. 参考</h2>
+<h2>4. 参考</h2>
 <ul>
 <li><a href="https://github.com/golang/go/blob/master/src/runtime/pprof/pprof.go">runtime/pprof/pprof.go</a></li>
 <li><a href="https://github.com/golang/go/blob/master/src/net/http/pprof/pprof.go">net/http/pprof/pprof.go</a></li>

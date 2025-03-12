@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-01-16
@@ -19,8 +19,8 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,build
 -->
 
-<h1 id="go-build">go build</h1>
-<h2 id="删除调试符号">删除调试符号</h2>
+<h1>go build</h1>
+<h2>删除调试符号</h2>
 <pre><code class="language-bash">go build -ldflags &quot;-s -w&quot; [&lt;your/package]
 </code></pre>
 <p>这里 <code>-ldflags</code> 参数最终会在 <code>go tool link</code> 的时候传给它， <code>go tool link -h</code> 解释如下</p>
@@ -28,11 +28,11 @@ markmeta_tags: golang,build
  -w    disable DWARF generation
 </code></pre>
 <p>删除掉调试符号的另一个好处就是，显著减小了文件大小（平均20%）.</p>
-<h2 id="静态编译">静态编译</h2>
+<h2>静态编译</h2>
 <p>go程序编译后的程序依赖glibc, 如果需要完全不依赖第三方库，需要静态编译，这时候需要glibc-static库。</p>
 <pre><code class="language-bash">CGO_ENABLED=0 go build -a -ldflags &#39;-extldflags &quot;-static&quot;&#39; .
 </code></pre>
-<h2 id="二进制文件压缩">二进制文件压缩</h2>
+<h2>二进制文件压缩</h2>
 <p>加一个UPX壳，还可以进一步压缩原文件大小。</p>
 <pre><code class="language-bash"># 压缩二进制文件
 ./upx &lt;BINARY_FILE&gt;
@@ -40,7 +40,7 @@ markmeta_tags: golang,build
 # 解压文件
 ./upx -d &lt;BINARY_FILE&gt;
 </code></pre>
-<h2 id="reference">Reference</h2>
+<h2>Reference</h2>
 <ol>
 <li><a href="http://dwarfstd.org">DWARF</a>, Debugging With Attributed Record Formats. DWARF is a debugging file format used by many compilers and debuggers to support source level debugging. </li>
 <li><a href="https://github.com/upx/upx">upx</a>, UPX is an advanced executable file compressor. UPX will typically reduce the file size of programs and DLLs by around 50%-70%, thus reducing disk space, network load times, download times and other distribution and storage costs. Programs and libraries compressed by UPX are completely self-contained and run exactly as before, with no runtime or memory penalty for most of the supported formats.</li>

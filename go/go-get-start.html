@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2022-02-16
@@ -19,11 +19,11 @@ markmeta_categories: 编程语言
 markmeta_tags: golang
 -->
 
-<h1 id="golang-入门">Golang 入门</h1>
+<h1>Golang 入门</h1>
 <p><strong>摘要</strong>: 
 本文简要介绍了Go语言的发展历史，通过文字和源代码形式介绍Go语言基本语法、开发工具、并发模型、垃圾回收机制等。
 本文作为Go语言的入门资料，读者可以通过本文快速了解Go语言的基本用法。</p>
-<h2 id="1-golang-介绍">1. Golang 介绍</h2>
+<h2>1. Golang 介绍</h2>
 <p>C++语言在Google内部是主要开发语言, C++执行效率高, 但C++存在一些缺点, 如学习难度大、开发低效。</p>
 <p>其他语言如 .NET, Java, Python, 开发效率高, 执行效率低。</p>
 <p>2007年，Google设计Go，目的在于提高在多核、网络机器（networked machines）、大型代码库（codebases）的情况下的开发效率。
@@ -61,7 +61,7 @@ markmeta_tags: golang
 <li><a href="https://github.com/unknwon/the-way-to-go_ZH_CN">《The Way to Go》中文译本</a></li>
 <li><a href="https://juejin.cn/post/6844903808183566344">三分钟了解Go语言的前世今生</a></li>
 </ol>
-<h2 id="2-go-安装">2. Go 安装</h2>
+<h2>2. Go 安装</h2>
 <p>从 <a href="https://go.dev/dl/">https://go.dev/dl/</a> 下载最新版本安装，也可以通过以下命令安装:</p>
 <p>Mac环境安装:</p>
 <pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.18.2.darwin-amd64.tar.gz
@@ -98,7 +98,7 @@ sudo rm -rf /usr/local/go
 <ol>
 <li><a href="https://github.com/golang/go/tags">golang versions</a></li>
 </ol>
-<h2 id="3-hello-world-范例">3. Hello World 范例</h2>
+<h2>3. Hello World 范例</h2>
 <p>Go 语言的基础组成有以下几个部分：</p>
 <ul>
 <li>包声明</li>
@@ -134,55 +134,55 @@ go build -o main main.go
 ./main
 # Hello, World
 </code></pre>
-<h2 id="4-golang-tools-工具">4. Golang Tools 工具</h2>
+<h2>4. Golang Tools 工具</h2>
 <pre><code>go help
 Go is a tool for managing Go source code.
 
 Usage:
 
-    go &lt;command&gt; [arguments]
+	go &lt;command&gt; [arguments]
 
 The commands are:
 
-    bug         start a bug report
-    build       compile packages and dependencies
-    clean       remove object files and cached files
-    doc         show documentation for package or symbol
-    env         print Go environment information
-    fix         update packages to use new APIs
-    fmt         gofmt (reformat) package sources
-    generate    generate Go files by processing source
-    get         add dependencies to current module and install them
-    install     compile and install packages and dependencies
-    list        list packages or modules
-    mod         module maintenance
-    work        workspace maintenance
-    run         compile and run Go program
-    test        test packages
-    tool        run specified go tool
-    version     print Go version
-    vet         report likely mistakes in packages
+	bug         start a bug report
+	build       compile packages and dependencies
+	clean       remove object files and cached files
+	doc         show documentation for package or symbol
+	env         print Go environment information
+	fix         update packages to use new APIs
+	fmt         gofmt (reformat) package sources
+	generate    generate Go files by processing source
+	get         add dependencies to current module and install them
+	install     compile and install packages and dependencies
+	list        list packages or modules
+	mod         module maintenance
+	work        workspace maintenance
+	run         compile and run Go program
+	test        test packages
+	tool        run specified go tool
+	version     print Go version
+	vet         report likely mistakes in packages
 </code></pre>
-<h2 id="5-go-关键字符">5. Go 关键字符</h2>
+<h2>5. Go 关键字符</h2>
 <p><strong>25 个关键字</strong>:</p>
-<pre><code>break    default    func    interface    select
-case    defer    go        map        struct
-chan    else    goto    package    switch
-const    fallthrough    if    range    type
-continue    for    import    return    var
+<pre><code>break	default	func	interface	select
+case	defer	go		map		struct
+chan	else	goto	package	switch
+const	fallthrough	if	range	type
+continue	for	import	return	var
 </code></pre>
 <p><strong>36 个预定义标识符</strong>：</p>
-<pre><code>append    bool    byte    cap    close    complex    complex64    complex128    uint16
-copy    false    float32    float64    imag    int    int8    int16    uint32
-int32    int64    iota    len    make    new    nil    panic    uint64
-print    println    real    recover    string    true    uint    uint8    uintptr
+<pre><code>append	bool	byte	cap	close	complex	complex64	complex128	uint16
+copy	false	float32	float64	imag	int	int8	int16	uint32
+int32	int64	iota	len	make	new	nil	panic	uint64
+print	println	real	recover	string	true	uint	uint8	uintptr
 any
 </code></pre>
 <p><strong>标识符</strong>: 一个或是多个字母(<code>A~Z</code> 和 <code>a~z</code>) 数字(<code>0~9</code>)、下划线<code>_</code>组成的序列，但是第一个字符必须是字母或下划线而不能是数字。</p>
 <p><strong>分隔符</strong>：括号 <code>()</code>，中括号 <code>[]</code> 和大括号 <code>{}</code>。</p>
 <p><strong>标点符号</strong>：<code>.</code>、<code>,</code>、<code>;</code>、<code>:</code>、<code>…</code>。</p>
 <p>程序一般由关键字、常量、变量、运算符、类型和函数组成。</p>
-<h2 id="6-go-类型">6. Go 类型</h2>
+<h2>6. Go 类型</h2>
 <ul>
 <li>bool类型: 只可以是常量 true 或者 false。一个简单的例子：var b bool = true。</li>
 <li>数字类型: <ul>
@@ -225,82 +225,82 @@ any
 <ol>
 <li><a href="https://zh.wikipedia.org/wiki/IEEE_754">IEEE二进制浮点数算术标准（IEEE 754）</a></li>
 </ol>
-<h2 id="7-golang-变量">7. Golang 变量</h2>
+<h2>7. Golang 变量</h2>
 <p>Go命名规则: 名字必须以一个字母（Unicode字母）或下划线开头，后面可以跟任意数量的字母、数字或下划线。 
 大写字母和小写字母是不同的：heapSort和Heapsort是两个不同的名字。</p>
 <p>变量命名一般采用驼峰式，当遇到特有名词（缩写或简称，如 DNS,URL,HTML）的时候，特有名词根据是否私有全部大写或小写。</p>
-<h3 id="71-变量定义">7.1. 变量定义</h3>
+<h3>7.1. 变量定义</h3>
 <pre><code class="language-golang">func main() {
-    // 指定类型定义
-    var x string = &quot;Hello World&quot;
-    println(x)
+	// 指定类型定义
+	var x string = &quot;Hello World&quot;
+	println(x)
 
-    // 编译器自动判断类型
-    name := &quot;wongoo&quot;
-    println(name)
+	// 编译器自动判断类型
+	name := &quot;wongoo&quot;
+	println(name)
 }
 </code></pre>
-<h3 id="72-全局变量">7.2. 全局变量</h3>
+<h3>7.2. 全局变量</h3>
 <pre><code class="language-golang">var x string = &quot;Hello World&quot;
 func main() {
     println(x)
 }
 </code></pre>
-<h3 id="73-静态变量">7.3. 静态变量</h3>
+<h3>7.3. 静态变量</h3>
 <pre><code class="language-golang">const x := &quot;Hello World&quot;
 func main() {
     println(x)
 
     const name string = &quot;wongoo&quot;
-    println(name)
+	println(name)
 }
 </code></pre>
-<h3 id="74-定义多个变量">7.4. 定义多个变量</h3>
+<h3>7.4. 定义多个变量</h3>
 <pre><code class="language-golang">// 每个变量单独定义并赋值
 var ( 
-    a = 5
-    b = 10
-    c = 15 
+	a = 5
+	b = 10
+	c = 15 
 )
 
 // 多个变量一起定义并赋值
 var (
-    a, b, c = 5, 10, 15
+	a, b, c = 5, 10, 15
 )
 
 // 省略模式
 a, b, c := 5, 10, 15
 </code></pre>
-<h3 id="75-枚举变量">7.5. 枚举变量</h3>
+<h3>7.5. 枚举变量</h3>
 <p>go语言不支持枚举, 一般通过定义静态变量的方式来定义枚举：</p>
 <pre><code class="language-golang">const (
-    ColorWhite = 0
-    ColorRed   = 1
-    ColorGreen = 2
+	ColorWhite = 0
+	ColorRed   = 1
+	ColorGreen = 2
 )
 </code></pre>
 <p>当变量太多时可以通过 <code>iota</code> 简化定义:</p>
 <pre><code class="language-golang">const (
-    ColorWhite = iota
-    ColorRed
-    ColorGreen
+	ColorWhite = iota
+	ColorRed
+	ColorGreen
 )
 </code></pre>
-<h2 id="8-控制语句">8. 控制语句</h2>
-<h3 id="81-for-控制语句">8.1. for 控制语句</h3>
+<h2>8. 控制语句</h2>
+<h3>8.1. for 控制语句</h3>
 <pre><code class="language-golang">func main() {
     i := 1
     for i &lt;= 10 {
         println(i)
-        i = i + 1 
-    }
+		i = i + 1 
+	}
 
-    for j:=1; j &lt;= 10; j++ {
+	for j:=1; j &lt;= 10; j++ {
         println(j)
-    }
+	}
 }
 </code></pre>
-<h3 id="82-if-控制语句">8.2. if 控制语句</h3>
+<h3>8.2. if 控制语句</h3>
 <pre><code class="language-golang">if i % 2 == 0 {
     // divisible by 2
 } else if i % 3 == 0 {
@@ -309,30 +309,30 @@ a, b, c := 5, 10, 15
     // divisible by 4
 }
 </code></pre>
-<h3 id="83-switch-控制语句">8.3. switch 控制语句</h3>
+<h3>8.3. switch 控制语句</h3>
 <pre><code class="language-golang">switch i {
-    case 0: println(&quot;Zero&quot;)
-    case 1: println(&quot;One&quot;)
-    case 2: println(&quot;Two&quot;)
-    case 3: println(&quot;Three&quot;)
-    case 4: println(&quot;Four&quot;)
-    case 5: println(&quot;Five&quot;)
-    default: println(&quot;Unknown Number&quot;)
+	case 0: println(&quot;Zero&quot;)
+	case 1: println(&quot;One&quot;)
+	case 2: println(&quot;Two&quot;)
+	case 3: println(&quot;Three&quot;)
+	case 4: println(&quot;Four&quot;)
+	case 5: println(&quot;Five&quot;)
+	default: println(&quot;Unknown Number&quot;)
 }
 
 switch {
-    case i == 0: println(&quot;Zero&quot;)
-    case i == 1: println(&quot;One&quot;)
-    case i == 2: println(&quot;Two&quot;)
-    case i == 3: println(&quot;Three&quot;)
-    case i == 4: println(&quot;Four&quot;)
-    case i == 5: println(&quot;Five&quot;)
-    default: println(&quot;Unknown Number&quot;)
+	case i == 0: println(&quot;Zero&quot;)
+	case i == 1: println(&quot;One&quot;)
+	case i == 2: println(&quot;Two&quot;)
+	case i == 3: println(&quot;Three&quot;)
+	case i == 4: println(&quot;Four&quot;)
+	case i == 5: println(&quot;Five&quot;)
+	default: println(&quot;Unknown Number&quot;)
 }
 
 </code></pre>
-<h2 id="9-go-arrayslicemap">9. Go Array,Slice,Map</h2>
-<h3 id="91-数组-array">9.1. 数组 Array</h3>
+<h2>9. Go Array,Slice,Map</h2>
+<h3>9.1. 数组 Array</h3>
 <pre><code class="language-golang">var x [5]int
 x[4] = 100
 println(x)  // [0 0 0 0 100]
@@ -341,7 +341,7 @@ println(len(x)) // 4
 // 直接赋值
 x := [5]int{ 98, 93, 77, 82, 83 }
 </code></pre>
-<h3 id="92-slice">9.2. slice</h3>
+<h3>9.2. slice</h3>
 <pre><code class="language-golang">var x []int // 长度为0
 
 x := make([]int, 5) // 长度为5
@@ -373,7 +373,7 @@ println(slice3)      // [1,2,4,5,6]
 println(len(slice3)) // 4
 println(cap(slice3)) // 6
 </code></pre>
-<h3 id="93-map">9.3. Map</h3>
+<h3>9.3. Map</h3>
 <pre><code class="language-golang">x := make(map[string]int)
 x[&quot;key&quot;] = 10
 println(x[&quot;key&quot;]) // 10
@@ -384,7 +384,7 @@ println(y[1]) // 10
 
 // 判断map中是否存在某一个key再进行操作
 if v, ok := y[1]; ok {
-    println(v) // 10
+	println(v) // 10
 }
 
 // 从map删除一个key
@@ -393,87 +393,87 @@ println(y[1]) // 0
 
 // 直接赋值
 elements := map[string]string{
-    &quot;H&quot;:  &quot;Hydrogen&quot;,
-    &quot;He&quot;: &quot;Helium&quot;,
+	&quot;H&quot;:  &quot;Hydrogen&quot;,
+	&quot;He&quot;: &quot;Helium&quot;,
 }
 println(elements) // map[H:Hydrogen He:Helium]
 
 innerMap := map[string]map[string]string{
-    &quot;H&quot;: map[string]string{
-        &quot;name&quot;:  &quot;Hydrogen&quot;,
-        &quot;state&quot;: &quot;gas&quot;,
-    },
-    &quot;He&quot;: {
-        &quot;name&quot;:  &quot;Helium&quot;,
-        &quot;state&quot;: &quot;gas&quot;,
-    },
+	&quot;H&quot;: map[string]string{
+		&quot;name&quot;:  &quot;Hydrogen&quot;,
+		&quot;state&quot;: &quot;gas&quot;,
+	},
+	&quot;He&quot;: {
+		&quot;name&quot;:  &quot;Helium&quot;,
+		&quot;state&quot;: &quot;gas&quot;,
+	},
 }
 println(innerMap) // map[H:map[name:Hydrogen state:gas] He:map[name:Helium state:gas]]
 </code></pre>
-<h2 id="10-函数-functions">10. 函数 Functions</h2>
-<h3 id="101-一般函数">10.1. 一般函数</h3>
+<h2>10. 函数 Functions</h2>
+<h3>10.1. 一般函数</h3>
 <pre><code class="language-golang">func add(a int, b int) int {
-    return a + b
+	return a + b
 }
 
 func sub(a, b int) int {
-    return a - b
+	return a - b
 }
 
 func addAndSub(a, b int) (int, int) {
-    return a + b, a - b
+	return a + b, a - b
 }
 
 func sum(x ...int) int {
-    s := 0
-    for _, n := range x {
-        s += n
-    }
-    return s
+	s := 0
+	for _, n := range x {
+		s += n
+	}
+	return s
 }
 
 func main() {
-    println(add(5, 2))       // 7
-    println(sub(5, 2))       // 3
-    println(addAndSub(5, 2)) // 7 3
-    println(sum(1, 2, 3, 4)) // 10
+	println(add(5, 2))       // 7
+	println(sub(5, 2))       // 3
+	println(addAndSub(5, 2)) // 7 3
+	println(sum(1, 2, 3, 4)) // 10
 }
 </code></pre>
-<h3 id="102-闭包">10.2. 闭包</h3>
+<h3>10.2. 闭包</h3>
 <pre><code class="language-golang">func main() {
-    x := 0
-    increment := func() int {
-        x++
-        return x
-    }
-    println(increment()) // 1
-    println(increment()) // 2
+	x := 0
+	increment := func() int {
+		x++
+		return x
+	}
+	println(increment()) // 1
+	println(increment()) // 2
 }
 </code></pre>
-<h3 id="103-递归">10.3. 递归</h3>
+<h3>10.3. 递归</h3>
 <pre><code class="language-golang">// 阶乘
 func factorial(x uint) uint {
-    if x == 0 {
-        return 1
-    }
-    return x * factorial(x-1)
+	if x == 0 {
+		return 1
+	}
+	return x * factorial(x-1)
 }
 
 func main() {
-    println(factorial(5)) // 120
+	println(factorial(5)) // 120
 }
 </code></pre>
-<h3 id="103-defer">10.3. Defer</h3>
+<h3>10.3. Defer</h3>
 <pre><code class="language-golang">func first() {
-    println(&quot;first&quot;)
+	println(&quot;first&quot;)
 }
 func last() {
-    println(&quot;last&quot;)
+	println(&quot;last&quot;)
 }
 func main() {
-    defer last()
-    defer first()
-    println(&quot;hello world&quot;)
+	defer last()
+	defer first()
+	println(&quot;hello world&quot;)
 }
 
 // hello world
@@ -483,123 +483,123 @@ func main() {
 <blockquote>
 <p><code>defer</code> 可以理解为 java 的 <code>try-finally</code>.</p>
 </blockquote>
-<h3 id="104-panic--recover">10.4. panic &amp; recover</h3>
+<h3>10.4. panic &amp; recover</h3>
 <pre><code class="language-golang">func recoverPanic() {
-    defer func() {
-        r := recover()
-        println(&quot;recover:&quot;, r)
-    }()
-    panic(&quot;panic error&quot;)
+	defer func() {
+		r := recover()
+		println(&quot;recover:&quot;, r)
+	}()
+	panic(&quot;panic error&quot;)
 }
 
 func main() {
-    recoverPanic() // recover: panic error
+	recoverPanic() // recover: panic error
 }
 </code></pre>
 <blockquote>
 <p><code>panic</code> 可理解为java的 <code>throw new RuntimeException()</code>.
 <code>recover()</code> 需要放到<code>defer</code> (类似java的catch块) 中才能恢复panic.</p>
 </blockquote>
-<h2 id="11-指针-pointer">11. 指针 Pointer</h2>
+<h2>11. 指针 Pointer</h2>
 <pre><code class="language-golang">func toZero(x int) {
-    x = 0
+	x = 0
 }
 
 func resetZero(x *int) {
-    // x为int指针, *x指向heap区的int值
-    *x = 0
+	// x为int指针, *x指向heap区的int值
+	*x = 0
 }
 
 func main() {
-    x := 5
-    toZero(x)
-    println(x) // x is still 5
+	x := 5
+	toZero(x)
+	println(x) // x is still 5
 
-    // 通过&amp;符号获取x变量的指针位置
-    resetZero(&amp;x)
-    println(x) // x is 0
+	// 通过&amp;符号获取x变量的指针位置
+	resetZero(&amp;x)
+	println(x) // x is 0
 }
 </code></pre>
-<h3 id="111-new-操作">11.1. new 操作</h3>
+<h3>11.1. new 操作</h3>
 <pre><code class="language-golang">func one(xPtr *int) {
-    *xPtr = 1
+	*xPtr = 1
 }
 
 func main() {
-    // new 创建一个指定类型实例, 并返回其指针
-    xPtr := new(int)
-    one(xPtr)
-    println(*xPtr) // x is 1
+	// new 创建一个指定类型实例, 并返回其指针
+	xPtr := new(int)
+	one(xPtr)
+	println(*xPtr) // x is 1
 }
 </code></pre>
-<h2 id="12-结构体-struct">12. 结构体 struct</h2>
+<h2>12. 结构体 struct</h2>
 <pre><code class="language-golang">
 type Department struct {
-    Name     string
-    Superior *Department
+	Name     string
+	Superior *Department
 }
 
 type Employee struct {
-    Name   string
-    Sex    int
-    Depart *Department
+	Name   string
+	Sex    int
+	Depart *Department
 }
 
 func (e Employee) Work() {
-    println(e.Name, &quot;work&quot;)
+	println(e.Name, &quot;work&quot;)
 }
 
 func (e *Employee) Rest() {
-    println(e.Name, &quot;rest&quot;)
+	println(e.Name, &quot;rest&quot;)
 }
 
 func main() {
-    decisionMakingCommittee := &amp;Department{Name: &quot;Decision-making Committee&quot;}
+	decisionMakingCommittee := &amp;Department{Name: &quot;Decision-making Committee&quot;}
 
-    researchCenter := &amp;Department{
-        Name:     &quot;Research Center&quot;,
-        Superior: decisionMakingCommittee,
-    }
+	researchCenter := &amp;Department{
+		Name:     &quot;Research Center&quot;,
+		Superior: decisionMakingCommittee,
+	}
 
-    wongoo := Employee{
-        Name:   &quot;wongoo&quot;,
-        Sex:    1,
-        Depart: researchCenter,
-    }
+	wongoo := Employee{
+		Name:   &quot;wongoo&quot;,
+		Sex:    1,
+		Depart: researchCenter,
+	}
 
-    println(wongoo.Name, wongoo.Depart.Name) // wongoo Research Center
-    wongoo.Work() // wongoo work
-    wongoo.Rest() // wongoo rest
+	println(wongoo.Name, wongoo.Depart.Name) // wongoo Research Center
+	wongoo.Work() // wongoo work
+	wongoo.Rest() // wongoo rest
 }
 </code></pre>
-<h2 id="13-接口-interface">13. 接口 Interface</h2>
+<h2>13. 接口 Interface</h2>
 <p>Go中无需显示的生命一个 type 实现了某一个接口，只要指定type拥有某个接口所有相同签名的方法，则这个类型会被当做这个接口的实现。</p>
 <blockquote>
 <p>注意: 如果一个接口增加了方法，则其所有实现也要同时增加该方法才会被认为实现了该接口。</p>
 </blockquote>
 <pre><code class="language-golang">type Worker interface {
-    Work()
+	Work()
 }
 
 func teamWork(workers ...Worker) {
-    for _, w := range workers {
-        w.Work()
-    }
+	for _, w := range workers {
+		w.Work()
+	}
 }
 
 func main() {
-    // Employee 有实现 Work() 方法，则为 Worker 接口的实现
-    wongoo := Employee{
-        Name:   &quot;wongoo&quot;,
-    }
+	// Employee 有实现 Work() 方法，则为 Worker 接口的实现
+	wongoo := Employee{
+		Name:   &quot;wongoo&quot;,
+	}
 
-    eric := Employee{
-        Name:   &quot;eric&quot;,
-    }
+	eric := Employee{
+		Name:   &quot;eric&quot;,
+	}
 
-    teamWork(wongoo, eric)
-    // wongoo work
-    // eric work
+	teamWork(wongoo, eric)
+	// wongoo work
+	// eric work
 }
 </code></pre>
 <p><strong>接口命名规范</strong>: 接口名一般用名词，可以是<code>动词+er</code>的形式。</p>
@@ -612,44 +612,44 @@ type Reader interface {
     Read(p []byte) (n int, err error)
 }
 type Writer interface {
-    Write(p []byte) (n int, err error)
+	Write(p []byte) (n int, err error)
 }
 </code></pre>
-<h2 id="14-go-继承和重写">14. Go 继承和重写</h2>
+<h2>14. Go 继承和重写</h2>
 <pre><code class="language-golang">type Employee struct {
-    Name string
+	Name string
 }
 
 func (e Employee) Work() {
-    println(e.Name, &quot;work&quot;)
+	println(e.Name, &quot;work&quot;)
 }
 
 type Developer struct {
-    Employee // 无名称字段类型实现继承
-    Projects []string
+	Employee // 无名称字段类型实现继承
+	Projects []string
 }
 
 // 实现重写
 func (d Developer) Work() {
-    println(d.Name, &quot;work on projects&quot;, d.Projects)
+	println(d.Name, &quot;work on projects&quot;, d.Projects)
 }
 
 type Worker interface {
-    Work()
+	Work()
 }
 
 func workerWork(worker Worker) {
-    worker.Work()
+	worker.Work()
 }
 
 func main() {
-    wongoo := Developer{
-        Employee: Employee{Name: &quot;wongoo&quot;},
-        Projects: []string{&quot;gateway&quot;, &quot;message&quot;},
-    }
+	wongoo := Developer{
+		Employee: Employee{Name: &quot;wongoo&quot;},
+		Projects: []string{&quot;gateway&quot;, &quot;message&quot;},
+	}
 
-    workerWork(wongoo)          // wongoo work on projects [gateway message]
-    workerWork(wongoo.Employee) // wongoo work
+	workerWork(wongoo)          // wongoo work on projects [gateway message]
+	workerWork(wongoo.Employee) // wongoo work
 }
 </code></pre>
 <blockquote>
@@ -657,46 +657,46 @@ func main() {
 </blockquote>
 <p>接口也可以继承:</p>
 <pre><code class="language-golang">type Person interface {
-    Name() string
+	Name() string
 }
 
 type Worker interface {
-    Person // 继承Person接口
-    Work()
+	Person // 继承Person接口
+	Work()
 }
 </code></pre>
-<h2 id="15-泛型">15. 泛型</h2>
+<h2>15. 泛型</h2>
 <p>Go 因为一开始不支持泛型而被吐槽，但从 v1.18 版本开始可以使用泛型了。</p>
 <p>泛型结构体:</p>
 <pre><code class="language-golang">// 定义一个泛型结构体
 type BaseResponse[T any] struct{
-    Code int
-    Msg  string
-    Data T
+	Code int
+	Msg  string
+	Data T
 }
 
 // 实例指定具体泛型类型
 resp := &amp;BaseResponse[string]{
-    Code: 200,
-    Msg:  &quot;ok&quot;,
-    Data: &quot;this is data&quot;,
+	Code: 200,
+	Msg:  &quot;ok&quot;,
+	Data: &quot;this is data&quot;,
 }
 </code></pre>
 <p>泛型函数:</p>
 <pre><code class="language-golang">// 在函数名后通过中括号定义类型约束，此处是类型列表
 func add[T int | int32 | int64 | float32 | float64](a T, b T) T {
-    return a + b
+	return a + b
 }
 
 func sub[T int | int32 | int64 | float32 | float64](a T, b T) T {
-    return a - b
+	return a - b
 }
 
 func main() {
-    println(add(5, 2))
-    println(add(1.5, 1.2))
-    println(sub(5, 2))
-    println(sub(1.5, 1.2))
+	println(add(5, 2))
+	println(add(1.5, 1.2))
+	println(sub(5, 2))
+	println(sub(1.5, 1.2))
 }
 // 7
 // +2.700000e+000
@@ -706,23 +706,23 @@ func main() {
 <p>如果支持的类型多个函数都会用到，可以定义一个类型约束接口来简化代码：</p>
 <pre><code class="language-golang">// 声明一个类型约束接口
 type Number interface {
-    int|int32|int64|float32|float64
+	int|int32|int64|float32|float64
 }
 
 // 在函数名后通过中括号定义类型约束，此处是接口类型
 func add[T Number](a T, b T) T {
-    return a + b
+	return a + b
 }
 
 func sub[T Number](a T, b T) T {
-    return a - b
+	return a - b
 }
 
 func main() {
-    println(add(5, 2))
-    println(add(1.5, 1.2))
-    println(sub(5, 2))
-    println(sub(1.5, 1.2))
+	println(add(5, 2))
+	println(add(1.5, 1.2))
+	println(sub(5, 2))
+	println(sub(1.5, 1.2))
 }
 
 // 7
@@ -734,7 +734,7 @@ func main() {
 <blockquote>
 <p>说明: Go 泛型并不是运行时判断, 只是编译器在前端(词法分析、语法分析、语义分析)编译阶段，将泛型编译为代码中所有类型的具体函数。</p>
 </blockquote>
-<h2 id="16-go-错误处理">16. Go 错误处理</h2>
+<h2>16. Go 错误处理</h2>
 <p>Go 语言通过内置的错误接口提供了非常简单的错误处理机制。</p>
 <p>error类型是一个接口类型：</p>
 <pre><code class="language-golang">type error interface {
@@ -756,7 +756,7 @@ if err != nil {
    println(err)
 }
 </code></pre>
-<h2 id="17-go包">17. Go包</h2>
+<h2>17. Go包</h2>
 <p>Go 中的包用于封装隔离代码模块逻辑，并控制对外可见性。
 以大写字母开头的变量或函数对包外可见(exported)，
 小写字母开头的变量和函数则是私有的(unexported)，仅在同一个包内可以访问。</p>
@@ -780,22 +780,22 @@ import &quot;pkg1&quot;
 import &quot;pkg2&quot;
 
 func main(){
-    println(pkg1.Hello())
-    // println(pkg1.privateMethod()) // unexported 方法无法调用 (可以理解为private方法)
+	println(pkg1.Hello())
+	// println(pkg1.privateMethod()) // unexported 方法无法调用 (可以理解为private方法)
 
-    println(pkg2.GlobalVariable)
-    // println(pkg2.privateVariable) // unexported 变量无法访问 (可以理解为private变量)
+	println(pkg2.GlobalVariable)
+	// println(pkg2.privateVariable) // unexported 变量无法访问 (可以理解为private变量)
 }
 </code></pre>
 <p><strong>pkg1.go</strong></p>
 <pre><code class="language-golang">package pkg1
 
 func Hello(){
-    println(&quot;hello&quot;)
+	println(&quot;hello&quot;)
 }
 
 func privateMethod(){
-    println(&quot;private&quot;)
+	println(&quot;private&quot;)
 }
 </code></pre>
 <p><strong>module.go</strong></p>
@@ -804,23 +804,23 @@ func privateMethod(){
 var GlobalVariable = &quot;exported var&quot;
 var privateVariable = &quot;unexported var&quot;
 </code></pre>
-<h3 id="171-内部包-internal">17.1. 内部包 internal</h3>
+<h3>17.1. 内部包 internal</h3>
 <p>包管理方便了模块化，要让模块之间能够访问就需要 exported 相关的方法或变量。
 但一个模块一旦 exported 了，其他所有模块都可以对其进行访问。
 Go从v1.4开始引入内部包 <code>internal包</code>, 来进一步限制包访问权限。</p>
 <p><code>.../a/b/c/internal/d/e/f</code>包只能被包名以 <code>.../a/b/c</code> 开始的包访问， 而 <code>.../a/b/g</code> 则不可以访问。</p>
-<h3 id="172-包初始化函数">17.2. 包初始化函数</h3>
+<h3>17.2. 包初始化函数</h3>
 <p><code>init()</code> 函数用于 程序运行前 的进行包初始化（自定义变量、实例化通信连接）工作.</p>
 <pre><code class="language-golang">func init()  {
-    println(&quot;init() 1&quot;)
+	println(&quot;init() 1&quot;)
 }
 
 func init()  {
-    println(&quot;init() 2&quot;)
+	println(&quot;init() 2&quot;)
 }
 
 func main() {
-    println(&quot;main()&quot;)
+	println(&quot;main()&quot;)
 }
 
 // init() 1
@@ -835,10 +835,10 @@ func main() {
 <li><code>init()</code> 不能被其他函数调用，而自动 <strong>在main函数执行前</strong> 被调用</li>
 <li>执行顺序总结： import –&gt; const –&gt; var –&gt; init() –&gt; main()</li>
 </ul>
-<h2 id="18-golang-核心包">18. Golang 核心包</h2>
+<h2>18. Golang 核心包</h2>
 <p>Go包括诸多核心包，具体可以参考: <a href="https://github.com/golang/go/tree/master/src">https://github.com/golang/go/tree/master/src</a> .
 下面列举结构常用包的一些用法。</p>
-<h3 id="181-strings-包">18.1. strings 包</h3>
+<h3>18.1. strings 包</h3>
 <pre><code class="language-golang">strings.ToLower(&quot;TEST&quot;)               // &quot;test&quot;
 strings.ToUpper(&quot;test&quot;)               // &quot;TEST&quot;
 strings.Join([]string{&quot;a&quot;, &quot;b&quot;}, &quot;-&quot;) // &quot;a-b&quot;
@@ -854,13 +854,13 @@ strings.Replace(&quot;aaaa&quot;, &quot;a&quot;, &quot;b&quot;, 2)  // &quot;bba
 arr := []byte(&quot;test&quot;)  // 字符串转字节数组
 str := string([]byte{&#39;t&#39;,&#39;e&#39;,&#39;s&#39;,&#39;t&#39;}) // 字节数组转字符串
 </code></pre>
-<h3 id="182-io-包">18.2. io 包</h3>
+<h3>18.2. io 包</h3>
 <p>io 包 定义了基本的两个接口 <code>Reader</code> 和 <code>Writer</code>, </p>
 <pre><code class="language-golang">type Reader interface {
-    Read(p []byte) (n int, err error)
+	Read(p []byte) (n int, err error)
 }
 type Writer interface {
-    Write(p []byte) (n int, err error)
+	Write(p []byte) (n int, err error)
 }
 </code></pre>
 <p>io包其下的方法都主要围绕这两个接口进行操作，更多接口参考 <a href="https://pkg.go.dev/io">https://pkg.go.dev/io</a>.</p>
@@ -872,47 +872,47 @@ func ReadAtLeast(r Reader, buf []byte, min int) (n int, err error)
 func ReadFull(r Reader, buf []byte) (n int, err error)
 func WriteString(w Writer, s string) (n int, err error)
 </code></pre>
-<h3 id="183-os包">18.3. os包</h3>
+<h3>18.3. os包</h3>
 <p><strong>文件读写</strong>:</p>
 <pre><code class="language-golang">func writeFile() {
-    file, err := os.Create(&quot;test.txt&quot;)
-    if err != nil {
-        // handle the error here
-        return
-    }
-    defer file.Close()
-    file.WriteString(&quot;test&quot;)
+	file, err := os.Create(&quot;test.txt&quot;)
+	if err != nil {
+		// handle the error here
+		return
+	}
+	defer file.Close()
+	file.WriteString(&quot;test&quot;)
 }
 
 func readFile() {
-    bs, err := os.ReadFile(&quot;test.txt&quot;)
-    if err != nil {
-        // handle the error here
-        return
-    }
-    str := string(bs)
-    println(str)
+	bs, err := os.ReadFile(&quot;test.txt&quot;)
+	if err != nil {
+		// handle the error here
+		return
+	}
+	str := string(bs)
+	println(str)
 }
 </code></pre>
-<h2 id="19-go-测试">19. Go 测试</h2>
+<h2>19. Go 测试</h2>
 <p>Go 测试代码会单独放到以 <code>_test</code> 结尾的测试文件中。</p>
 <p>比如 <code>util.go</code>:</p>
 <pre><code class="language-golang">package util
 
 func sub(a,b int) int {
-    return a - b
+	return a - b
 }
 
 func Add(a,b int) int {
-    return a + b
+	return a + b
 }
 </code></pre>
 <p><code>util_test.go</code>:</p>
 <pre><code class="language-golang">package util
 
 import (
-    &quot;testing&quot;
-    &quot;github.com/stretchr/testify/assert&quot;
+	&quot;testing&quot;
+	&quot;github.com/stretchr/testify/assert&quot;
 )
 
 func TestSub(t *testing.T) {
@@ -924,9 +924,9 @@ func TestSub(t *testing.T) {
 package util_test
 
 import (
-    &quot;util&quot;
-    &quot;testing&quot;
-    &quot;github.com/stretchr/testify/assert&quot;
+	&quot;util&quot;
+	&quot;testing&quot;
+	&quot;github.com/stretchr/testify/assert&quot;
 )
 
 func TestAdd(t *testing.T) {
@@ -942,7 +942,7 @@ func TestAdd(t *testing.T) {
 # PASS
 # ok      github.com/wongoo/gdemo/temp    0.008s 
 </code></pre>
-<h2 id="20-go-模块管理">20. Go 模块管理</h2>
+<h2>20. Go 模块管理</h2>
 <pre><code class="language-bash"># 初始化项目模块
 go mod init &lt;project-path&gt;
 
@@ -972,17 +972,17 @@ gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c h1:dUUwHk2QECo/6vqA44rthZ8ie
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 </code></pre>
 <p>依赖模块默认会从官方的仓库下载, 可能会比较慢，可以通过创建<a href="https://wongoo.github.io/note/go/go-proxy.html">私有go proxy</a>提升速度。</p>
-<h2 id="21-go-并发">21. Go 并发</h2>
-<h3 id="211-协程-goroutine">21.1. 协程 goroutine</h3>
+<h2>21. Go 并发</h2>
+<h3>21.1. 协程 goroutine</h3>
 <p>不同于操作系统级别的线程Thread, Go语言提供轻量级的语言级线程 —— 协程(goroutine), 可以支持上百万级的协程调度。</p>
 <p>启动goroutine:</p>
 <pre><code class="language-golang">// 创建一个匿名函数并启动一个协程去执行
 go func() {
-    // do something
+	// do something
 }()
 </code></pre>
 <p>协程启动后将有Go调度器去调度异步执行。</p>
-<h3 id="212-gmp模型">21.2. GMP模型</h3>
+<h3>21.2. GMP模型</h3>
 <p>GMP是 Groutine、Machine、Processor的缩写，是Go调度器的核心:</p>
 <ul>
 <li>G : Groutine 协程</li>
@@ -1024,59 +1024,59 @@ go func() {
 <li><a href="https://learnku.com/articles/41728">Golang 调度器 GMP 原理与调度全分析</a></li>
 <li><a href="https://cloud.tencent.com/developer/article/1828822">GMP模型里为什么要有P？</a></li>
 </ul>
-<h3 id="213-锁">21.3. 锁</h3>
-<h4 id="2131-syncmutex-互斥锁">21.3.1. sync.Mutex 互斥锁</h4>
+<h3>21.3. 锁</h3>
+<h4>21.3.1. sync.Mutex 互斥锁</h4>
 <pre><code class="language-golang">var l sync.Mutex
 var a string
 
 func f() {
-    a = &quot;hello, world&quot;
-    // 解锁
-    l.Unlock()
+	a = &quot;hello, world&quot;
+	// 解锁
+	l.Unlock()
 }
 
 func main() {
-    // 加锁
-    l.Lock()
+	// 加锁
+	l.Lock()
 
-    go f()
+	go f()
 
-    // 加锁
-    l.Lock()
+	// 加锁
+	l.Lock()
 
-    // 确保能正常打印 hello world
-    println(a)
+	// 确保能正常打印 hello world
+	println(a)
 }
 </code></pre>
-<h4 id="2132-syncrwmutex-读写锁">21.3.2. sync.RWMutex 读写锁</h4>
+<h4>21.3.2. sync.RWMutex 读写锁</h4>
 <p>读锁和写锁互斥, 读锁和读锁可以并存。</p>
 <pre><code class="language-golang">var l sync.RWMutex
 var a int32
 
 func w() {
-    // 写锁
-    l.Lock()
-    defer l.Unlock()
+	// 写锁
+	l.Lock()
+	defer l.Unlock()
 
-    println(&quot;incr&quot;)
-    atomic.AddInt32(&amp;a, 1)
+	println(&quot;incr&quot;)
+	atomic.AddInt32(&amp;a, 1)
 }
 
 func r() {
-    // 读锁
-    l.RLock()
-    defer l.RUnlock()
+	// 读锁
+	l.RLock()
+	defer l.RUnlock()
 
-    println(atomic.LoadInt32(&amp;a))
+	println(atomic.LoadInt32(&amp;a))
 }
 
 func main() {
-    for i := 0; i &lt; 6; i++ {
-        go r()
-        go w()
-    }
+	for i := 0; i &lt; 6; i++ {
+		go r()
+		go w()
+	}
 
-    &lt;-time.After(time.Second)
+	&lt;-time.After(time.Second)
 }
 
 // 0
@@ -1095,7 +1095,7 @@ func main() {
 <blockquote>
 <p>注意: go中对开发人员无线程的概念，也不提供协程的id，没有可重入锁，同一个协程中重复请求锁将发生死锁错误。</p>
 </blockquote>
-<h3 id="214-通道channel">21.4. 通道Channel</h3>
+<h3>21.4. 通道Channel</h3>
 <p>Channel 是 Golang 在语言级别提供的 goroutine 之间的通信方式，可以使用 channel 在两个或多个 goroutine 之间传递消息。</p>
 <p>Channel 是类型相关的，也就是说，一个 channel 只能传递一种类型的值，这个类型需要在声明 channel 时指定。</p>
 <p><strong>非缓冲通道</strong>:</p>
@@ -1104,21 +1104,21 @@ var c = make(chan string)
 var a string
 
 func f() {
-    a = &quot;hello, world&quot;
+	a = &quot;hello, world&quot;
 
-    // 向通道发送消息
-    c &lt;- &quot;ok&quot;
+	// 向通道发送消息
+	c &lt;- &quot;ok&quot;
 }
 
 func main() {
-    go f()
+	go f()
 
-    // 阻塞等待通道消息
-    r := &lt;-c
-    println(r)
+	// 阻塞等待通道消息
+	r := &lt;-c
+	println(r)
 
-    // 接收到通道消息时, a已被赋值
-    println(a)
+	// 接收到通道消息时, a已被赋值
+	println(a)
 }
 
 // ok
@@ -1131,33 +1131,33 @@ var c = make(chan int32, 2)
 var a int32
 
 func producer() {
-    i := atomic.AddInt32(&amp;a, 1)
-    // 向通道发送消息
-    c &lt;- i
-    println(&quot;produce &quot;, i)
+	i := atomic.AddInt32(&amp;a, 1)
+	// 向通道发送消息
+	c &lt;- i
+	println(&quot;produce &quot;, i)
 }
 func consumer() {
-    for i := 0; i &lt; 4; i++ {
-        // 消费通道消息
-        println(&quot;consume &quot;, &lt;-c)
-    }
+	for i := 0; i &lt; 4; i++ {
+		// 消费通道消息
+		println(&quot;consume &quot;, &lt;-c)
+	}
 }
 
 func main() {
-    // 先向通道发送2笔
-    producer()
-    producer()
+	// 先向通道发送2笔
+	producer()
+	producer()
 
-    // 再先向通道发送时超过了通道缓冲区长度，会被阻塞，需等待消费后才可以往缓冲区写
-    go producer()
-    go producer()
+	// 再先向通道发送时超过了通道缓冲区长度，会被阻塞，需等待消费后才可以往缓冲区写
+	go producer()
+	go producer()
 
-    &lt;-time.After(time.Second)
+	&lt;-time.After(time.Second)
 
-    // 开始消费
-    go consumer()
+	// 开始消费
+	go consumer()
 
-    &lt;-time.After(time.Second)
+	&lt;-time.After(time.Second)
 }
 
 // produce 1
@@ -1173,7 +1173,7 @@ func main() {
 <ul>
 <li><a href="go-memory-model.html">Go内存模型</a></li>
 </ul>
-<h3 id="215-select-语法">21.5. select 语法</h3>
+<h3>21.5. select 语法</h3>
 <p>select 的语法与 switch 的语法非常相似，由 select 开始一个新的选择块，每个选择条件有 case 语句来描述。
 其大致的结构如下：</p>
 <pre><code class="language-golang">select {
@@ -1182,11 +1182,11 @@ func main() {
     default:            // 如果上面的条件都没有成功，则执行 default 流程
 }
 </code></pre>
-<h2 id="22-go-反射">22. Go 反射</h2>
+<h2>22. Go 反射</h2>
 <p>go语言也支持反射，可在运行时更新和检查变量的值、调用变量的方法和变量支持的内在操作。</p>
 <pre><code class="language-golang">type Person struct {
-    Name string
-    Sex  int `json:&quot;name&quot;` // 带有tag的字段
+	Name string
+	Sex  int `json:&quot;name&quot;` // 带有tag的字段
 }
 
 wongoo := Person{Name: &quot;wongoo&quot;, Sex: 1}
@@ -1196,11 +1196,11 @@ println(typ.Name(), typ.Kind()) // Person struct
 
 // 遍历结构体所有成员
 for i := 0; i &lt; typ.NumField(); i++ {
-    field := typ.Field(i) // 获取成员的结构体字段类型
+	field := typ.Field(i) // 获取成员的结构体字段类型
 
-    fmt.Printf(&quot;name: %v  tag: %v\n&quot;, field.Name, field.Tag) // 输出成员名和tag
-    // name: Name  tag: &#39;&#39;
-    // name: Type  tag: &#39;json:&quot;type&quot; id:&quot;100&quot;&#39;
+	fmt.Printf(&quot;name: %v  tag: %v\n&quot;, field.Name, field.Tag) // 输出成员名和tag
+	// name: Name  tag: &#39;&#39;
+	// name: Type  tag: &#39;json:&quot;type&quot; id:&quot;100&quot;&#39;
 }
 
 println(wongoo) // {wongoo 1}
@@ -1219,31 +1219,31 @@ println(wongoo)         // {Yang 1}
 type Joiner func(i int, a string) string
 
 func main() {
-    // 获得方法反射类型
-    joinerType := reflect.TypeOf((*Joiner)(nil)).Elem()
+	// 获得方法反射类型
+	joinerType := reflect.TypeOf((*Joiner)(nil)).Elem()
 
-    // 定义方法处理函数
-    dynamicProxyJoiner := func(args []reflect.Value) (results []reflect.Value) {
-        i := args[0].Int()
-        a := args[1].String()
+	// 定义方法处理函数
+	dynamicProxyJoiner := func(args []reflect.Value) (results []reflect.Value) {
+		i := args[0].Int()
+		a := args[1].String()
 
-        r := fmt.Sprintf(&quot;%d: %s&quot;, i, a)
+		r := fmt.Sprintf(&quot;%d: %s&quot;, i, a)
 
-        return []reflect.Value{reflect.ValueOf(r)}
-    }
+		return []reflect.Value{reflect.ValueOf(r)}
+	}
 
-    // 反射生成函数定义
-    fn := reflect.MakeFunc(joinerType, dynamicProxyJoiner)
+	// 反射生成函数定义
+	fn := reflect.MakeFunc(joinerType, dynamicProxyJoiner)
 
-    // 调用函数
-    results := fn.Call([]reflect.Value{reflect.ValueOf(200), reflect.ValueOf(&quot;ok&quot;)})
+	// 调用函数
+	results := fn.Call([]reflect.Value{reflect.ValueOf(200), reflect.ValueOf(&quot;ok&quot;)})
 
-    result := results[0].String()
+	result := results[0].String()
 
-    println(result) // 200: ok
+	println(result) // 200: ok
 }
 </code></pre>
-<h2 id="23-go-gc">23. Go GC</h2>
+<h2>23. Go GC</h2>
 <p>Go GC算法基本特征：</p>
 <ul>
 <li>非分代</li>
@@ -1281,7 +1281,7 @@ func main() {
 <li><a href="module-garbage-collection.html">[译] 现代垃圾回收</a></li>
 <li><a href="go-goroutine-knowledge.html">goroutine 背后的系统知识</a></li>
 </ul>
-<h2 id="24-go-和-java-性能对比">24. Go 和 Java 性能对比</h2>
+<h2>24. Go 和 Java 性能对比</h2>
 <p>一般情况下 Go 程序相比Java程序在资源利用率上更好，特别是内存利用率上。</p>
 <p>笔者曾经拿相同功能的HTTP网关程序（解析、路由、转发）在同一台主机上进行测试：</p>
 <p>TPS:</p>
@@ -1295,7 +1295,7 @@ func main() {
 <li>Go网关: 50%</li>
 </ul>
 <p>从TPS数据看，Go网关 是 Java网关 的3倍左右, 且CPU消耗更低。</p>
-<h1 id="a-编辑历史">A. 编辑历史</h1>
+<h1>A. 编辑历史</h1>
 <ol>
 <li>2022-02-16, wongoo, 初版</li>
 <li>2022-02-17, wongoo, 增加泛型、select用法、内部包 internal、包初始化函数</li>

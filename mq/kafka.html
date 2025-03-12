@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2021-09-26
@@ -19,8 +19,8 @@ markmeta_categories: MQ
 markmeta_tags: kafka,mq
 -->
 
-<h1 id="kafka">kafka</h1>
-<h2 id="1-概念-concepts">1. 概念 concepts</h2>
+<h1>kafka</h1>
+<h2>1. 概念 concepts</h2>
 <ul>
 <li>Broker: 消息中间件处理节点（服务器），一个节点就是一个broker，一个Kafka集群由一个或多个broker组成</li>
 <li>Topic: Kafka对消息进行归类，发送到集群的每一条消息都要指定一个topic</li>
@@ -34,19 +34,19 @@ markmeta_tags: kafka,mq
 <li>Offset: 消费者消费的位置信息，监控数据消费到什么位置，当消费者挂掉再重新恢复的时候，可以从消费位置继续消费。</li>
 <li>cluster manager： 集群管理器, Kafka 集群能够正常工作，需要依赖于一致性协调框架，3.0版本之前使用Zookeeper，3.0版本开始使用自己实现的raft协议框架，主要负责存储和管理集群信息。</li>
 </ul>
-<h2 id="2-关系">2. 关系</h2>
-<h3 id="21-topic--partition">2.1 Topic &amp; Partition</h3>
+<h2>2. 关系</h2>
+<h3>2.1 Topic &amp; Partition</h3>
 <ul>
 <li>一个topic为一类消息，每条消息必须指定一个topic。</li>
 <li>物理上，一个topic分成一个或多个partition，每个partition有多个副本分布在不同的broker中</li>
 </ul>
-<h3 id="22-consumer-group--consumer">2.2 Consumer Group &amp; Consumer</h3>
+<h3>2.2 Consumer Group &amp; Consumer</h3>
 <ul>
 <li>一个 Consumer Group 由一个或多个 Consumer 实例组成，便于扩容与容错。</li>
 <li>kafka是发布与订阅模式，这个订阅者是 Consumer Group，而不是 Consumer 实例。</li>
 <li>每一条消息只会被同一个 Consumer Group 里的一个 Consumer 实例消费，不同的 Consumer Group 可以同时消费同一条消息</li>
 </ul>
-<h2 id="3-存储">3. 存储</h2>
+<h2>3. 存储</h2>
 <pre><code class="language-mermaid">graph TD
 
 T[Topic] --&gt; P0(Partion 0)
@@ -69,22 +69,22 @@ S1 --&gt; F2(.index)
 <li>一个partition对应多个日志, 每个日志按照 Segment 段进行存储</li>
 <li>每个 Segment 段包含一个 <code>.log</code> 日志文件 和 一个 <code>.index</code> 索引文件</li>
 </ul>
-<h3 id="31-append-log">3.1 append log</h3>
+<h3>3.1 append log</h3>
 <ul>
 <li>每个partition在存储层面是一个append log文件，发布到此partition的消息会追加到log文件的尾部，为顺序写人磁盘。每条消息在log文件中的位置成为offset（偏移量），offset为一个long型数字，唯一标记一条消息。</li>
 <li>每个消费者唯一保存的元数据是offset值，这个位置完全为消费者控制，因此消费者可以采用任何顺序来消费记录；</li>
 <li>只能保证partition中记录是有序的，而不保证topic中不同partition的顺序</li>
 </ul>
-<h3 id="32-删除数据">3.2 删除数据</h3>
+<h3>3.2 删除数据</h3>
 <p>提供两种策略:</p>
 <ol>
 <li>基于时间，让kafka删除2天或一周的数据；</li>
 <li>基于partition文件大小：让kafka在partition文件超过1GB时删除数据；</li>
 </ol>
-<h2 id="4-特性">4. 特性</h2>
-<h3 id="41-exactly-once">4.1 exactly once</h3>
+<h2>4. 特性</h2>
+<h3>4.1 exactly once</h3>
 <p>kafka保证同一个消费组里只有一个消费者会消费一条消息。</p>
-<h3 id="42-consumer-reblance">4.2 consumer reblance</h3>
+<h3>4.2 consumer reblance</h3>
 <ul>
 <li>某个partition的数据只会被某一特定的consumer实例消费</li>
 <li>每个consumer不用跟大量的broker通信，减少通信开销，也降低了分配难度</li>
@@ -96,11 +96,11 @@ S1 --&gt; F2(.index)
 <li>若consumer group中的consumer数量多于partition数量，则会有部分consumer无法消费该topic中任何一条消息</li>
 <li>若consumer group中的consumer数量等于partition数量，则正好一个consumer消费一个partition数据</li>
 </ul>
-<h2 id="a-reference">A. Reference</h2>
+<h2>A. Reference</h2>
 <ul>
 <li>Kafka架构图, <a href="https://zhuanlan.zhihu.com/p/38269875">https://zhuanlan.zhihu.com/p/38269875</a></li>
 </ul>
-<h2 id="history">History</h2>
+<h2>History</h2>
 <ul>
 <li>2021-09-26, first version</li>
 </ul>

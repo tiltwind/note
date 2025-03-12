@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2018-12-21
@@ -19,20 +19,20 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,module
 -->
 
-<h1 id="go-module">GO Module</h1>
+<h1>GO Module</h1>
 <p>一个模块是相关Go包的集合。
 modules是源代码交换和版本控制的单元。 
 go命令直接支持使用modules，包括记录和解析对其他模块的依赖性。
 modules替换旧的基于GOPATH的方法来指定在给定构建中使用哪些源文件。</p>
 <p>go module从1.11开始支持，需要<a href="https://golang.org/dl/">下载</a>版本；</p>
-<h2 id="go111module">GO111MODULE</h2>
+<h2>GO111MODULE</h2>
 <p>取值为 off, on, or auto (默认值，因此前面例子里需要注意2个重点)。</p>
 <ul>
 <li>off: GOPATH mode，查找vendor和GOPATH目录</li>
 <li>on：module-aware mode，使用 go module，忽略GOPATH目录</li>
 <li>auto：如果当前目录不在$GOPATH 并且 当前目录（或者父目录）下有go.mod文件，则使用 GO111MODULE， 否则仍旧使用 GOPATH mode。</li>
 </ul>
-<h2 id="基本功能">基本功能</h2>
+<h2>基本功能</h2>
 <pre><code>&gt; go help mod
 
 Go mod provides access to operations on modules.
@@ -44,7 +44,7 @@ See &#39;go help modules&#39; for an overview of module functionality.
 
 Usage:
 
-    go mod &lt;command&gt; [arguments]
+	go mod &lt;command&gt; [arguments]
 
 The commands are:
         download    download modules to local cache (下载依赖的module到本地cache))
@@ -58,7 +58,7 @@ The commands are:
 
 Use &quot;go help mod &lt;command&gt;&quot; for more information about a command.
 </code></pre>
-<h2 id="gomod-语法">go.mod 语法</h2>
+<h2>go.mod 语法</h2>
 <p>每个模块下有两个文件:</p>
 <ul>
 <li>go.mod : 项目依赖配置</li>
@@ -78,14 +78,14 @@ replace golang.org/x/text =&gt; github.com/golang/text v0.3.0
 </code></pre>
 <p>相同的部分可以写在一起:</p>
 <pre><code>require (
-    other/project v1.0.2
-    new/project v2.3.4
+	other/project v1.0.2
+	new/project v2.3.4
 )
 </code></pre>
 <p>部分特殊格式:</p>
 <pre><code>require (
-    github.com/natefinch/lumberjack v2.0.0+incompatible
-    github.com/golang/mock v1.2.0 // indirect
+	github.com/natefinch/lumberjack v2.0.0+incompatible
+	github.com/golang/mock v1.2.0 // indirect
 )
 </code></pre>
 <p>部分特殊格式:</p>
@@ -93,7 +93,7 @@ replace golang.org/x/text =&gt; github.com/golang/text v0.3.0
 <li><code>+incompatible</code>: 不兼容的</li>
 <li><code>indirect</code>: 间接依赖项</li>
 </ul>
-<h2 id="版本编号">版本编号</h2>
+<h2>版本编号</h2>
 <p>可以通过 <code>go get github.com/group/project@&lt;version&gt;</code> 添加依赖项目, 其中<code>&lt;version&gt;</code>的格式可以是:</p>
 <ul>
 <li>latest: 最新版本，如果有release版本则是最新的release版本；否则为master的最新commit版本；</li>
@@ -101,11 +101,11 @@ replace golang.org/x/text =&gt; github.com/golang/text v0.3.0
 </ul>
 <p>部分特殊格式:</p>
 <pre><code>require (
-    gopkg.in/yaml.v2 &lt;=v2.2.1   
-    gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
-    golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
-    github.com/natefinch/lumberjack v2.0.0+incompatible
-    github.com/golang/mock v1.2.0 // indirect
+	gopkg.in/yaml.v2 &lt;=v2.2.1   
+	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
+	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
+	github.com/natefinch/lumberjack v2.0.0+incompatible
+	github.com/golang/mock v1.2.0 // indirect
 )
 </code></pre>
 <p>部分特殊格式:</p>
@@ -113,7 +113,7 @@ replace golang.org/x/text =&gt; github.com/golang/text v0.3.0
 <li><code>&lt;=v2.2.1</code>: 小于特定版本号</li>
 <li></li>
 </ul>
-<h2 id="go-get-升级">go get 升级</h2>
+<h2>go get 升级</h2>
 <ul>
 <li>go get -u : 将会升级到最新的次要版本或者修订版本(x.y.z, z是修订版本号， y是次要版本号)</li>
 <li>go get -u=patch : 将会升级到最新的修订版本</li>

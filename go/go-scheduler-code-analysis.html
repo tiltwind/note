@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-03-12
@@ -19,8 +19,8 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,scheduler
 -->
 
-<h1 id="go-scheduler-code-analysis">go scheduler code analysis</h1>
-<h2 id="总体介绍">总体介绍</h2>
+<h1>go scheduler code analysis</h1>
+<h2>总体介绍</h2>
 <ul>
 <li>$GOROOT/src/pkg/runtime目录很重要，值得好好研究，源代码可以从runtime.h开始读起。</li>
 <li>proc.c中是实现的线程调度相关。</li>
@@ -31,7 +31,7 @@ markmeta_tags: golang,scheduler
 <li>amd64中这个寄存器是使用R15，在x86中使用0(GS)  分段寄存器</li>
 <li>结构体M名字是machine的缩写。是对机器的抽象，其实是对应到操作系统线程。</li>
 </ul>
-<h2 id="goroutine的生老病死">goroutine的生老病死</h2>
+<h2>goroutine的生老病死</h2>
 <p>go关键字最终被弄成了<code>runtime.newproc</code>. 就以这个为出发点看整个调度器吧.</p>
 <p><code>runtime.newproc</code> 功能是创建一个新的g.这个函数不能用分段栈,真正的工作是调用<code>newproc1</code>完成的.
 <code>newproc1</code> 的动作包括:</p>
@@ -77,7 +77,7 @@ markmeta_tags: golang,scheduler
 <p>现在<code>Gwaiting,Grunnable,Grunning,Gwaiting</code> 都出现过的,接下来看最后两种状态<code>Gmoribund</code>和<code>Gdead</code>.
 看<code>runtime.goexit</code>函数.这个函数直接把g的状态设置成<code>Gmoribund</code>,然后调用gosched,进入到schedule中.
 在schedule中如果遇到状态为Gmoribund的g,直接设置g的状态为Gdead,将g与m分离,把g放回到free队列.</p>
-<h2 id="参考">参考</h2>
+<h2>参考</h2>
 <ul>
 <li><a href="http://bbs.mygolang.com/en/thread-163-1-1.html">http://bbs.mygolang.com/en/thread-163-1-1.html</a></li>
 </ul>

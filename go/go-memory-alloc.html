@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-10-24 
@@ -19,8 +19,8 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,module
 -->
 
-<h1 id="go-内存分配">GO 内存分配</h1>
-<h2 id="分配堆外内存">分配堆外内存</h2>
+<h1>GO 内存分配</h1>
+<h2>分配堆外内存</h2>
 <pre><code class="language-go">const chunkSize = 64 * 1024
 
 const chunksPerAlloc = 1024
@@ -29,7 +29,7 @@ const chunksPerAlloc = 1024
 // This should reduce free memory waste.
 data, err := syscall.Mmap(-1, 0, chunkSize*chunksPerAlloc, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE)
 if err != nil {
-    panic(fmt.Errorf(&quot;cannot allocate %d bytes via mmap: %s&quot;, chunkSize*chunksPerAlloc, err))
+	panic(fmt.Errorf(&quot;cannot allocate %d bytes via mmap: %s&quot;, chunkSize*chunksPerAlloc, err))
 }
 </code></pre>
 

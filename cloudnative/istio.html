@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2021-12-22
@@ -19,8 +19,8 @@ markmeta_categories: mesh
 markmeta_tags: mesh,service-mesh
 -->
 
-<h1 id="istio">Istio</h1>
-<h2 id="install-istio">install istio</h2>
+<h1>Istio</h1>
+<h2>install istio</h2>
 <pre><code class="language-bash">
 # Download Istio
 curl -L https://istio.io/downloadIstio | sh -
@@ -37,7 +37,7 @@ istioctl install --set profile=demo -y
 # Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later
 kubectl label namespace default istio-injection=enabled
 </code></pre>
-<h2 id="run-istio-demo">run istio demo</h2>
+<h2>run istio demo</h2>
 <pre><code class="language-bash"># Deploy the Bookinfo sample application:
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 
@@ -102,7 +102,7 @@ socat tcp-listen:8000,reuseaddr,fork tcp:127.0.0.1:20001
 
 # browser http://10.225.46.24:8000 to see dashboard
 </code></pre>
-<h2 id="uninstall-istio">uninstall istio</h2>
+<h2>uninstall istio</h2>
 <pre><code class="language-bash">kubectl delete -f samples/addons
 istioctl manifest generate --set profile=demo | kubectl delete --ignore-not-found=true -f -
 istioctl tag remove default
@@ -117,11 +117,11 @@ kubectl label namespace default istio-injection-
 
 minikube stop
 </code></pre>
-<h2 id="reference">reference</h2>
+<h2>reference</h2>
 <ul>
 <li><a href="https://istio.io/latest/docs/setup/getting-started/">https://istio.io/latest/docs/setup/getting-started/</a></li>
 </ul>
-<h2 id="history">History</h2>
+<h2>History</h2>
 <ul>
 <li>2021-12-22, first version</li>
 </ul>

@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2018-12-21
@@ -19,22 +19,22 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,memory
 -->
 
-<h1 id="go内存模型">Go内存模型</h1>
+<h1>Go内存模型</h1>
 <p>原文《<a href="https://golang.org/ref/mem">The Go Memory Model</a>》, 已有<a href="https://go-zh.org/ref/mem">中文翻译</a>，整体翻译不错，但主要是一一对照翻译，有些翻译有错，加上英文版本有些地方写得也很教材化，翻译有些晦涩难懂，所以想自己来翻译一下，按照理解进行翻译，对重点内容进行译注说明，希望能做到简单明了。</p>
 <p>文章将对一些关键字不进行翻译：</p>
 <ul>
 <li>goroutine</li>
 <li>channel</li>
 </ul>
-<h1 id="1-介绍">1. 介绍</h1>
+<h1>1. 介绍</h1>
 <p>本文说明如何确保一个goroutine能够读取到另一个goroutine对一个变量写入的值。</p>
-<h1 id="2-忠告">2. 忠告</h1>
+<h1>2. 忠告</h1>
 <p>如果存在多个goroutine同时修改数据的情况，则需要串行化请求来保护数据。串行化可以通过channel信道或如sync、sync/atomic包下的同步工具来实现。</p>
 <p>如果你需要读本文才能理解你的程序的行为，你正变得更聪明，但别自作聪明。</p>
 <blockquote>
 <p>译注: 你应该保持你的代码清晰简洁, 要明白语言同步特性，不要滥用，否则适得其反。</p>
 </blockquote>
-<h1 id="3-事件顺序">3. 事件顺序</h1>
+<h1>3. 事件顺序</h1>
 <p>在单个goroutine中，读取和写入的表现必须与代码指定的执行顺序相一致。按照Go语言规范，编译器和处理器可能会对单个goroutine中的读取和写入的代码进行重新排序，只要重新排序不会改变goroutine的行为。由于存在重新排序，一个goroutine中的执行顺序可能和另外一个goroutine中的执行顺序不一致。例如一个goroutine执行 <code>a = 1; b = 2;</code> 这个语句，另外一个goroutine可能会监测到变量<code>b</code>比变量<code>a</code>先更新。</p>
 <p>为了详细论述读取和写入的必要条件，我们定义了<code>事件发生顺序</code>的概念，它表示Go程序中内存操作执行的 偏序关系（<code>partial order</code>）。 若事件 e1 发生在 e2 之前， 那么我们就说 e2 发生在 e1 之后。 换言之，若 e1 既未发生在 e2 之前， 又未发生在 e2 之后，那么我们就说 e1 与 e2 是并发的。</p>
 <p><strong>单个goroutine中事件发生的顺序即为程序所表达的顺序</strong>。</p>
@@ -76,12 +76,12 @@ markmeta_tags: golang,memory
 r2 之前的写入为 w2，但与其并发的有 w4，因此 r2 的值是不确定的：可以是 w2，也可以是 w4。
 而 r4 之前的写入的是 w2，与它并发的并没有写入，因此 r4 读取的值为 w2。
 </code></pre>
-<h1 id="4-同步">4. 同步</h1>
-<h2 id="41-初始化">4.1 初始化</h2>
+<h1>4. 同步</h1>
+<h2>4.1 初始化</h2>
 <p>程序的初始化运行在单个goroutine中，但该Go程可能会创建其它并发运行的gouroutine。</p>
 <p><strong>若包 p 导入了包 q，则 q 的 init 函数会在 p 的任何函数开始前完成。</strong></p>
 <p><strong>函数 main.main 会在所有的 init 函数结束后开始。</strong></p>
-<h2 id="42-goroutine-创建">4.2 Goroutine 创建</h2>
+<h2>4.2 Goroutine 创建</h2>
 <p>启动一个新的goroutine的go语句执行后，这个新的goroutine才开始执行。</p>
 <blockquote>
 <p>译注: goroutine创建后，需要runtime去调度才会执行。</p>
@@ -90,27 +90,27 @@ r2 之前的写入为 w2，但与其并发的有 w4，因此 r2 的值是不确�
 <pre><code class="language-golang">var a string
 
 func f() {
-    print(a)
+	print(a)
 }
 
 func hello() {
-    a = &quot;hello, world&quot;
-    go f()
+	a = &quot;hello, world&quot;
+	go f()
 }
 </code></pre>
 <p>调用<code>hello()</code>方法将在之后的某一个时间点打印<code>“hello, world”</code>（可能是<code>hello()</code>方法已经返回了之后）。</p>
-<h2 id="43-goroutine-销毁">4.3 Goroutine 销毁</h2>
+<h2>4.3 Goroutine 销毁</h2>
 <p>一个goroutine不保证在程序的任何事件之前退出，如下:</p>
 <pre><code class="language-golang">var a string
 
 func hello() {
-    go func() { a = &quot;hello&quot; }()
-    print(a)
+	go func() { a = &quot;hello&quot; }()
+	print(a)
 }
 </code></pre>
 <p>对变量a的赋值没有添加在同步事件之后，就不能保证能被其他goroutine监测到。实际上，一个积极的编译器可能会将整个go语句都删掉。</p>
 <p>要确保一个goroutine被其他goroutine监测到，需要使用类似lock或channel通信的同步机制来建立顺序关系。</p>
-<h2 id="44-channel-通信">4.4 Channel 通信</h2>
+<h2>4.4 Channel 通信</h2>
 <p>channel通信是goroutine之间主要的同步方式。一个channel上的每一个send动作都对应这个channel上的一个receive动作, send和receive通常在不同的goroutine中.</p>
 <p><strong>(缓冲的)channel上的一个send发生在对应的receive完成前。</strong></p>
 <blockquote>
@@ -124,14 +124,14 @@ func hello() {
 var a string
 
 func f() {
-    a = &quot;hello, world&quot;
-    c &lt;- 0
+	a = &quot;hello, world&quot;
+	c &lt;- 0
 }
 
 func main() {
-    go f()
-    &lt;-c
-    print(a)
+	go f()
+	&lt;-c
+	print(a)
 }
 </code></pre>
 <p>以上代码确保可以打印出&quot;hello, world&quot;：</p>
@@ -154,13 +154,13 @@ func main() {
 var a string
 
 func f() {
-    a = &quot;hello, world&quot;
-    &lt;-c
+	a = &quot;hello, world&quot;
+	&lt;-c
 }
 func main() {
-    go f()
-    c &lt;- 0
-    print(a)
+	go f()
+	c &lt;- 0
+	print(a)
 }
 </code></pre>
 <p>这个例子也能保证打印出&quot;hello, world&quot;：</p>
@@ -185,17 +185,17 @@ func main() {
 <pre><code class="language-golang">var limit = make(chan int, 3)
 
 func main() {
-    for _, w := range work {
-        go func(w func()) {
-            limit &lt;- 1
-            w()
-            &lt;-limit
-        }(w)
-    }
-    select{}
+	for _, w := range work {
+		go func(w func()) {
+			limit &lt;- 1
+			w()
+			&lt;-limit
+		}(w)
+	}
+	select{}
 }
 </code></pre>
-<h2 id="45-锁">4.5 锁</h2>
+<h2>4.5 锁</h2>
 <p><code>sync</code>包内实现了两种锁 <code>sync.Mutex</code> 和 <code>sync.RWMutex</code>。</p>
 <p><strong>对于sync.Mutex 或 sync.RWMutex 的变量 l，当n &lt; m时，第n次调用<code>l.Unlock()</code>发生在第m次调用<code>l.Lock()</code>返回之前。</strong></p>
 <blockquote>
@@ -208,15 +208,15 @@ func main() {
 var a string
 
 func f() {
-    a = &quot;hello, world&quot;
-    l.Unlock()
+	a = &quot;hello, world&quot;
+	l.Unlock()
 }
 
 func main() {
-    l.Lock()
-    go f()
-    l.Lock()
-    print(a)
+	l.Lock()
+	go f()
+	l.Lock()
+	print(a)
 }
 </code></pre>
 <p>以上代码可以确保打印出&quot;hello, world&quot;。</p>
@@ -231,7 +231,7 @@ func main() {
 <blockquote>
 <p>译注: 读锁(read lock)加锁<code>l.RLock</code>和解锁<code>l.RUnlock</code>成对依次出现，可并行多个；写锁(write lock)加锁<code>l.Lock</code>和解锁<code>l.Unlock</code>成对依次出现，并行只能有一个。但<code>读锁对</code>和<code>写锁对</code>不能并行，也就是同一时间只能有read lock或者write lock。以上这句话主要是说明write lock解锁后才能加read lock, 相应read lock解锁后才能加write lock。</p>
 </blockquote>
-<h2 id="46-once单次锁">4.6 Once单次锁</h2>
+<h2>4.6 Once单次锁</h2>
 <p>sync包通过Once单次锁类型提供一种安全的多goroutine初始化机制。多个线程(<code>译注:原文是threads，而不是goroutine</code>) 执行<code>once.Do(f)</code>调用方法f, 但只会有一个会执行<code>f()</code>方法，其他的调用会在<code>f()</code>方法调用返回之前被阻塞住。</p>
 <p><strong>通过<code>once.Do(f)</code>单次调用<code>f()</code>方法发生在任何调用<code>once.Do(f)</code>返回之前。</strong></p>
 <blockquote>
@@ -244,41 +244,41 @@ func main() {
 var once sync.Once
 
 func setup() {
-    a = &quot;hello, world&quot;
+	a = &quot;hello, world&quot;
 }
 
 func doprint() {
-    once.Do(setup)
-    print(a)
+	once.Do(setup)
+	print(a)
 }
 
 func twoprint() {
-    go doprint()
-    go doprint()
+	go doprint()
+	go doprint()
 }
 </code></pre>
 <p>调用<code>twoprint</code>方法会打印 &quot;hello, world&quot; 两次. 只有第一次调用<code>doprint</code> 会执行<code>setup</code>一次.</p>
 <blockquote>
 <p>译注: 原文<code>The first call to doprint runs setup once</code>可能描述不准确，应该是只有第一次调用<code>once.Do(setup)</code> 会执行<code>setup</code>一次.</p>
 </blockquote>
-<h1 id="5-错误的同步">5. 错误的同步</h1>
+<h1>5. 错误的同步</h1>
 <p>注意，虽然某一次读r可能会监测到和它同步的某一次写w，但这并不表明r之后的读能够监测到在w之前的写。</p>
 <p>请看以下例子：</p>
 <pre><code class="language-golang">var a, b int
 
 func f() {
-    a = 1
-    b = 2
+	a = 1
+	b = 2
 }
 
 func g() {
-    print(b)
-    print(a)
+	print(b)
+	print(a)
 }
 
 func main() {
-    go f()
-    g()
+	go f()
+	g()
 }
 </code></pre>
 <p>这个例子g()方法可能会先打印2然后打印0。</p>
@@ -288,20 +288,20 @@ func main() {
 var done bool
 
 func setup() {
-    a = &quot;hello, world&quot;
-    done = true
+	a = &quot;hello, world&quot;
+	done = true
 }
 
 func doprint() {
-    if !done {
-        once.Do(setup)
-    }
-    print(a)
+	if !done {
+		once.Do(setup)
+	}
+	print(a)
 }
 
 func twoprint() {
-    go doprint()
-    go doprint()
+	go doprint()
+	go doprint()
 }
 </code></pre>
 <p>这里并不保证在 <code>doprint</code> 方法中通过监测对变量<code>done</code>的写来间接监测到对变量<code>a</code>的写。这个版本可能会错误的打印空字符串而不是&quot;hello, world&quot;。</p>
@@ -310,15 +310,15 @@ func twoprint() {
 var done bool
 
 func setup() {
-    a = &quot;hello, world&quot;
-    done = true
+	a = &quot;hello, world&quot;
+	done = true
 }
 
 func main() {
-    go setup()
-    for !done {
-    }
-    print(a)
+	go setup()
+	for !done {
+	}
+	print(a)
 }
 </code></pre>
 <p>如上一个例子，这个例子也无法确保main方法中通过监测对变量<code>done</code>的写来间接监测到对变量<code>a</code>的写，这个程序也可能打印空字符串。
@@ -328,27 +328,27 @@ func main() {
 </blockquote>
 <p>类似还有一些微妙的变体版本，例如这段代码:</p>
 <pre><code class="language-golang">type T struct {
-    msg string
+	msg string
 }
 
 var g *T
 
 func setup() {
-    t := new(T)
-    t.msg = &quot;hello, world&quot;
-    g = t
+	t := new(T)
+	t.msg = &quot;hello, world&quot;
+	g = t
 }
 
 func main() {
-    go setup()
-    for g == nil {
-    }
-    print(g.msg)
+	go setup()
+	for g == nil {
+	}
+	print(g.msg)
 }
 </code></pre>
 <p>尽管如果<code>main</code>方法能够监测到<code>g != nil</code>退出了循环，但也不能保证能够监测到<code>g.msg</code>的初始化值。</p>
 <p>在以上所有错误的例子，解决方案都是一样的：<strong>明确使用同步语法！</strong></p>
-<h1 id="a-参考">A. 参考</h1>
+<h1>A. 参考</h1>
 <ol>
 <li>The Go Memory Model, <a href="https://golang.org/ref/mem">https://golang.org/ref/mem</a></li>
 <li>source code of golang channel,  <a href="https://github.com/golang/go/blob/master/src/runtime/chan.go">https://github.com/golang/go/blob/master/src/runtime/chan.go</a></li>
@@ -357,7 +357,7 @@ func main() {
 <li>Go Channel 源码剖析，<a href="http://legendtkl.com/2017/08/06/golang-channel-implement/">http://legendtkl.com/2017/08/06/golang-channel-implement/</a></li>
 <li>Golang 内存管理, <a href="http://legendtkl.com/2017/04/02/golang-alloc/">http://legendtkl.com/2017/04/02/golang-alloc/</a></li>
 </ol>
-<h1 id="b-编辑历史">B. 编辑历史</h1>
+<h1>B. 编辑历史</h1>
 <ol>
 <li>2019-02-15, wangoo, 修改译注，说明多核cpu可能无法读取到变量更改的原因</li>
 <li>2018-12-06, wangoo, 调整格式,修改文字错误，修改部分译注说明</li>

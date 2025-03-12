@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: titlwind
 markmeta_date: 2023-07-06
@@ -18,11 +18,11 @@ markmeta_title: AI提示词 —— 代码生成（解析数据）
 markmeta_categories: ai
 markmeta_tags: ai,prompt-engineering
 -->
-<h1 id="ai提示词--代码生成（解析数据）">AI提示词 —— 代码生成（解析数据）</h1>
+<h1>AI提示词 —— 代码生成（解析数据）</h1>
 <blockquote>
 <p>团队360评估打分出来了，要去计算平均分，让 AI 来帮助我吧！</p>
 </blockquote>
-<h2 id="代码生成询问ai">代码生成(询问AI)</h2>
+<h2>代码生成(询问AI)</h2>
 <p>现在有一个评价数据表格, 文件名称是 evaluation.csv，其中包含7列，分别是  &quot;被评人&quot;、&quot;评价人&quot;、&quot;专业技术&quot;、&quot;业务理解&quot;、&quot;学习分享&quot;、&quot;沟通协作&quot;、&quot;影响力&quot;；</p>
 <p>其中&quot;专业技术&quot;、&quot;业务理解&quot;、&quot;学习分享&quot;、&quot;沟通协作&quot;、&quot;影响力&quot;这5列为指标列，值的格式是数值。</p>
 <p>指标&quot;总体评价&quot;不在数据表格中，而是通过计算得出，计算方式为&quot;专业技术&quot;、&quot;业务理解&quot;、&quot;学习分享&quot;、&quot;沟通协作&quot;、&quot;影响力&quot;这5个指标的平均分。</p>
@@ -34,7 +34,7 @@ markmeta_tags: ai,prompt-engineering
 <li>输出表头包括&quot;被评人&quot;、&quot;专业技术平均分&quot;、&quot;业务理解平均分&quot;、&quot;学习分享平均分&quot;、&quot;沟通协作平均分&quot;、&quot;影响力平均分&quot;、&quot;总体评价平均分&quot;。</li>
 <li>每个指标的平均分是被评人所有被评记录的对应指标的平均分。</li>
 </ol>
-<h2 id="代码生成ai回答">代码生成(AI回答)</h2>
+<h2>代码生成(AI回答)</h2>
 <p>好的,我用Golang来实现这个数据分析任务:</p>
 <pre><code class="language-go">package main
 

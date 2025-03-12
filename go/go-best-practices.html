@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
     <title>Index</title>
 </head>
-<body>
+<body class="markdown-body">
     <div id="navbar"></div>
     <div id="menu"></div>
-    <div class="markdown-body main" id="app">
+    <div class="main" id="app">
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-07-16
@@ -19,13 +19,13 @@ markmeta_categories: 编程语言
 markmeta_tags: golang,practices
 -->
 
-<h1 id="go-best-practices">Go Best Practices</h1>
+<h1>Go Best Practices</h1>
 <ul>
 <li>不要频繁的使用<code>&lt;-time.After</code>,它会创建大量channel和goroutine, 可以使用<code>time.Ticker</code>类似时间轮的算法解决；</li>
 <li>不用频繁的创建<code>[]byte</code> 和 <code>bytes.Buffer</code>对象, 缓存并重复使用他们；</li>
 <li>多使用缓存池<code>sync.Pool</code></li>
 </ul>
-<h2 id="fasthttp-best-practices">Fasthttp best practices</h2>
+<h2>Fasthttp best practices</h2>
 <ul>
 <li>Do not allocate objects and <code>[]byte</code> buffers - just reuse them as much
 as possible. Fasthttp API design encourages this.</li>
