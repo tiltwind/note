@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: 斜风
 markmeta_date: 2023-03-28
@@ -20,15 +21,21 @@ markmeta_tags: think
 -->
 
 <h1>认识 ChatGPT</h1>
+
 <h2>GPT</h2>
+
 <p>Generative Pre-training Transformer （生成式预训练Transfomer模型）, 它基于 Transformer 架构，GPT模型先在大规模语料上进行无监督预训练、再在小得多的有监督数据集上为具体任务进行精细调节（fine-tune）的方式。先训练一个通用模型，然后再在各个任务上调节，这种不依赖针对单独任务的模型设计技巧能够一次性在多个任务中取得很好的表现。</p>
+
 <ul>
 <li>Generative, 生成式。 在机器学习里，有判别式模式(discriminative model)和生成式模式(Generative model)两种区别。生成式模型相比判别式模型更适合大数据学习 ，后者更适合精确样本(人工标注的有效数据集）。GPT是单向生成，即根据上文生成下文。</li>
 <li>Pre-Trained, 预训练</li>
 <li>Transformer, 在Transformer模型出来前，RNN模型(循环神经网络)是典型的NLP模型架构，基于RNN还有其他一些变种模型（忽略其名字，Transformer出来后，已经不再重要了），但是都存在相同的问题，并没能很好解决。RNN的基本原理是，从左到右浏览每个单词向量(比如说this is a dog)，保留每个单词的数据，后面的每个单词，都依赖于前面的单词。RNN的关键问题：前后需要顺序、依次计算。可以想象一下，一本书、一篇文章，里面是有大量单词的，而又因为顺序依赖性，不能并行，所以效率很低。2017年6月，Google发布论文《Attention is all you need》，首次提出Transformer模型，成为GPT发展的基础。GPT的Transformer相比google论文原版Transformer是简化过的，只保留了Decoder部分。通过大量的无监督预训练(Unsupervised pre-training)，再通过少量有监督微调（Supervised fine-tunning)，奖励模型训练Reward Model，增强学习优化RPO。</li>
 </ul>
+
 <p>chatGPT 只是 GPT 模型的一个应用，是一个对话式的交互接口。</p>
+
 <h2>发展历史</h2>
+
 <ul>
 <li>2017年，谷歌发布论文《Attention is all you need》，提出Transformer模型，为GPT铺就了前提。</li>
 <li>2018年6月，OpenAI发布了GPT生成式预训练模型，通过BooksCorpus大数据集（7000本书）进行训练，并主张通过大规模、无监督预训练（pre-training)+有监督微调(fine-tuning)进行模型构建。</li>
@@ -37,23 +44,26 @@ markmeta_tags: think
 <li>2022年2月，OpenAI发布Instruction GPT模型，此次主要是在GPT-3的基础上，增加了监督微调(Supervised Fine-tuning)环节，并且基于此，进一步加入了Reward Model奖励模型，通过RM训练模型来对学习模型进行RPO增强学习优化。</li>
 <li>2022年11月30日，OpenAI发布ChatGPT模型，可以理解为一个多轮迭代训练后的InstructionGPT，并在此基础上增加了Chat对话聊天功能。</li>
 </ul>
-<h2>相关论文</h2>
-<ul>
-<li>2017年6月，Google发布论文《Attention is all you need》，首次提出Transformer模型，成为GPT发展的基础。 论文地址： <a href="https://arxiv.org/abs/1706.03762">https://arxiv.org/abs/1706.03762</a></li>
-<li>2018年6月,OpenAI 发布论文《Improving Language Understanding by Generative Pre-Training》(通过生成式预训练提升语言理解能力)，首次提出GPT模型(Generative Pre-Training)。论文地址： <a href="https://paperswithcode.com/method/gpt">https://paperswithcode.com/method/gpt</a> 。</li>
-<li>2019年2月，OpenAI 发布论文《Language Models are Unsupervised Multitask Learners》（语言模型应该是一个无监督多任务学习者），提出GPT-2模型。论文地址: <a href="https://paperswithcode.com/method/gpt-2">https://paperswithcode.com/method/gpt-2</a></li>
-<li>2020年5月，OpenAI 发布论文《Language Models are Few-Shot Learners》(语言模型应该是一个少量样本(few-shot)学习者，提出GPT-3模型。论文地址： <a href="https://paperswithcode.com/method/gpt-3">https://paperswithcode.com/method/gpt-3</a></li>
-<li>2022年2月底，OpenAI 发布论文《Training language models to follow instructions with human feedback》（使用人类反馈指令流来训练语言模型），公布Instruction GPT模型。论文地址： <a href="https://arxiv.org/abs/2203.02155">https://arxiv.org/abs/2203.02155</a></li>
-</ul>
-<h2>参考</h2>
-<ol>
-<li>知乎搞懂GPT, <a href="https://zhuanlan.zhihu.com/p/403469926">https://zhuanlan.zhihu.com/p/403469926</a></li>
-<li>理解ChatGPT的技术逻辑及演进, <a href="https://www.freebuf.com/articles/others-articles/352202.html">https://www.freebuf.com/articles/others-articles/352202.html</a></li>
-<li>十分钟理解Transformer, <a href="https://zhuanlan.zhihu.com/p/82312421">https://zhuanlan.zhihu.com/p/82312421</a></li>
-<li>台大教授李宏毅的视频《ChatGPT是怎么炼成的？GPT社会化过程》。<a href="https://www.inside.com.tw/article/30032-chatgpt-possible-4-steps-training">https://www.inside.com.tw/article/30032-chatgpt-possible-4-steps-training</a></li>
-<li>Generative Model, <a href="https://en.wikipedia.org/wiki/Generative_model">https://en.wikipedia.org/wiki/Generative_model</a></li>
-</ol>
 
+<h2>相关论文</h2>
+
+<ul>
+<li>2017年6月，Google发布论文《Attention is all you need》，首次提出Transformer模型，成为GPT发展的基础。 论文地址： <a href="https://arxiv.org/abs/1706.03762" target="_blank">https://arxiv.org/abs/1706.03762</a></li>
+<li>2018年6月,OpenAI 发布论文《Improving Language Understanding by Generative Pre-Training》(通过生成式预训练提升语言理解能力)，首次提出GPT模型(Generative Pre-Training)。论文地址： <a href="https://paperswithcode.com/method/gpt" target="_blank">https://paperswithcode.com/method/gpt</a> 。</li>
+<li>2019年2月，OpenAI 发布论文《Language Models are Unsupervised Multitask Learners》（语言模型应该是一个无监督多任务学习者），提出GPT-2模型。论文地址: <a href="https://paperswithcode.com/method/gpt-2" target="_blank">https://paperswithcode.com/method/gpt-2</a></li>
+<li>2020年5月，OpenAI 发布论文《Language Models are Few-Shot Learners》(语言模型应该是一个少量样本(few-shot)学习者，提出GPT-3模型。论文地址： <a href="https://paperswithcode.com/method/gpt-3" target="_blank">https://paperswithcode.com/method/gpt-3</a></li>
+<li>2022年2月底，OpenAI 发布论文《Training language models to follow instructions with human feedback》（使用人类反馈指令流来训练语言模型），公布Instruction GPT模型。论文地址： <a href="https://arxiv.org/abs/2203.02155" target="_blank">https://arxiv.org/abs/2203.02155</a></li>
+</ul>
+
+<h2>参考</h2>
+
+<ol>
+<li>知乎搞懂GPT, <a href="https://zhuanlan.zhihu.com/p/403469926" target="_blank">https://zhuanlan.zhihu.com/p/403469926</a></li>
+<li>理解ChatGPT的技术逻辑及演进, <a href="https://www.freebuf.com/articles/others-articles/352202.html" target="_blank">https://www.freebuf.com/articles/others-articles/352202.html</a></li>
+<li>十分钟理解Transformer, <a href="https://zhuanlan.zhihu.com/p/82312421" target="_blank">https://zhuanlan.zhihu.com/p/82312421</a></li>
+<li>台大教授李宏毅的视频《ChatGPT是怎么炼成的？GPT社会化过程》。<a href="https://www.inside.com.tw/article/30032-chatgpt-possible-4-steps-training" target="_blank">https://www.inside.com.tw/article/30032-chatgpt-possible-4-steps-training</a></li>
+<li>Generative Model, <a href="https://en.wikipedia.org/wiki/Generative_model" target="_blank">https://en.wikipedia.org/wiki/Generative_model</a></li>
+</ol>
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

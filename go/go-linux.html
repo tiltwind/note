@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-09-10
@@ -20,7 +21,9 @@ markmeta_tags: golang,linux
 -->
 
 <h1>go linux</h1>
+
 <h2>接收父进程死掉的信号</h2>
+
 <pre><code>// Child can ask kernel to deliver SIGHUP (or other signal) when parent dies
 // by specifying option PR_SET_PDEATHSIG in prctl() syscall like this:
 //
@@ -42,7 +45,6 @@ if err != nil {
 	log.Fatalf(&quot;setParentDeathSignal error: %v&quot;, err)
 }
 </code></pre>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

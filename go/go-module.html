@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2018-12-21
@@ -20,27 +21,34 @@ markmeta_tags: golang,module
 -->
 
 <h1>GO Module</h1>
+
 <p>一个模块是相关Go包的集合。
-modules是源代码交换和版本控制的单元。 
+modules是源代码交换和版本控制的单元。
 go命令直接支持使用modules，包括记录和解析对其他模块的依赖性。
 modules替换旧的基于GOPATH的方法来指定在给定构建中使用哪些源文件。</p>
-<p>go module从1.11开始支持，需要<a href="https://golang.org/dl/">下载</a>版本；</p>
+
+<p>go module从1.11开始支持，需要<a href="https://golang.org/dl/" target="_blank">下载</a>版本；</p>
+
 <h2>GO111MODULE</h2>
+
 <p>取值为 off, on, or auto (默认值，因此前面例子里需要注意2个重点)。</p>
+
 <ul>
 <li>off: GOPATH mode，查找vendor和GOPATH目录</li>
 <li>on：module-aware mode，使用 go module，忽略GOPATH目录</li>
 <li>auto：如果当前目录不在$GOPATH 并且 当前目录（或者父目录）下有go.mod文件，则使用 GO111MODULE， 否则仍旧使用 GOPATH mode。</li>
 </ul>
+
 <h2>基本功能</h2>
+
 <pre><code>&gt; go help mod
 
 Go mod provides access to operations on modules.
 
 Note that support for modules is built into all the go commands,
-not just &#39;go mod&#39;. For example, day-to-day adding, removing, upgrading,
-and downgrading of dependencies should be done using &#39;go get&#39;.   &lt;--- 使用 go get 管理依赖
-See &#39;go help modules&#39; for an overview of module functionality.
+not just 'go mod'. For example, day-to-day adding, removing, upgrading,
+and downgrading of dependencies should be done using 'go get'.   &lt;--- 使用 go get 管理依赖
+See 'go help modules' for an overview of module functionality.
 
 Usage:
 
@@ -58,13 +66,18 @@ The commands are:
 
 Use &quot;go help mod &lt;command&gt;&quot; for more information about a command.
 </code></pre>
+
 <h2>go.mod 语法</h2>
+
 <p>每个模块下有两个文件:</p>
+
 <ul>
 <li>go.mod : 项目依赖配置</li>
 <li>go.sum : 依赖项目的hash值</li>
 </ul>
+
 <p>go.mod 格式如下:</p>
+
 <pre><code>module my/project
 
 require other/project v1.0.2
@@ -76,30 +89,41 @@ exclude old/project v1.2.3
 replace bad/project v1.4.5 =&gt; good/project v1.4.5
 replace golang.org/x/text =&gt; github.com/golang/text v0.3.0
 </code></pre>
+
 <p>相同的部分可以写在一起:</p>
+
 <pre><code>require (
 	other/project v1.0.2
 	new/project v2.3.4
 )
 </code></pre>
+
 <p>部分特殊格式:</p>
+
 <pre><code>require (
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/golang/mock v1.2.0 // indirect
 )
 </code></pre>
+
 <p>部分特殊格式:</p>
+
 <ul>
 <li><code>+incompatible</code>: 不兼容的</li>
 <li><code>indirect</code>: 间接依赖项</li>
 </ul>
+
 <h2>版本编号</h2>
+
 <p>可以通过 <code>go get github.com/group/project@&lt;version&gt;</code> 添加依赖项目, 其中<code>&lt;version&gt;</code>的格式可以是:</p>
+
 <ul>
 <li>latest: 最新版本，如果有release版本则是最新的release版本；否则为master的最新commit版本；</li>
 <li><version></li>
 </ul>
+
 <p>部分特殊格式:</p>
+
 <pre><code>require (
 	gopkg.in/yaml.v2 &lt;=v2.2.1   
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
@@ -108,18 +132,21 @@ replace golang.org/x/text =&gt; github.com/golang/text v0.3.0
 	github.com/golang/mock v1.2.0 // indirect
 )
 </code></pre>
+
 <p>部分特殊格式:</p>
+
 <ul>
 <li><code>&lt;=v2.2.1</code>: 小于特定版本号</li>
 <li></li>
 </ul>
+
 <h2>go get 升级</h2>
+
 <ul>
 <li>go get -u : 将会升级到最新的次要版本或者修订版本(x.y.z, z是修订版本号， y是次要版本号)</li>
 <li>go get -u=patch : 将会升级到最新的修订版本</li>
 <li>go get package@version : 将会升级到指定的版本号version</li>
 </ul>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

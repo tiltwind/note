@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: titlwind
 markmeta_date: 2022-12-28
@@ -20,29 +21,42 @@ markmeta_tags: cve,nvd,cpe
 -->
 
 <h1>漏洞数据库</h1>
+
 <p>名词解释</p>
+
 <ul>
 <li>CVE : Common Vulnerabilities and Exposures, 通用漏洞披露</li>
 <li>NVD : NATIONAL VULNERABILITY DATABASE 美国国家漏洞数据库</li>
 </ul>
+
 <h2>漏洞查询API</h2>
-<p>接口文档参考: <a href="https://nvd.nist.gov/developers/vulnerabilities">https://nvd.nist.gov/developers/vulnerabilities</a></p>
+
+<p>接口文档参考: <a href="https://nvd.nist.gov/developers/vulnerabilities" target="_blank">https://nvd.nist.gov/developers/vulnerabilities</a></p>
+
 <p>接口有做限流，滚动30s内不超过5次请求，应用应该要主动控制限流，并且存储已查询结果，尽量从本地查询。</p>
+
 <p>范例:</p>
+
 <pre><code class="language-bash"># 查询 log4j 相关漏洞
-curl --location --request GET &#39;https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=log4j&#39;
+curl --location --request GET 'https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=log4j'
 
 # 查询 windows 10 特定版本漏洞
-curl --location --request GET &#39;https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe:2.3:o:microsoft:windows_10:1607&#39;
+curl --location --request GET 'https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe:2.3:o:microsoft:windows_10:1607'
 </code></pre>
+
 <h2>CPE 名称定义</h2>
+
 <p>CPE (Common Platform Enumeration) 通用平台枚举, 一种结构化命名方案，用来描述标记应用、操作系统、硬件设备。</p>
+
 <blockquote>
-<p>CPE 并不定义在具体操作系统上的唯一实例，比如 <code>XYZ Visualizer Enterprise Suite 4.2.3 且序列号为Q472B987P113</code>. 
+<p>CPE 并不定义在具体操作系统上的唯一实例，比如 <code>XYZ Visualizer Enterprise Suite 4.2.3 且序列号为Q472B987P113</code>.
 CPE 标记的是虚拟产品分类，例如 <code>XYZ Visualizer Enterprise Suite 4.2.3</code>， 或者 <code>XYZ Visualizer Enterprise Suite</code> (所有版本), 或者 <code>XYZ Visualizer</code> (所有类型).</p>
 </blockquote>
-<p>以 CPE 2.3版为例, 参考定义: <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7695.pdf">https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7695.pdf</a></p>
+
+<p>以 CPE 2.3版为例, 参考定义: <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7695.pdf" target="_blank">https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7695.pdf</a></p>
+
 <p>格式: <code>cpe:2.3:&lt;part&gt;:&lt;vendor&gt;:&lt;product&gt;:&lt;version&gt;:&lt;update&gt;:&lt;edition&gt;:&lt;sw_edition&gt;:&lt;target_sw&gt;:&lt;target_hw&gt;:&lt;language&gt;:&lt;other&gt;</code></p>
+
 <ul>
 <li><strong>part</strong>: <code>a</code>表示应用, <code>o</code>表示操作系统, <code>h</code>表示硬件设备</li>
 <li><strong>vendor</strong>: 标识创建产品的机构或个人</li>
@@ -56,18 +70,26 @@ CPE 标记的是虚拟产品分类，例如 <code>XYZ Visualizer Enterprise Suit
 <li><strong>language</strong>: 语言</li>
 <li><strong>other</strong>: 自定义内容</li>
 </ul>
+
 <p>范例:</p>
+
 <p>Microsoft Internet Explorer 8.0.6001 Beta (no edition):
 <code>wfn:[part=&quot;a&quot;,vendor=&quot;microsoft&quot;,product=&quot;internet_explorer&quot;,version=&quot;8\.0\.6001&quot;,update=&quot;beta&quot;,edition=NA]</code></p>
+
 <p>Microsoft Internet Explorer 8.* SP? (no edition, any language):
 <code>wfn:[part=&quot;a&quot;,vendor=&quot;microsoft&quot;,product=&quot;internet_explorer&quot;,version=&quot;8\.*&quot;,update=&quot;sp?&quot;,edition=NA,language=ANY]</code></p>
+
 <p>Identifier for HP Insight Diagnostics 7.4.0.1570 Online Edition for Windows 2003 x64:
 <code>wfn:[part=&quot;a&quot;,vendor=&quot;hp&quot;,product=&quot;insight_diagnostics&quot;,version=&quot;7\.4\.0\.1570&quot;,sw_edition=&quot;online&quot;,target_sw=&quot;windows_2003&quot;,target_hw=&quot;x64&quot;]</code></p>
+
 <p>Identifier for HP OpenView Network Manager 7.51 (no update) for Linux:
 <code>wfn:[part=&quot;a&quot;,vendor=&quot;hp&quot;,product=&quot;openview_network_manager&quot;,version=&quot;7\.51&quot;,update=NA,target_sw=&quot;linux&quot;]</code></p>
-<p>Foo\Bar Systems Big$Money 2010 Special Edition for iPod Touch:
-<code>wfn:[part=&quot;a&quot;,vendor=&quot;foo\\bar&quot;,product=&quot;big\$money_2010&quot;,sw_edition=&quot;special&quot;,target_sw=&quot;ipod_touch&quot;]</code></p>
+
+<p>Foo\Bar Systems Big<span class="math inline">\(Money 2010 Special Edition for iPod Touch:
+`wfn:[part=&quot;a&quot;,vendor=&quot;foo\\bar&quot;,product=&quot;big\\)</span>money_2010&rdquo;,sw_edition=&ldquo;special&rdquo;,target_sw=&ldquo;ipod_touch&rdquo;]`</p>
+
 <p>CPE URI 格式:</p>
+
 <pre><code>cpe-name = &quot;cpe:/&quot; component-list
 component-list = part &quot;:&quot; vendor &quot;:&quot; product &quot;:&quot; version &quot;:&quot; update &quot;: &quot;edition &quot;:&quot; lang
 component-list /= part &quot;:&quot; vendor &quot;:&quot; product &quot;:&quot; version &quot;:&quot; update &quot;:&quot; edition
@@ -93,14 +115,19 @@ DIGIT = %x30-39 ; 0-9
 HEXDIG = DIGIT / &quot;a&quot; / &quot;b&quot; / &quot;c&quot; / &quot;d&quot; / &quot;e&quot; / &quot;f&quot;
 LANGTAG = cf. [RFC5646]
 </code></pre>
+
 <ul>
-<li>CPE 名称匹配规范: <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7696.pdf">https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7696.pdf</a></li>
-<li>CPE Java 解析库: <a href="https://github.com/stevespringett/CPE-Parser">https://github.com/stevespringett/CPE-Parser</a></li>
+<li>CPE 名称匹配规范: <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7696.pdf" target="_blank">https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7696.pdf</a></li>
+<li>CPE Java 解析库: <a href="https://github.com/stevespringett/CPE-Parser" target="_blank">https://github.com/stevespringett/CPE-Parser</a></li>
 </ul>
+
 <h2>扫描漏洞工具 DependencyCheck</h2>
-<p><a href="https://jeremylong.github.io/DependencyCheck/general/internals.html">DependencyCheck</a> 会下载漏洞数据库，并存储在本地索引中, 通过CPE匹配，如果匹配则加入到报告中。
+
+<p><a href="https://jeremylong.github.io/DependencyCheck/general/internals.html" target="_blank">DependencyCheck</a> 会下载漏洞数据库，并存储在本地索引中, 通过CPE匹配，如果匹配则加入到报告中。
 DependencyCheck 扫描的目标是 jar 包, 指定目录下需包含jar包。</p>
+
 <h3>命令行使用方式</h3>
+
 <pre><code class="language-bash">curl -L -O -C - https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.3/dependency-check-7.4.3-release.zip
 
 unzip dependency-check-7.4.3-release.zip
@@ -117,10 +144,14 @@ open dependency-check-report.html
 ./dependency-check.sh --advancedHelp
 ./dependency-check.sh --disableRetireJS --prettyPrint -f JSON -o ~/temp -s &lt;myproject_path&gt;
 </code></pre>
+
 <p>命令行下载的漏洞数据会存放在 <code>dependency-check/data</code> 目录下</p>
+
 <h3>maven 插件使用方式</h3>
+
 <p>maven插件的方式可以通过maven识别项目依赖的包，并直接扫描本地仓库中的jar包。
 maven插件下载的漏洞数据库位置是 <code>~/.m2/repository/org/owasp/dependency-check-data/</code>.</p>
+
 <pre><code class="language-xml">&lt;build&gt;
     &lt;plugins&gt;
         &lt;plugin&gt;
@@ -131,24 +162,29 @@ maven插件下载的漏洞数据库位置是 <code>~/.m2/repository/org/owasp/de
     &lt;/plugins&gt;
 &lt;/build&gt;
 </code></pre>
+
 <p>执行命令:</p>
+
 <pre><code class="language-bash"># 聚合检查maven项目(包括子项目), 输出json格式, 输出到制定目录下, 输出文件名为 dependency-check-report.json
 mvn dependency-check:aggregate \
 	-DretireJsAnalyzerEnabled=false \
 	-Dformat=JSON -DprettyPrint=true \
 	-Dodc.outputDirectory=/Users/gelnyang/temp
 </code></pre>
+
 <blockquote>
-<p>maven 插件参数说明: <a href="https://jeremylong.github.io/DependencyCheck/dependency-check-maven/configuration.html">https://jeremylong.github.io/DependencyCheck/dependency-check-maven/configuration.html</a></p>
+<p>maven 插件参数说明: <a href="https://jeremylong.github.io/DependencyCheck/dependency-check-maven/configuration.html" target="_blank">https://jeremylong.github.io/DependencyCheck/dependency-check-maven/configuration.html</a></p>
 </blockquote>
+
 <p>输出的JSON数据格式:</p>
+
 <pre><code class="language-JSON">{
   &quot;dependencies&quot;: [
     {
       &quot;isVirtual&quot;: false,
       &quot;fileName&quot;: &quot;aliyun-sdk-opensearch-3.1.3.jar (shaded: com.google.guava:guava:19.0)&quot;,
       &quot;filePath&quot;: &quot;/Users/gelnyang/.m2/repository/com/aliyun/opensearch/aliyun-sdk-opensearch/3.1.3/aliyun-sdk-opensearch-3.1.3.jar/META-INF/maven/com.google.guava/guava/pom.xml&quot;,
-      &quot;description&quot;: &quot;\n    Guava is a suite of core and expanded libraries that include\n    utility classes, google&#39;s collections, io classes, and much\n    much more.\n\n    Guava has only one code dependency - javax.annotation,\n    per the JSR-305 spec.\n  &quot;,
+      &quot;description&quot;: &quot;\n    Guava is a suite of core and expanded libraries that include\n    utility classes, google's collections, io classes, and much\n    much more.\n\n    Guava has only one code dependency - javax.annotation,\n    per the JSR-305 spec.\n  &quot;,
       &quot;packages&quot;: [
         {
           &quot;id&quot;: &quot;pkg:maven/com.google.guava/guava@19.0&quot;,
@@ -171,18 +207,22 @@ mvn dependency-check:aggregate \
   ]
 }
 </code></pre>
+
 <ul>
 <li>可在jenkins中增加检查步骤, 将输出的json上报到系统，让漏洞系统进行解析；</li>
 <li>系统从 <code>packages/id</code> 解析出 maven 包的版本信息, 从 <code>vulnerabilities/name</code> 解析出漏洞编号, 便可以对maven包进行漏洞标记；</li>
 </ul>
-<h2>查看maven库是不是存在漏洞</h2>
-<p>访问特定库的版本，比如 log4j:1.2.17 版本 <a href="https://mvnrepository.com/artifact/log4j/log4j/1.2.17">https://mvnrepository.com/artifact/log4j/log4j/1.2.17</a> , 页面上会该版本是不是存在漏洞(Vulnerabilities).</p>
-<h2>Reference</h2>
-<ol>
-<li>NVD 美国国家漏洞数据库, <a href="https://nvd.nist.gov/">https://nvd.nist.gov/</a></li>
-<li>CPE 定义, <a href="https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/cpe">https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/cpe</a></li>
-</ol>
 
+<h2>查看maven库是不是存在漏洞</h2>
+
+<p>访问特定库的版本，比如 log4j:1.2.17 版本 <a href="https://mvnrepository.com/artifact/log4j/log4j/1.2.17" target="_blank">https://mvnrepository.com/artifact/log4j/log4j/1.2.17</a> , 页面上会该版本是不是存在漏洞(Vulnerabilities).</p>
+
+<h2>Reference</h2>
+
+<ol>
+<li>NVD 美国国家漏洞数据库, <a href="https://nvd.nist.gov/" target="_blank">https://nvd.nist.gov/</a></li>
+<li>CPE 定义, <a href="https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/cpe" target="_blank">https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/cpe</a></li>
+</ol>
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: titlwind
 markmeta_date: 2023-07-06
@@ -18,24 +19,36 @@ markmeta_title: AI提示词 —— 代码生成（解析数据）
 markmeta_categories: ai
 markmeta_tags: ai,prompt-engineering
 -->
+
 <h1>AI提示词 —— 代码生成（解析数据）</h1>
+
 <blockquote>
 <p>团队360评估打分出来了，要去计算平均分，让 AI 来帮助我吧！</p>
 </blockquote>
+
 <h2>代码生成(询问AI)</h2>
-<p>现在有一个评价数据表格, 文件名称是 evaluation.csv，其中包含7列，分别是  &quot;被评人&quot;、&quot;评价人&quot;、&quot;专业技术&quot;、&quot;业务理解&quot;、&quot;学习分享&quot;、&quot;沟通协作&quot;、&quot;影响力&quot;；</p>
-<p>其中&quot;专业技术&quot;、&quot;业务理解&quot;、&quot;学习分享&quot;、&quot;沟通协作&quot;、&quot;影响力&quot;这5列为指标列，值的格式是数值。</p>
-<p>指标&quot;总体评价&quot;不在数据表格中，而是通过计算得出，计算方式为&quot;专业技术&quot;、&quot;业务理解&quot;、&quot;学习分享&quot;、&quot;沟通协作&quot;、&quot;影响力&quot;这5个指标的平均分。</p>
-<p>数据表中每个&quot;被评人&quot;会有多笔被评记录, 每个&quot;评价人&quot;也有多笔评价记录。</p>
+
+<p>现在有一个评价数据表格, 文件名称是 evaluation.csv，其中包含7列，分别是  &ldquo;被评人&rdquo;、&rdquo;评价人&rdquo;、&rdquo;专业技术&rdquo;、&rdquo;业务理解&rdquo;、&rdquo;学习分享&rdquo;、&rdquo;沟通协作&rdquo;、&rdquo;影响力&rdquo;；</p>
+
+<p>其中&rdquo;专业技术&rdquo;、&rdquo;业务理解&rdquo;、&rdquo;学习分享&rdquo;、&rdquo;沟通协作&rdquo;、&rdquo;影响力&rdquo;这5列为指标列，值的格式是数值。</p>
+
+<p>指标&rdquo;总体评价&rdquo;不在数据表格中，而是通过计算得出，计算方式为&rdquo;专业技术&rdquo;、&rdquo;业务理解&rdquo;、&rdquo;学习分享&rdquo;、&rdquo;沟通协作&rdquo;、&rdquo;影响力&rdquo;这5个指标的平均分。</p>
+
+<p>数据表中每个&rdquo;被评人&rdquo;会有多笔被评记录, 每个&rdquo;评价人&rdquo;也有多笔评价记录。</p>
+
 <p>你的任务是生成golang分析代码，请遵循以下要求:</p>
+
 <ol>
 <li>代码变量命名需要使用英文，注释用中文。</li>
 <li>按照被评人纬度计算所有指标的平均分, 按照 csv 格式输出到 evaluation_avg.csv 文件中</li>
-<li>输出表头包括&quot;被评人&quot;、&quot;专业技术平均分&quot;、&quot;业务理解平均分&quot;、&quot;学习分享平均分&quot;、&quot;沟通协作平均分&quot;、&quot;影响力平均分&quot;、&quot;总体评价平均分&quot;。</li>
+<li>输出表头包括&rdquo;被评人&rdquo;、&rdquo;专业技术平均分&rdquo;、&rdquo;业务理解平均分&rdquo;、&rdquo;学习分享平均分&rdquo;、&rdquo;沟通协作平均分&rdquo;、&rdquo;影响力平均分&rdquo;、&rdquo;总体评价平均分&rdquo;。</li>
 <li>每个指标的平均分是被评人所有被评记录的对应指标的平均分。</li>
 </ol>
+
 <h2>代码生成(AI回答)</h2>
+
 <p>好的,我用Golang来实现这个数据分析任务:</p>
+
 <pre><code class="language-go">package main
 
 import (
@@ -120,12 +133,12 @@ func main() {
     overallAvg := (techAvg + bizAvg + shareAvg + commAvg + influenceAvg) / 5.0
     
     outputRecords = append(outputRecords, []string{name, 
-      strconv.FormatFloat(techAvg, &#39;f&#39;, 2, 64),
-      strconv.FormatFloat(bizAvg, &#39;f&#39;, 2, 64),
-      strconv.FormatFloat(shareAvg, &#39;f&#39;, 2, 64),
-      strconv.FormatFloat(commAvg, &#39;f&#39;, 2, 64),
-      strconv.FormatFloat(influenceAvg, &#39;f&#39;, 2, 64),
-      strconv.FormatFloat(overallAvg, &#39;f&#39;, 2, 64)})
+      strconv.FormatFloat(techAvg, 'f', 2, 64),
+      strconv.FormatFloat(bizAvg, 'f', 2, 64),
+      strconv.FormatFloat(shareAvg, 'f', 2, 64),
+      strconv.FormatFloat(commAvg, 'f', 2, 64),
+      strconv.FormatFloat(influenceAvg, 'f', 2, 64),
+      strconv.FormatFloat(overallAvg, 'f', 2, 64)})
   }
   
   // 输出结果到CSV文件
@@ -143,8 +156,8 @@ func main() {
   }
 }
 </code></pre>
-<p>这个代码读取 evaluation.csv 文件,解析数据到 Evaluation 结构体,然后按被评人分组,计算每个人的各项指标平均分,最后写入 evaluation_avg.csv 输出文件。输出格式符合要求,注释使用中文说明,变量名称英文。请检查实现是否符合要求。</p>
 
+<p>这个代码读取 evaluation.csv 文件,解析数据到 Evaluation 结构体,然后按被评人分组,计算每个人的各项指标平均分,最后写入 evaluation_avg.csv 输出文件。输出格式符合要求,注释使用中文说明,变量名称英文。请检查实现是否符合要求。</p>
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

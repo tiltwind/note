@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_title: golang pool
 markmeta_author: 望哥
@@ -20,9 +21,13 @@ markmeta_categories: lang
 -->
 
 <h1>golang pool</h1>
+
 <h2>1. sync.Pool</h2>
+
 <p>golang sdk已经提供了性能优良的pool工具 <code>sync.Pool</code>, 在实践过程需要使用pool的尽量使用<code>sync.Pool</code>即可。</p>
+
 <p><code>sync.Pool</code>关键实现：</p>
+
 <ul>
 <li>MPG模型P级别单对象缓存,大多情况都直接返回，不存在竞争；</li>
 <li>MPG模型P级别池对象链表,取头部对象,也不存在竞争；</li>
@@ -32,17 +37,20 @@ markmeta_categories: lang
 <li>2个GC周期回收缓存对象,减轻GC压力,提高缓存利用率;</li>
 <li>双向链表</li>
 </ul>
+
 <p><code>sync.Pool</code>的特点:</p>
+
 <ul>
 <li>runtime级别最小化同步竞争，性能极好；</li>
 <li>支持GC对象回收，资源利用伸缩自如；</li>
 </ul>
+
 <p><code>sync.Pool</code>使用注意:</p>
+
 <ul>
 <li>应该使用指针作为池对象，避免潜在的对象复制；</li>
 <li>如果缓存slice需要判断传入slice的容量cap，缓存一致大小的slice避免出现内存泄露；</li>
 </ul>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-10-24 
@@ -20,19 +21,20 @@ markmeta_tags: golang,module
 -->
 
 <h1>GO 内存分配</h1>
+
 <h2>分配堆外内存</h2>
+
 <pre><code class="language-go">const chunkSize = 64 * 1024
 
 const chunksPerAlloc = 1024
 
-// Allocate offheap memory, so GOGC won&#39;t take into account cache size.
+// Allocate offheap memory, so GOGC won't take into account cache size.
 // This should reduce free memory waste.
 data, err := syscall.Mmap(-1, 0, chunkSize*chunksPerAlloc, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE)
 if err != nil {
 	panic(fmt.Errorf(&quot;cannot allocate %d bytes via mmap: %s&quot;, chunkSize*chunksPerAlloc, err))
 }
 </code></pre>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

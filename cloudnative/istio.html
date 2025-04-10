@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2021-12-22
@@ -20,7 +21,9 @@ markmeta_tags: mesh,service-mesh
 -->
 
 <h1>Istio</h1>
+
 <h2>install istio</h2>
+
 <pre><code class="language-bash">
 # Download Istio
 curl -L https://istio.io/downloadIstio | sh -
@@ -36,8 +39,11 @@ istioctl install --set profile=demo -y
 
 # Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later
 kubectl label namespace default istio-injection=enabled
+
 </code></pre>
+
 <h2>run istio demo</h2>
+
 <pre><code class="language-bash"># Deploy the Bookinfo sample application:
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 
@@ -46,7 +52,7 @@ kubectl get services
 kubectl get pods
 
 # Verify everything is working correctly up to this point. Run this command to see if the app is running inside the cluster and serving HTML pages by checking for the page title in the response:
-kubectl exec &quot;$(kubectl get pod -l app=ratings -o jsonpath=&#39;{.items[0].metadata.name}&#39;)&quot; -c ratings -- curl -sS productpage:9080/productpage | grep -o &quot;&lt;title&gt;.*&lt;/title&gt;&quot;
+kubectl exec &quot;$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')&quot; -c ratings -- curl -sS productpage:9080/productpage | grep -o &quot;&lt;title&gt;.*&lt;/title&gt;&quot;
 
 # &lt;title&gt;Simple Bookstore App&lt;/title&gt;
 
@@ -57,24 +63,30 @@ kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
 istioctl analyze
 
 # Set the ingress ports:
-export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=&#39;{.spec.ports[?(@.name==&quot;http2&quot;)].nodePort}&#39;)
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name==&quot;http2&quot;)].nodePort}')
 echo &quot;$INGRESS_PORT&quot;
 
-export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=&#39;{.spec.ports[?(@.name==&quot;https&quot;)].nodePort}&#39;)
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name==&quot;https&quot;)].nodePort}')
 echo &quot;$SECURE_INGRESS_PORT&quot;
 
 # Set the ingress IP:
 export INGRESS_HOST=$(minikube ip)
 echo &quot;$INGRESS_HOST&quot;
+
 </code></pre>
+
 <p>start minikube tunnel in new window:</p>
+
 <pre><code class="language-bash"># Run this command in a new terminal window to start a Minikube tunnel that sends traffic to your Istio Ingress Gateway:
 su - kube
 usermod -aG wheel kube
 minikube tunnel
-</code></pre>
-<p>browse the demo page:</p>
-<pre><code class="language-bash"># Set GATEWAY_URL:
+
+````
+
+browse the demo page:
+```bash
+# Set GATEWAY_URL:
 export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 echo &quot;$GATEWAY_URL&quot;
 
@@ -87,7 +99,9 @@ export LOCAL_EXTERNAL_HOST=10.225.46.24:8000
 echo &quot;http://$LOCAL_EXTERNAL_HOST/productpage&quot;
 # Paste the output from the previous command into your web browser and confirm that the Bookinfo product page is displayed.
 </code></pre>
+
 <p>view dashboard:</p>
+
 <pre><code class="language-bash">
 kubectl apply -f samples/addons
 kubectl rollout status deployment/kiali -n istio-system
@@ -102,7 +116,9 @@ socat tcp-listen:8000,reuseaddr,fork tcp:127.0.0.1:20001
 
 # browser http://10.225.46.24:8000 to see dashboard
 </code></pre>
+
 <h2>uninstall istio</h2>
+
 <pre><code class="language-bash">kubectl delete -f samples/addons
 istioctl manifest generate --set profile=demo | kubectl delete --ignore-not-found=true -f -
 istioctl tag remove default
@@ -117,15 +133,18 @@ kubectl label namespace default istio-injection-
 
 minikube stop
 </code></pre>
+
 <h2>reference</h2>
+
 <ul>
-<li><a href="https://istio.io/latest/docs/setup/getting-started/">https://istio.io/latest/docs/setup/getting-started/</a></li>
+<li><a href="https://istio.io/latest/docs/setup/getting-started/" target="_blank">https://istio.io/latest/docs/setup/getting-started/</a></li>
 </ul>
+
 <h2>History</h2>
+
 <ul>
 <li>2021-12-22, first version</li>
 </ul>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

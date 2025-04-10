@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2021-10-15
@@ -20,19 +21,28 @@ markmeta_tags: golang,proxy
 -->
 
 <h1>Go proxy</h1>
+
 <h2>1. 什么是 go proxy</h2>
-<p>golang 官方提供了模块管理功能 <code>go mod</code>, 
-项目下通过 <code>go.mod</code> 定义模块依赖， 
+
+<p>golang 官方提供了模块管理功能 <code>go mod</code>,
+项目下通过 <code>go.mod</code> 定义模块依赖，
 通过 <code>go.sum</code> 定义依赖模块的 checksum 校验码.</p>
-<p>模块下载通过支持 <a href="https://golang.org/ref/mod#goproxy-protocol">goproxy 协议</a> 的服务进行下载, 
+
+<p>模块下载通过支持 <a href="https://golang.org/ref/mod#goproxy-protocol" target="_blank">goproxy 协议</a> 的服务进行下载,
 默认地址是 <code>https://proxy.golang.org</code>。</p>
-<p>checksum 数据库默认地址是 <code>https://sum.golang.org</code>, 
-代理服务也可以代理 checksum 的代理请求，只需实现 <a href="https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md#checksum-database">checksum代理协议</a></p>
+
+<p>checksum 数据库默认地址是 <code>https://sum.golang.org</code>,
+代理服务也可以代理 checksum 的代理请求，只需实现 <a href="https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md#checksum-database" target="_blank">checksum代理协议</a></p>
+
 <p>但网络原因，可能访问不了默认代理服务或访问很慢，可以通过请求中间代理服务，
 中间代理服务只要支持 <code>goproxy协议</code> 和 <code>checksum代理协议</code> 即可.</p>
+
 <p>比如 <code>https://goproxy.io</code> , <code>https://goproxy.cn</code>.</p>
+
 <h2>2. 访问私有仓库</h2>
+
 <p>golang 要构建需要下载相关依赖库的源码，因为公司内部项目都是放在私有 gitlab 仓库中，要能够下载编译可以设置以下两个参数即可。</p>
+
 <pre><code class="language-bash"># 多个代理逗号间隔,go会依次尝试从各个代理下载依赖库,如果下载不了则使用下一个代理
 # direct 代表直接连接
 export GOPROXY=https://goproxy.cn,https://proxy.golang.org,direct
@@ -41,22 +51,34 @@ export GOPROXY=https://goproxy.cn,https://proxy.golang.org,direct
 # GOPRIVATE 指定的仓库将不进行sum校验
 export GOPRIVATE=gitlab.mycompany.com,*.mysubcompany.com,github.com/mycompany
 </code></pre>
+
 <p>还可以用 <code>GONOPROXY</code> 和 <code>GONOSUMDB</code> 更灵活的配置，这两个配置会覆盖 <code>GOPRIVATE</code> 的配置.</p>
+
 <p>注意: 如果本地是通过ssh连接私有仓库,还需配置 <code>~/.gitconfig</code>：</p>
+
 <pre><code>[url &quot;ssh://git@gitlab.mycompany.com/&quot;]
     insteadOf = https://gitlab.mycompany.com/
 </code></pre>
+
 <h2>3. 安装私有 goproxy</h2>
+
 <p>如果出于性能、安全、稳定性考虑, 公司还可以创建私有goproxy。</p>
+
 <blockquote>
 <p>注意: goproxy 无安全认证，如果公司内部项目有权限访问限制，则不要将私有项目通过goproxy进行代理。
 只有开源公开的项目才通过goproxy代理,其他项目则直接访问代码库的方式。</p>
 </blockquote>
-<p>下面选择 开源goproxy实现 <a href="https://github.com/gomods/athens">athens</a> 进行安装。</p>
+
+<p>下面选择 开源goproxy实现 <a href="https://github.com/gomods/athens" target="_blank">athens</a> 进行安装。</p>
+
 <h3>3.1. 下载 athens</h3>
-<p>从 <a href="https://github.com/gomods/athens/releases">这里</a> 下载athens最新版本, 解压后得到 athens 可执行文件.</p>
+
+<p>从 <a href="https://github.com/gomods/athens/releases" target="_blank">这里</a> 下载athens最新版本, 解压后得到 athens 可执行文件.</p>
+
 <h3>3.2. 创建 athens 配置文件</h3>
-<p>创建一个配置文件  config.toml: </p>
+
+<p>创建一个配置文件  config.toml:</p>
+
 <pre><code class="language-toml">Port = &quot;:3000&quot;
 GoBinary = &quot;go&quot;
 GoEnv = &quot;development&quot;
@@ -80,31 +102,43 @@ StorageType = &quot;disk&quot;
     [Storage.Disk]
         RootPath = &quot;/home/app/athens/storage&quot;
 </code></pre>
+
 <p>其中 <code>RootPath = &quot;/home/app/athens/storage&quot;</code> 为配置缓存文件的目录。
-完整配置属性参考<a href="https://docs.gomods.io/configuration/">这里</a>.
-也可以基于 <a href="https://github.com/gomods/athens/blob/main/config.dev.toml">范例</a> 进行修改.</p>
+完整配置属性参考<a href="https://docs.gomods.io/configuration/" target="_blank">这里</a>.
+也可以基于 <a href="https://github.com/gomods/athens/blob/main/config.dev.toml" target="_blank">范例</a> 进行修改.</p>
+
 <h3>3.3. 配置代码库访问权限</h3>
+
 <p>创建 .netrc 文件用于配置访问 gitlab 仓库的账号密码</p>
+
 <pre><code>machine gitlab.mycompany.com login root password ROOTPASS
 </code></pre>
+
 <h3>3.4. 启动代理</h3>
+
 <pre><code class="language-bash">./athens -config_file ./config.toml
 </code></pre>
+
 <p>访问地址为 <code>http://&lt;ip&gt;:3000</code>.</p>
+
 <h3>3.5. 访问代理</h3>
+
 <p>jenkins或本地开发设置 <code>export GOPROXY=http://&lt;ip&gt;:3000,direct</code> 即可。</p>
+
 <h2>A. 参考</h2>
+
 <ul>
-<li>goproxy protocol, <a href="https://golang.org/ref/mod#goproxy-protocol">https://golang.org/ref/mod#goproxy-protocol</a></li>
-<li>golang checksum database protocol, <a href="https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md#checksum-database">https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md#checksum-database</a></li>
-<li>GOPRIVATE 环境变量, <a href="https://goproxy.io/zh/docs/GOPRIVATE-env.html">https://goproxy.io/zh/docs/GOPRIVATE-env.html</a></li>
-<li>GOSUMDB 环境变量, <a href="https://goproxy.io/zh/docs/GOSUMDB-env.html">https://goproxy.io/zh/docs/GOSUMDB-env.html</a></li>
+<li>goproxy protocol, <a href="https://golang.org/ref/mod#goproxy-protocol" target="_blank">https://golang.org/ref/mod#goproxy-protocol</a></li>
+<li>golang checksum database protocol, <a href="https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md#checksum-database" target="_blank">https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md#checksum-database</a></li>
+<li>GOPRIVATE 环境变量, <a href="https://goproxy.io/zh/docs/GOPRIVATE-env.html" target="_blank">https://goproxy.io/zh/docs/GOPRIVATE-env.html</a></li>
+<li>GOSUMDB 环境变量, <a href="https://goproxy.io/zh/docs/GOSUMDB-env.html" target="_blank">https://goproxy.io/zh/docs/GOSUMDB-env.html</a></li>
 </ul>
+
 <h2>B. 编辑历史</h2>
+
 <ol>
 <li>2021-10-15, wangoo, 初版</li>
 </ol>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

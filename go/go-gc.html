@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: 望哥
 markmeta_date: 2018-08-01
@@ -20,44 +21,60 @@ markmeta_tags: golang,GC
 -->
 
 <h1>Go GC 算法</h1>
+
 <p>Go GC算法基本特征：</p>
+
 <ul>
 <li>非分代</li>
 <li>非紧缩</li>
 <li>写屏障</li>
 <li>并发标记</li>
 </ul>
+
 <p>Go采用三色标记和写屏障：</p>
+
 <ul>
 <li>起初所有的对象都是白色；</li>
 <li>扫描找出所有可达对象，标记为灰色，放入待处理队列；</li>
 <li>从队列提取灰色对象，将其引用对象标记为灰色放入队列,自身标记为黑色;</li>
 <li>写屏障监视对象的内存修改，重新标色或放回队列；</li>
 </ul>
-<p><img src="images/golang_gc_phases.png" alt="">
-<img src="images/Animation_of_tri-color_garbage_collection.gif" alt=""></p>
+
+<p><img src="images/golang_gc_phases.png" alt="" />
+<img src="images/Animation_of_tri-color_garbage_collection.gif" alt="" /></p>
+
 <p>关于上图有几点需要说明的是。</p>
+
 <ul>
 <li>首先从 root 开始遍历，root 包括全局指针和 goroutine 栈上的指针。</li>
-<li>mark 有两个过程。<ul>
+<li>mark 有两个过程。
+
+<ul>
 <li>从 root 开始遍历，标记为灰色。遍历灰色队列。</li>
 <li>re-scan 全局指针和栈。因为 mark 和用户程序是并行的，所以在过程 1 的时候可能会有新的对象分配，这个时候就需要通过写屏障（write barrier）记录下来。re-scan 再完成检查一下。</li>
-</ul>
-</li>
-<li>Stop The World 有两个过程。<ul>
+</ul></li>
+<li>Stop The World 有两个过程。
+
+<ul>
 <li>第一个是 GC 将要开始的时候，这个时候主要是一些准备工作，比如 enable write barrier。</li>
 <li>第二个过程就是上面提到的 re-scan 过程。如果这个时候没有 stw，那么 mark 将无休止。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
+
 <h1>Go各版本GC算法及STW耗时 ：</h1>
+
 <h2>Go 1.0</h2>
+
 <p>GC算法:</p>
+
 <ul>
 <li>same as Go 1.1, but instead of being mostly precise the garbage collector is conservative. The conservative GC is able to ignore objects such as []byte.  ：同1.1版本，但不是大多数精确回收，而是采用保守的方式，会忽略一些对象(如[]byte对象)</li>
 </ul>
+
 <h2>Go 1.1</h2>
+
 <p>GC算法:</p>
+
 <ul>
 <li>mark-and-sweep (parallel implementation) ：标记回收算法(并行实现)</li>
 <li>non-generational  ：非分代回收</li>
@@ -69,17 +86,24 @@ markmeta_tags: golang,GC
 <li>supports finalizers on objects  ：支持对象析构器</li>
 <li>there is no support for weak references  ：不支持弱引用</li>
 </ul>
+
 <h2>Go 1.3</h2>
+
 <p>GC算法:</p>
+
 <ul>
 <li>Mark (STW)  ：Mark阶段STW</li>
 <li>concurrent sweep: 并发回收</li>
 <li>fully precise：完全精确回收</li>
 <li>updates on top of Go 1.1：基于1.1版本升级</li>
 </ul>
+
 <h2>Go 1.4</h2>
+
 <p>GC STW耗时: 300ms</p>
+
 <p>GC算法:</p>
+
 <ul>
 <li>hybrid stop-the-world/concurrent collector：混合STW/并发收集器</li>
 <li>stop-the-world part limited by a 10ms deadline：STW阶段有10ms限制截止时间</li>
@@ -91,50 +115,71 @@ markmeta_tags: golang,GC
 <li>incurs a small cost if the program is moving pointers around ：程序如果正在移动指针会有额外一点消耗</li>
 <li>lower latency, but most likely also lower throughput, than Go 1.3 GC ：比1.3更少延迟，一般也会更少吞吐量</li>
 </ul>
+
 <h2>Go 1.5</h2>
+
 <p>GC STW耗时: 40ms</p>
+
 <p>GC算法:</p>
+
 <ul>
 <li>三色标记法</li>
 </ul>
+
 <h2>Go 1.6</h2>
+
 <p>GC STW耗时: 3ms</p>
+
 <p>GC算法:</p>
+
 <ul>
 <li>三色标记法</li>
 </ul>
+
 <h2>Go 1.7</h2>
+
 <p>GC STW耗时: 1.5 ms</p>
+
 <p>GC算法:</p>
+
 <ul>
 <li>三色标记法混合write barrier</li>
 <li>write barrier 使用的经典的 Dijkstra-style insertion write barrier [Dijkstra ‘78]， STW 的主要耗时就在 stack re-scan 的过程;</li>
 </ul>
+
 <h2>Go 1.8</h2>
+
 <p>GC STW耗时: 50µs</p>
+
 <p>GC算法:</p>
+
 <ul>
 <li>三色标记法混合write barrier</li>
-<li>采用一种混合的 write barrier 方式 （Yuasa-style deletion write barrier [Yuasa ‘90] 和 Dijkstra-style insertion write barrier [Dijkstra ‘78]）来避免 re-scan。参考 <a href="https://github.com/golang/proposal/blob/master/design/17503-eliminate-rescan.md">17503-eliminate-rescan</a>。</li>
-<li>stack re-scanning concurrent, 参考<a href="https://github.com/golang/proposal/blob/master/design/17505-concurrent-rescan.md">17505-concurrent-rescan</a></li>
+<li>采用一种混合的 write barrier 方式 （Yuasa-style deletion write barrier [Yuasa ‘90] 和 Dijkstra-style insertion write barrier [Dijkstra ‘78]）来避免 re-scan。参考 <a href="https://github.com/golang/proposal/blob/master/design/17503-eliminate-rescan.md" target="_blank">17503-eliminate-rescan</a>。</li>
+<li>stack re-scanning concurrent, 参考<a href="https://github.com/golang/proposal/blob/master/design/17505-concurrent-rescan.md" target="_blank">17505-concurrent-rescan</a></li>
 </ul>
+
 <h2>Go 1.9、1.10</h2>
+
 <p>基于以前版本没有太大变化。</p>
+
 <h1>参考:</h1>
+
 <ul>
-<li><a href="https://talks.golang.org/2015/go-gc.pdf">GO GC PDF</a></li>
-<li><a href="https://stackoverflow.com/questions/7823725/what-kind-of-garbage-collection-does-go-use">What kind of Garbage Collection does Go use?</a></li>
-<li><a href="http://legendtkl.com/2017/04/28/golang-gc/">golang 垃圾回收剖析</a></li>
-<li><a href="https://www.reddit.com/r/golang/comments/43cpy6/gc_pause_times_from_300ms_go_14_to_40ms_go_15_to/">GC pause times: from 300ms (Go 1.4) to 40ms (Go 1.5) to 3ms (Go 1.6). They did it again!</a></li>
-<li><a href="https://blog.plan99.net/modern-garbage-collection-911ef4f8bd8e">Modern garbage collection</a></li>
-<li><a href="https://segmentfault.com/a/1190000007926782">译文-现代垃圾回收</a></li>
-<li><a href="http://holys.im/2016/07/01/monitor-golang-gc/">如何监控 golang 程序的垃圾回收</a></li>
+<li><a href="https://talks.golang.org/2015/go-gc.pdf" target="_blank">GO GC PDF</a></li>
+<li><a href="https://stackoverflow.com/questions/7823725/what-kind-of-garbage-collection-does-go-use" target="_blank">What kind of Garbage Collection does Go use?</a></li>
+<li><a href="http://legendtkl.com/2017/04/28/golang-gc/" target="_blank">golang 垃圾回收剖析</a></li>
+<li><a href="https://www.reddit.com/r/golang/comments/43cpy6/gc_pause_times_from_300ms_go_14_to_40ms_go_15_to/" target="_blank">GC pause times: from 300ms (Go 1.4) to 40ms (Go 1.5) to 3ms (Go 1.6). They did it again!</a></li>
+<li><a href="https://blog.plan99.net/modern-garbage-collection-911ef4f8bd8e" target="_blank">Modern garbage collection</a></li>
+<li><a href="https://segmentfault.com/a/1190000007926782" target="_blank">译文-现代垃圾回收</a></li>
+<li><a href="http://holys.im/2016/07/01/monitor-golang-gc/" target="_blank">如何监控 golang 程序的垃圾回收</a></li>
 </ul>
+
 <h1>History</h1>
+
 <ol>
 <li>2018-08-01, wongoo, created</li>
 </ol>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

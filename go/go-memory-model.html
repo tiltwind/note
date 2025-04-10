@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2018-12-21
@@ -20,38 +21,60 @@ markmeta_tags: golang,memory
 -->
 
 <h1>Go内存模型</h1>
-<p>原文《<a href="https://golang.org/ref/mem">The Go Memory Model</a>》, 已有<a href="https://go-zh.org/ref/mem">中文翻译</a>，整体翻译不错，但主要是一一对照翻译，有些翻译有错，加上英文版本有些地方写得也很教材化，翻译有些晦涩难懂，所以想自己来翻译一下，按照理解进行翻译，对重点内容进行译注说明，希望能做到简单明了。</p>
+
+<p>原文《<a href="https://golang.org/ref/mem" target="_blank">The Go Memory Model</a>》, 已有<a href="https://go-zh.org/ref/mem" target="_blank">中文翻译</a>，整体翻译不错，但主要是一一对照翻译，有些翻译有错，加上英文版本有些地方写得也很教材化，翻译有些晦涩难懂，所以想自己来翻译一下，按照理解进行翻译，对重点内容进行译注说明，希望能做到简单明了。</p>
+
 <p>文章将对一些关键字不进行翻译：</p>
+
 <ul>
 <li>goroutine</li>
 <li>channel</li>
 </ul>
+
 <h1>1. 介绍</h1>
+
 <p>本文说明如何确保一个goroutine能够读取到另一个goroutine对一个变量写入的值。</p>
+
 <h1>2. 忠告</h1>
+
 <p>如果存在多个goroutine同时修改数据的情况，则需要串行化请求来保护数据。串行化可以通过channel信道或如sync、sync/atomic包下的同步工具来实现。</p>
+
 <p>如果你需要读本文才能理解你的程序的行为，你正变得更聪明，但别自作聪明。</p>
+
 <blockquote>
 <p>译注: 你应该保持你的代码清晰简洁, 要明白语言同步特性，不要滥用，否则适得其反。</p>
 </blockquote>
+
 <h1>3. 事件顺序</h1>
+
 <p>在单个goroutine中，读取和写入的表现必须与代码指定的执行顺序相一致。按照Go语言规范，编译器和处理器可能会对单个goroutine中的读取和写入的代码进行重新排序，只要重新排序不会改变goroutine的行为。由于存在重新排序，一个goroutine中的执行顺序可能和另外一个goroutine中的执行顺序不一致。例如一个goroutine执行 <code>a = 1; b = 2;</code> 这个语句，另外一个goroutine可能会监测到变量<code>b</code>比变量<code>a</code>先更新。</p>
+
 <p>为了详细论述读取和写入的必要条件，我们定义了<code>事件发生顺序</code>的概念，它表示Go程序中内存操作执行的 偏序关系（<code>partial order</code>）。 若事件 e1 发生在 e2 之前， 那么我们就说 e2 发生在 e1 之后。 换言之，若 e1 既未发生在 e2 之前， 又未发生在 e2 之后，那么我们就说 e1 与 e2 是并发的。</p>
+
 <p><strong>单个goroutine中事件发生的顺序即为程序所表达的顺序</strong>。</p>
+
 <p>若以下条件均成立，则对变量 v 的读取操作 r 就可以监测到对变量 v 的写入操作 w ：</p>
+
 <ul>
 <li>r 不发生在 w 之前。</li>
-<li>在 w 之后 r 之前，不存在其它对 v 进行的写入操作 w&#39;。</li>
+<li>在 w 之后 r 之前，不存在其它对 v 进行的写入操作 w&rsquo;。</li>
 </ul>
+
 <p>为确保对变量 v 的读取操作 r 能够监测到特定的对 v 进行写入的操作 w，需确保 w 是唯一允许被 r 监测的写入操作，也就是以下条件均成立：</p>
+
 <ul>
 <li>w 发生在 r 之前。</li>
 <li>对共享变量 v 的其它任何写入操作都只能发生在 w 之前或 r 之后。</li>
 </ul>
+
 <p>这对条件的要求比第一对更强，它需要确保没有其它写入操作与 w 或 r 并发。</p>
+
 <p>在单个goroutine中并不存在并发，因此这两条定义是等价的：读取操作 r 可监测最近的写入操作 w 对 v 写入的值。当多个goroutine访问共享变量 v 时，它们必须通过同步事件来建立顺序条件，以此确保读取操作能监测到预期的写入。</p>
+
 <p>以变量 v 所属类型的零值来对 v 进行初始化，其表现如同在内存模型中进行的写入操作。</p>
+
 <p>对大于单个机器字的值进行读取和写入，其表现如同以不确定的顺序对多个机器字大小的值进行操作。</p>
+
 <pre><code># https://go-zh.org/ref/mem
 单goroutine的情形：
 -- w0 ---- r1 -- w1 ---- w2 ----  r2 ---- r3 ------&gt;
@@ -76,17 +99,27 @@ markmeta_tags: golang,memory
 r2 之前的写入为 w2，但与其并发的有 w4，因此 r2 的值是不确定的：可以是 w2，也可以是 w4。
 而 r4 之前的写入的是 w2，与它并发的并没有写入，因此 r4 读取的值为 w2。
 </code></pre>
+
 <h1>4. 同步</h1>
+
 <h2>4.1 初始化</h2>
+
 <p>程序的初始化运行在单个goroutine中，但该Go程可能会创建其它并发运行的gouroutine。</p>
+
 <p><strong>若包 p 导入了包 q，则 q 的 init 函数会在 p 的任何函数开始前完成。</strong></p>
+
 <p><strong>函数 main.main 会在所有的 init 函数结束后开始。</strong></p>
+
 <h2>4.2 Goroutine 创建</h2>
+
 <p>启动一个新的goroutine的go语句执行后，这个新的goroutine才开始执行。</p>
+
 <blockquote>
 <p>译注: goroutine创建后，需要runtime去调度才会执行。</p>
 </blockquote>
+
 <p>例如:</p>
+
 <pre><code class="language-golang">var a string
 
 func f() {
@@ -98,9 +131,13 @@ func hello() {
 	go f()
 }
 </code></pre>
+
 <p>调用<code>hello()</code>方法将在之后的某一个时间点打印<code>“hello, world”</code>（可能是<code>hello()</code>方法已经返回了之后）。</p>
+
 <h2>4.3 Goroutine 销毁</h2>
+
 <p>一个goroutine不保证在程序的任何事件之前退出，如下:</p>
+
 <pre><code class="language-golang">var a string
 
 func hello() {
@@ -108,18 +145,25 @@ func hello() {
 	print(a)
 }
 </code></pre>
+
 <p>对变量a的赋值没有添加在同步事件之后，就不能保证能被其他goroutine监测到。实际上，一个积极的编译器可能会将整个go语句都删掉。</p>
+
 <p>要确保一个goroutine被其他goroutine监测到，需要使用类似lock或channel通信的同步机制来建立顺序关系。</p>
+
 <h2>4.4 Channel 通信</h2>
+
 <p>channel通信是goroutine之间主要的同步方式。一个channel上的每一个send动作都对应这个channel上的一个receive动作, send和receive通常在不同的goroutine中.</p>
+
 <p><strong>(缓冲的)channel上的一个send发生在对应的receive完成前。</strong></p>
+
 <blockquote>
 <p>原文: A send on a channel happens before the corresponding receive from that channel completes.</p>
-</blockquote>
-<blockquote>
+
 <p>译注: 注意这里是<code>receive完成</code>前, 而不是<code>receive开始</code>前。channel通信是通过共享内存的方式实现，send动作会去唤醒receive的goroutine变为ready状态，send还没完receive可能已经开始了，channel的内部结构hchan本身包含锁机制，可以保证send对hchan的修改在receive的修改之前完成。</p>
 </blockquote>
+
 <p>例如:</p>
+
 <pre><code class="language-golang">var c = make(chan int, 10)
 var a string
 
@@ -134,22 +178,29 @@ func main() {
 	print(a)
 }
 </code></pre>
-<p>以上代码确保可以打印出&quot;hello, world&quot;：</p>
+
+<p>以上代码确保可以打印出&rdquo;hello, world&rdquo;：</p>
+
 <ul>
 <li>对变量<code>a</code>的写入发生在对channel <code>c</code>的send之前；</li>
 <li>对channel <code>c</code> 的send动作又发生在<code>c</code>的receive动作完成之前；</li>
 <li>receive动作又发生在print打印之前。</li>
 </ul>
+
 <p>如果在receive之前close了channel，因为channel已经关闭，所以receive将接收到零值。</p>
-<p>上一个例子中，替换<code>c &lt;- 0</code>为<code>close(c) </code>可以同样保证相同的行为。</p>
+
+<p>上一个例子中，替换<code>c &lt;- 0</code>为<code>close(c)</code>可以同样保证相同的行为。</p>
+
 <p><strong>对于非缓冲的channel，receive动作发生在send完成之前。</strong></p>
+
 <blockquote>
 <p>原文: A receive from an unbuffered channel happens before the send on that channel completes.</p>
-</blockquote>
-<blockquote>
+
 <p>译注: 注意这里和缓冲channel的差异，非缓冲channel的receive动作比send先完成，而缓冲channel的send动作比receive先完成。</p>
 </blockquote>
+
 <p>以下例子同上例, 只是send和receive语句互换，并且使用非缓冲channel:</p>
+
 <pre><code class="language-golang">var c = make(chan int)
 var a string
 
@@ -163,25 +214,33 @@ func main() {
 	print(a)
 }
 </code></pre>
-<p>这个例子也能保证打印出&quot;hello, world&quot;：</p>
+
+<p>这个例子也能保证打印出&rdquo;hello, world&rdquo;：</p>
+
 <ul>
 <li>对变量a的写入发生在对c的receive之前,</li>
 <li>对c的receive又发生在对c的send之前，</li>
 <li>对c的send又发生在print之前。</li>
 </ul>
-<p>如果channel是缓冲的(例如<code>c = make(chan int, 1)</code>),则该程序不能保证打印出 &quot;hello, world&quot;，有可能打印空字符串，或者崩溃，或者其他情况。</p>
+
+<p>如果channel是缓冲的(例如<code>c = make(chan int, 1)</code>),则该程序不能保证打印出 &ldquo;hello, world&rdquo;，有可能打印空字符串，或者崩溃，或者其他情况。</p>
+
 <blockquote>
-<p>译注: 打印空字符串比较好理解，至于<code>崩溃</code>或<code>其他情况</code> 请参考<a href="https://stackoverflow.com/questions/55372640/trying-to-understand-golang-chan-cause-crash-or-do-something-else">这里</a></p>
+<p>译注: 打印空字符串比较好理解，至于<code>崩溃</code>或<code>其他情况</code> 请参考<a href="https://stackoverflow.com/questions/55372640/trying-to-understand-golang-chan-cause-crash-or-do-something-else" target="_blank">这里</a></p>
 </blockquote>
+
 <p><strong>对于容量为C的缓冲channel，第k次receive发生在第k+C次send完成之前。</strong></p>
+
 <blockquote>
 <p>原文: The kth receive on a channel with capacity C happens before the k+Cth send from that channel completes.</p>
-</blockquote>
-<blockquote>
+
 <p>译注: 这句话有点教科书式，较难理解。缓冲 channel 类似一个有容量的队列。当队列满的时候send goroutine会阻塞；当队列空的时候receive goroutine会阻塞。假设channel已经满了，也就是已经有C次的send动作，如果再进行第1+C次send，这次send的goroutine就会阻塞并被加到send等待队列中。当第1次receive发生的时候，会唤醒被阻塞的第1+C次send的 goroutine开始执行。当第1次receive动作完成并释放锁后，就可以让第1+C次的send完成动作。</p>
 </blockquote>
+
 <p>这个规则是对于前面缓冲channel规则的概括。即缓冲channel建模了一个计数信号量：channel中元素个数表示channel正被使用的数量, channel的容量决定了最大同时使用数。send一个元素需要获取信号量,receive一个元素释放信号量。这就是一般用于限制并发的做法。</p>
+
 <p>以下代码对于每一个work列表项启动一个goroutine，这些goroutine通过一个channel限制，确保同一时间只有3个工作项在执行。</p>
+
 <pre><code class="language-golang">var limit = make(chan int, 3)
 
 func main() {
@@ -195,15 +254,19 @@ func main() {
 	select{}
 }
 </code></pre>
+
 <h2>4.5 锁</h2>
+
 <p><code>sync</code>包内实现了两种锁 <code>sync.Mutex</code> 和 <code>sync.RWMutex</code>。</p>
+
 <p><strong>对于sync.Mutex 或 sync.RWMutex 的变量 l，当n &lt; m时，第n次调用<code>l.Unlock()</code>发生在第m次调用<code>l.Lock()</code>返回之前。</strong></p>
+
 <blockquote>
 <p>原文: For any sync.Mutex or sync.RWMutex variable l and n &lt; m, call n of l.Unlock() happens before call m of l.Lock() returns.</p>
+
+<p>译注：<code>l.Lock()</code> 和 <code>l.Unlock()</code> 必须是成对依次调用的，下一次（或后续的某一次第m次）的<code>l.Lock()</code> 必须在上一次 <code>l.Unlock()</code> （第n次）完成之后才能完成。 <code>l.Lock()</code> 返回之前，上一次<code>l.Unlock()</code>就肯定已经先返回完成了。 这个m不一定等于n+1, 也就是同时有多个<code>l.Lock()</code>加锁请求 n+1,n+2 &hellip; m,m+1 &hellip;，但第n次解锁后，后续的随机某一个加锁请求成功了。</p>
 </blockquote>
-<blockquote>
-<p>译注：<code>l.Lock()</code> 和 <code>l.Unlock()</code> 必须是成对依次调用的，下一次（或后续的某一次第m次）的<code>l.Lock()</code> 必须在上一次 <code>l.Unlock()</code> （第n次）完成之后才能完成。 <code>l.Lock()</code> 返回之前，上一次<code>l.Unlock()</code>就肯定已经先返回完成了。 这个m不一定等于n+1, 也就是同时有多个<code>l.Lock()</code>加锁请求 n+1,n+2 ... m,m+1 ...，但第n次解锁后，后续的随机某一个加锁请求成功了。</p>
-</blockquote>
+
 <pre><code class="language-golang">var l sync.Mutex
 var a string
 
@@ -219,27 +282,34 @@ func main() {
 	print(a)
 }
 </code></pre>
-<p>以上代码可以确保打印出&quot;hello, world&quot;。</p>
+
+<p>以上代码可以确保打印出&rdquo;hello, world&rdquo;。</p>
+
 <ul>
 <li>第1次调用f()中<code>l.Unlock()</code>发生在main中第2次<code>l.Lock()</code>返回之前；</li>
 <li>第2次<code>l.Lock()</code>又发生在print之前。</li>
 </ul>
+
 <p><strong>对于<code>sync.RWMutex</code>类型变量<code>l</code>,存在n,使得 <code>l.RLock</code>调用返回发生在第n次调用<code>l.Unlock</code>之后，对应<code>l.RUnlock</code>发生在第n+1次调用<code>l.Lock</code>之前。</strong></p>
+
 <blockquote>
 <p>原文: For any call to l.RLock on a sync.RWMutex variable l, there is an n such that the l.RLock happens (returns) after call n to l.Unlock and the matching l.RUnlock happens before call n+1 to l.Lock.</p>
-</blockquote>
-<blockquote>
+
 <p>译注: 读锁(read lock)加锁<code>l.RLock</code>和解锁<code>l.RUnlock</code>成对依次出现，可并行多个；写锁(write lock)加锁<code>l.Lock</code>和解锁<code>l.Unlock</code>成对依次出现，并行只能有一个。但<code>读锁对</code>和<code>写锁对</code>不能并行，也就是同一时间只能有read lock或者write lock。以上这句话主要是说明write lock解锁后才能加read lock, 相应read lock解锁后才能加write lock。</p>
 </blockquote>
+
 <h2>4.6 Once单次锁</h2>
+
 <p>sync包通过Once单次锁类型提供一种安全的多goroutine初始化机制。多个线程(<code>译注:原文是threads，而不是goroutine</code>) 执行<code>once.Do(f)</code>调用方法f, 但只会有一个会执行<code>f()</code>方法，其他的调用会在<code>f()</code>方法调用返回之前被阻塞住。</p>
+
 <p><strong>通过<code>once.Do(f)</code>单次调用<code>f()</code>方法发生在任何调用<code>once.Do(f)</code>返回之前。</strong></p>
+
 <blockquote>
 <p>原文: A single call of f() from once.Do(f) happens (returns) before any call of once.Do(f) returns.</p>
-</blockquote>
-<blockquote>
+
 <p>译注: <code>once.Do(f)</code>保证只会有一个真正调用<code>f()</code>, 方法<code>f()</code>调用完成返回后，所有的once.Do(f)调用才会完成返回。</p>
 </blockquote>
+
 <pre><code class="language-golang">var a string
 var once sync.Once
 
@@ -257,13 +327,19 @@ func twoprint() {
 	go doprint()
 }
 </code></pre>
-<p>调用<code>twoprint</code>方法会打印 &quot;hello, world&quot; 两次. 只有第一次调用<code>doprint</code> 会执行<code>setup</code>一次.</p>
+
+<p>调用<code>twoprint</code>方法会打印 &ldquo;hello, world&rdquo; 两次. 只有第一次调用<code>doprint</code> 会执行<code>setup</code>一次.</p>
+
 <blockquote>
 <p>译注: 原文<code>The first call to doprint runs setup once</code>可能描述不准确，应该是只有第一次调用<code>once.Do(setup)</code> 会执行<code>setup</code>一次.</p>
 </blockquote>
+
 <h1>5. 错误的同步</h1>
+
 <p>注意，虽然某一次读r可能会监测到和它同步的某一次写w，但这并不表明r之后的读能够监测到在w之前的写。</p>
+
 <p>请看以下例子：</p>
+
 <pre><code class="language-golang">var a, b int
 
 func f() {
@@ -281,9 +357,13 @@ func main() {
 	g()
 }
 </code></pre>
+
 <p>这个例子g()方法可能会先打印2然后打印0。</p>
+
 <p><strong>这个事实让一些惯用语法失效了。</strong></p>
+
 <p>请反复检查锁机制避免同步过多反而无效。例如，<code>twoprint</code>的例子可能错误的写为如下的形式:</p>
+
 <pre><code class="language-golang">var a string
 var done bool
 
@@ -304,8 +384,11 @@ func twoprint() {
 	go doprint()
 }
 </code></pre>
-<p>这里并不保证在 <code>doprint</code> 方法中通过监测对变量<code>done</code>的写来间接监测到对变量<code>a</code>的写。这个版本可能会错误的打印空字符串而不是&quot;hello, world&quot;。</p>
+
+<p>这里并不保证在 <code>doprint</code> 方法中通过监测对变量<code>done</code>的写来间接监测到对变量<code>a</code>的写。这个版本可能会错误的打印空字符串而不是&rdquo;hello, world&rdquo;。</p>
+
 <p>另外一种错误的语法是忙等一个值，例如：</p>
+
 <pre><code class="language-golang">var a string
 var done bool
 
@@ -321,12 +404,16 @@ func main() {
 	print(a)
 }
 </code></pre>
+
 <p>如上一个例子，这个例子也无法确保main方法中通过监测对变量<code>done</code>的写来间接监测到对变量<code>a</code>的写，这个程序也可能打印空字符串。
 可能更糟糕的是，也不能确保对变量<code>done</code>的写能够被<code>main</code>监测到，因为两个goroutine之间没有同步事件。<code>main</code>方法中的循环不保证会结束。</p>
+
 <blockquote>
-<p>译注: 其中 <code>不能确保对变量done的写能够被main监测到，因为两个goroutine之间没有同步事件</code> 需注意，在多核cpu中每个cpu有自己的高速缓存，变量会被拷贝到高速缓存中再进行操作。如果main goroutine的运行cpu已经获得done的值并拷贝到cpu高速缓存中，另外一个goroutine运行cpu对变量done的修改最终会更新到主存，但main goroutine运行cpu并不知道这个改变，不会更新自身缓存中的值，就会造成无限循环下去。可以通过atomic原子读取更新解决这个问题。 参考<a href="https://doc.sisopipo.com/#/cs/memory-model">内存模型</a>以及<a href="https://doc.sisopipo.com/#/cs/cas">CAS</a>。</p>
+<p>译注: 其中 <code>不能确保对变量done的写能够被main监测到，因为两个goroutine之间没有同步事件</code> 需注意，在多核cpu中每个cpu有自己的高速缓存，变量会被拷贝到高速缓存中再进行操作。如果main goroutine的运行cpu已经获得done的值并拷贝到cpu高速缓存中，另外一个goroutine运行cpu对变量done的修改最终会更新到主存，但main goroutine运行cpu并不知道这个改变，不会更新自身缓存中的值，就会造成无限循环下去。可以通过atomic原子读取更新解决这个问题。 参考<a href="https://doc.sisopipo.com/#/cs/memory-model" target="_blank">内存模型</a>以及<a href="https://doc.sisopipo.com/#/cs/cas" target="_blank">CAS</a>。</p>
 </blockquote>
+
 <p>类似还有一些微妙的变体版本，例如这段代码:</p>
+
 <pre><code class="language-golang">type T struct {
 	msg string
 }
@@ -346,24 +433,29 @@ func main() {
 	print(g.msg)
 }
 </code></pre>
+
 <p>尽管如果<code>main</code>方法能够监测到<code>g != nil</code>退出了循环，但也不能保证能够监测到<code>g.msg</code>的初始化值。</p>
+
 <p>在以上所有错误的例子，解决方案都是一样的：<strong>明确使用同步语法！</strong></p>
+
 <h1>A. 参考</h1>
+
 <ol>
-<li>The Go Memory Model, <a href="https://golang.org/ref/mem">https://golang.org/ref/mem</a></li>
-<li>source code of golang channel,  <a href="https://github.com/golang/go/blob/master/src/runtime/chan.go">https://github.com/golang/go/blob/master/src/runtime/chan.go</a></li>
-<li>Go内存模型, <a href="https://go-zh.org/ref/mem">https://go-zh.org/ref/mem</a></li>
-<li>深入理解 Go Channel, <a href="http://legendtkl.com/2017/07/30/understanding-golang-channel/">http://legendtkl.com/2017/07/30/understanding-golang-channel/</a></li>
-<li>Go Channel 源码剖析，<a href="http://legendtkl.com/2017/08/06/golang-channel-implement/">http://legendtkl.com/2017/08/06/golang-channel-implement/</a></li>
-<li>Golang 内存管理, <a href="http://legendtkl.com/2017/04/02/golang-alloc/">http://legendtkl.com/2017/04/02/golang-alloc/</a></li>
+<li>The Go Memory Model, <a href="https://golang.org/ref/mem" target="_blank">https://golang.org/ref/mem</a></li>
+<li>source code of golang channel,  <a href="https://github.com/golang/go/blob/master/src/runtime/chan.go" target="_blank">https://github.com/golang/go/blob/master/src/runtime/chan.go</a></li>
+<li>Go内存模型, <a href="https://go-zh.org/ref/mem" target="_blank">https://go-zh.org/ref/mem</a></li>
+<li>深入理解 Go Channel, <a href="http://legendtkl.com/2017/07/30/understanding-golang-channel/" target="_blank">http://legendtkl.com/2017/07/30/understanding-golang-channel/</a></li>
+<li>Go Channel 源码剖析，<a href="http://legendtkl.com/2017/08/06/golang-channel-implement/" target="_blank">http://legendtkl.com/2017/08/06/golang-channel-implement/</a></li>
+<li>Golang 内存管理, <a href="http://legendtkl.com/2017/04/02/golang-alloc/" target="_blank">http://legendtkl.com/2017/04/02/golang-alloc/</a></li>
 </ol>
+
 <h1>B. 编辑历史</h1>
+
 <ol>
 <li>2019-02-15, wangoo, 修改译注，说明多核cpu可能无法读取到变量更改的原因</li>
 <li>2018-12-06, wangoo, 调整格式,修改文字错误，修改部分译注说明</li>
 <li>2018-07-19, wangoo, 初版</li>
 </ol>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

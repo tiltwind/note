@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-01-16
@@ -20,8 +21,11 @@ markmeta_tags: golang,installation
 -->
 
 <h1>go installation</h1>
-<p>check new versions: <a href="https://github.com/golang/go/tags">https://github.com/golang/go/tags</a></p>
+
+<p>check new versions: <a href="https://github.com/golang/go/tags" target="_blank">https://github.com/golang/go/tags</a></p>
+
 <p>Mac:</p>
+
 <pre><code class="language-bash"># intel
 curl -C - -O https://dl.google.com/go/go1.24.1.darwin-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.24.1.darwin-amd64.tar.gz
@@ -30,12 +34,16 @@ sudo tar -C /usr/local -xzf go1.24.1.darwin-amd64.tar.gz
 curl -C - -O https://dl.google.com/go/go1.24.1.darwin-arm64.tar.gz
 sudo tar -C /usr/local -xzf go1.24.1.darwin-arm64.tar.gz
 </code></pre>
+
 <p>Linux:</p>
+
 <pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.24.1.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz
 sudo tar -C /tmp/go/local -xzf go1.24.1.linux-amd64.tar.gz
 </code></pre>
+
 <p>config env:</p>
+
 <pre><code class="language-bash">&gt; sudo vi /etc/profile
 export BASEDIR=/Users/gelnyang
 export GOPATH=$BASEDIR/go
@@ -49,18 +57,25 @@ export GOPROXY=https://goproxy.cn,direct
 
 export GOPRIVATE=gitlab.homeking365.com
 
+
 </code></pre>
-<p>upgrade: </p>
+
+<p>upgrade:</p>
+
 <pre><code class="language-bash">sudo rm -rf /usr/local/go
 # then install the latest
 </code></pre>
+
 <p>Install from source:</p>
+
 <pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.24.1.src.tar.gz
 tar -C /usr/local -xzf go1.24.1.src.tar.gz
 cd /usr/local/go/src
 time sudo ./make.bash
 </code></pre>
+
 <h2>go tools</h2>
+
 <pre><code class="language-bash"># golang tools
 # cd $GOPATH/src/github.com/golang/tools &amp;&amp; git pull -v &amp;&amp; go install ./...
 go install golang.org/x/tools/cmd/...@latest
@@ -73,7 +88,6 @@ go install github.com/golangci/golangci-lint/...@latest
 
 go install mvdan.cc/gofumpt@latest
 </code></pre>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

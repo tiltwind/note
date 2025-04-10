@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2019-07-16
@@ -20,32 +21,34 @@ markmeta_tags: golang,practices
 -->
 
 <h1>Go Best Practices</h1>
+
 <ul>
 <li>不要频繁的使用<code>&lt;-time.After</code>,它会创建大量channel和goroutine, 可以使用<code>time.Ticker</code>类似时间轮的算法解决；</li>
 <li>不用频繁的创建<code>[]byte</code> 和 <code>bytes.Buffer</code>对象, 缓存并重复使用他们；</li>
 <li>多使用缓存池<code>sync.Pool</code></li>
 </ul>
+
 <h2>Fasthttp best practices</h2>
+
 <ul>
 <li>Do not allocate objects and <code>[]byte</code> buffers - just reuse them as much
 as possible. Fasthttp API design encourages this.</li>
-<li><a href="https://golang.org/pkg/sync/#Pool">sync.Pool</a> is your best friend.</li>
-<li><a href="http://blog.golang.org/profiling-go-programs">Profile your program</a>
+<li><a href="https://golang.org/pkg/sync/#Pool" target="_blank">sync.Pool</a> is your best friend.</li>
+<li><a href="http://blog.golang.org/profiling-go-programs" target="_blank">Profile your program</a>
 in production.
 <code>go tool pprof --alloc_objects your-program mem.pprof</code> usually gives better
 insights for optimization opportunities than <code>go tool pprof your-program cpu.pprof</code>.</li>
-<li>Write <a href="https://golang.org/pkg/testing/">tests and benchmarks</a> for hot paths.</li>
+<li>Write <a href="https://golang.org/pkg/testing/" target="_blank">tests and benchmarks</a> for hot paths.</li>
 <li>Avoid conversion between <code>[]byte</code> and <code>string</code>, since this may result in memory
 allocation+copy. Fasthttp API provides functions for both <code>[]byte</code> and <code>string</code> -
 use these functions instead of converting manually between <code>[]byte</code> and <code>string</code>.
-There are some exceptions - see <a href="https://github.com/golang/go/wiki/CompilerOptimizations#string-and-byte">this wiki page</a>
+There are some exceptions - see <a href="https://github.com/golang/go/wiki/CompilerOptimizations#string-and-byte" target="_blank">this wiki page</a>
 for more details.</li>
 <li>Verify your tests and production code under
-<a href="https://golang.org/doc/articles/race_detector.html">race detector</a> on a regular basis.</li>
-<li>Prefer <a href="https://github.com/valyala/quicktemplate">quicktemplate</a> instead of
-<a href="https://golang.org/pkg/html/template/">html/template</a> in your webserver.</li>
+<a href="https://golang.org/doc/articles/race_detector.html" target="_blank">race detector</a> on a regular basis.</li>
+<li>Prefer <a href="https://github.com/valyala/quicktemplate" target="_blank">quicktemplate</a> instead of
+<a href="https://golang.org/pkg/html/template/" target="_blank">html/template</a> in your webserver.</li>
 </ul>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

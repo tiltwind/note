@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: titlwind
 markmeta_date: 2023-07-06
@@ -18,29 +19,41 @@ markmeta_title: AI提示词 —— 生成考试题目
 markmeta_categories: ai
 markmeta_tags: ai,prompt-engineering
 -->
+
 <h1>AI提示词 —— 生成考试题目</h1>
+
 <blockquote>
 <p>公司为了保障信息安全，发布了 《信息系统保障管理制度》， 为了让更好的让大家了解制度内容，决定要进行考试，考试题目让 AI 帮我出吧。</p>
 </blockquote>
+
 <h2>生成考试题目(询问AI)</h2>
-<p>上传 &quot;信息系统保障管理制度.txt&quot;</p>
+
+<p>上传 &ldquo;信息系统保障管理制度.txt&rdquo;</p>
+
 <p>你现在是信息安全官角色，你要让全公司学习信息系统保障管理制度，并了解其中的细节。
 根据上传文档内容请执行以下任务。</p>
+
 <p>任务1：生成10道选择题</p>
+
 <ul>
 <li>整理核心细节点作为考试问题，问题答案要简单，可以是一个数字，或者10个字以内的文字；</li>
 <li>另外随机生成3个比较接近的答案，共通组成 ABCD 4个答案；</li>
-<li>按照表格的形式列出 &quot;选择题问题&quot;, &quot;A答案&quot;,&quot;B答案&quot;,&quot;C答案&quot;,&quot;D答案&quot;, &quot;正确选项&quot;；</li>
+<li>按照表格的形式列出 &ldquo;选择题问题&rdquo;, &ldquo;A答案&rdquo;,&ldquo;B答案&rdquo;,&ldquo;C答案&rdquo;,&ldquo;D答案&rdquo;, &ldquo;正确选项&rdquo;；</li>
 <li>正确选项出现的位置随机打乱；</li>
 </ul>
+
 <p>任务2: 生成10道判断题</p>
+
 <ul>
-<li>整理10个判断题，只需要回答 “正确”，&quot;错误&quot;；</li>
-<li>按照表格的形式列出 &quot;判断题问题&quot;, &quot;正确答案&quot;；</li>
+<li>整理10个判断题，只需要回答 “正确”，&rdquo;错误&rdquo;；</li>
+<li>按照表格的形式列出 &ldquo;判断题问题&rdquo;, &ldquo;正确答案&rdquo;；</li>
 <li>判断题答案随机；</li>
 </ul>
+
 <h2>生成考试题目(AI回答)</h2>
+
 <p>任务1:</p>
+
 <table>
 <thead>
 <tr>
@@ -52,7 +65,9 @@ markmeta_tags: ai,prompt-engineering
 <th>正确选项</th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td>信息安全事故的定义是?</td>
 <td>未经授权泄露信息</td>
 <td>滥用职权</td>
@@ -60,6 +75,7 @@ markmeta_tags: ai,prompt-engineering
 <td>盗用他人账号</td>
 <td>C</td>
 </tr>
+
 <tr>
 <td>1L级信息安全事故中的机密信息泄露数量小于等于?</td>
 <td>5条</td>
@@ -68,6 +84,7 @@ markmeta_tags: ai,prompt-engineering
 <td>20条</td>
 <td>B</td>
 </tr>
+
 <tr>
 <td>2L级信息安全事故的处罚包括?</td>
 <td>警告</td>
@@ -76,6 +93,7 @@ markmeta_tags: ai,prompt-engineering
 <td>留岗查看</td>
 <td>D</td>
 </tr>
+
 <tr>
 <td>3L级信息安全事故的处罚包括?</td>
 <td>警告</td>
@@ -84,6 +102,7 @@ markmeta_tags: ai,prompt-engineering
 <td>留岗查看</td>
 <td>B</td>
 </tr>
+
 <tr>
 <td>信息安全事故的应急处理负责部门是?</td>
 <td>人力资源部</td>
@@ -92,6 +111,7 @@ markmeta_tags: ai,prompt-engineering
 <td>市场部</td>
 <td>C</td>
 </tr>
+
 <tr>
 <td>信息安全事故调查小组成员需遵守的原则是?</td>
 <td>公正</td>
@@ -100,6 +120,7 @@ markmeta_tags: ai,prompt-engineering
 <td>以上都有</td>
 <td>D</td>
 </tr>
+
 <tr>
 <td>1L级信息安全事故的调查负责人是?</td>
 <td>质量中心二级部门负责人</td>
@@ -108,6 +129,7 @@ markmeta_tags: ai,prompt-engineering
 <td>无</td>
 <td>B</td>
 </tr>
+
 <tr>
 <td>复议请求对象是?</td>
 <td>当事人</td>
@@ -116,6 +138,7 @@ markmeta_tags: ai,prompt-engineering
 <td>决策小组</td>
 <td>C</td>
 </tr>
+
 <tr>
 <td>信息安全事故的监控部门是?</td>
 <td>人才办</td>
@@ -124,6 +147,7 @@ markmeta_tags: ai,prompt-engineering
 <td>无</td>
 <td>B</td>
 </tr>
+
 <tr>
 <td>信息安全事故处罚公告的签发机构是?</td>
 <td>质量中心</td>
@@ -132,8 +156,10 @@ markmeta_tags: ai,prompt-engineering
 <td>无</td>
 <td>A</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>任务2:</p>
+
 <table>
 <thead>
 <tr>
@@ -141,48 +167,59 @@ markmeta_tags: ai,prompt-engineering
 <th>正确答案</th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td>信息安全事故不包括利用职权改动业务流程</td>
 <td>错误</td>
 </tr>
+
 <tr>
 <td>1L级信息安全事故的处罚包括开除</td>
 <td>正确</td>
 </tr>
+
 <tr>
 <td>2L级信息安全事故的调查由决策小组负责</td>
 <td>错误</td>
 </tr>
+
 <tr>
 <td>信息安全事故的应急处理需要相关部门配合</td>
 <td>正确</td>
 </tr>
+
 <tr>
 <td>信息安全事故行政复议由当事人直属上级处理</td>
 <td>错误</td>
 </tr>
+
 <tr>
 <td>3L级信息安全事故中一级部门负责人承担损失5000元</td>
 <td>正确</td>
 </tr>
+
 <tr>
 <td>信息安全事故的监督部门是质量中心</td>
 <td>错误</td>
 </tr>
+
 <tr>
 <td>信息安全事故处罚公告签发机构是人才办</td>
 <td>错误</td>
 </tr>
+
 <tr>
 <td>举报渠道包括邮箱</td>
 <td>正确</td>
 </tr>
+
 <tr>
 <td>本制度自发布之日生效</td>
 <td>正确</td>
 </tr>
-</tbody></table>
-
+</tbody>
+</table>
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

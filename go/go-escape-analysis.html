@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: wongoo
 markmeta_date: 2020-01-03
@@ -20,22 +21,30 @@ markmeta_tags: golang,escape
 -->
 
 <h1>go 逃逸分析</h1>
+
 <p>回顾问题:</p>
+
 <ol>
 <li>逃逸机制是什么?</li>
 <li>分析逃逸的工具方法？</li>
 <li>常见逃逸场景？</li>
 </ol>
+
 <h2>1. 关于堆和栈</h2>
+
 <ul>
 <li>栈上分配的内存在方法退出的时候即被释放，无需GC，对性能吴影响</li>
 <li>堆上分配的内存有助于共享, 由GC进行内存回收；</li>
 </ul>
+
 <h2>2. 逃逸机制（Escape Mechanics）</h2>
+
 <p>（内存的）完整性在于确保对任何值的访问始终是准确、一致和高效的。
 任何时候一个值被分享到函数栈帧范围之外，它都会在堆上被重新分配。
 这种情况由逃逸分析算法负责发现和控制。</p>
+
 <p><strong>逃逸分析（Escape analysis）</strong>：指由编译器在编译阶段决定内存分配的位置。</p>
+
 <pre><code class="language-go">package main
 
 type user struct {
@@ -69,21 +78,28 @@ func createUserV2() *user {
     return &amp;u // 返回指针被外部引用,发生逃逸
 }
 </code></pre>
+
 <ul>
 <li>使用 go:noinline 指令，阻止在 main 函数中，编译器使用内联代码替代函数调用</li>
-<li><code>&amp;</code> 操作符对应单词 &quot;sharing&quot;, 提高可读性</li>
+<li><code>&amp;</code> 操作符对应单词 &ldquo;sharing&rdquo;, 提高可读性</li>
 </ul>
+
 <h2>3. 编译器报告（Compiler Reporting）</h2>
+
 <p>查看编译器（关于逃逸分析）报告: <code>go build</code> 的时候，打开 <code>-gcflags</code> 开关，并带上 <code>-m</code> 选项。
 总共可以使用 4 个 <code>-m</code>，（但）超过 2 个级别的信息就已经太多了, 一般使用 2 个 <code>-m</code> 的级别。</p>
+
 <pre><code class="language-bash">$ go build -gcflags &quot;-m -m&quot;
 ./c.go:15:6: cannot inline createUserV1: marked go:noinline
 ./c.go:25:6: cannot inline createUserV2: marked go:noinline
 ./c.go:7:6: cannot inline main: function too complex: cost 133 exceeds budget 80
 ./c.go:26:2: moved to heap: u   --&gt; 说明变量u已经逃逸到堆
 </code></pre>
+
 <h2>4. 逃逸例子</h2>
+
 <h3>4.1 空间不足逃逸、动态大小逃逸</h3>
+
 <pre><code class="language-go">func F() {
 	a := make([]int, 0, 20)     // 空间小，分配于栈空间
 	b := make([]int, 0, 20000) // 空间过大,占空间不足, 逃逸，分配于堆空间
@@ -92,8 +108,11 @@ func createUserV2() *user {
 	c := make([]int, 0, l) // 动态分配不定空间，逃逸，分配于堆空间
 }
 </code></pre>
+
 <h3>4.2 动态类型逃逸</h3>
+
 <p>很多函数参数为interface类型，比如fmt.Println(a …interface{})，编译期间很难确定其参数的具体类型，也能产生逃逸。</p>
+
 <pre><code class="language-go">package main
 
 import &quot;fmt&quot;
@@ -103,12 +122,16 @@ func main() {
     fmt.Println(s)
 }
 </code></pre>
+
 <pre><code class="language-bash">go build -gcflags &quot;-m -l&quot;
 ./c.go:7:16: main ... argument does not escape
 ./c.go:7:16: s escapes to heap
 </code></pre>
+
 <h3>4.3 闭包引用对象逃逸</h3>
+
 <p>Fibonacci数列的函数：</p>
+
 <pre><code class="language-go">package main
 
 import &quot;fmt&quot;
@@ -129,6 +152,7 @@ func main() {
     }
 }
 </code></pre>
+
 <pre><code class="language-bash"> go build -gcflags &quot;-m -l&quot;
 ./c.go:6:5: moved to heap: a
 ./c.go:6:8: moved to heap: b
@@ -136,7 +160,6 @@ func main() {
 ./c.go:17:19: main ... argument does not escape
 ./c.go:17:40: f() escapes to heap
 </code></pre>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

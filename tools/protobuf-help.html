@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: tiltwind
 markmeta_date: 2020-01-23
@@ -20,20 +21,28 @@ markmeta_tags: protobuf,protoc
 -->
 
 <h1>Protocol Buffer Help</h1>
+
 <h2>install</h2>
+
 <p>Mac:</p>
+
 <pre><code class="language-bash">curl -L -C - -O https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-osx-x86_64.zip
 sudo tar -C /usr/local -xzf protoc-21.12-osx-x86_64.zip
 
 # install protobuf rust codegen
 cargo install protobuf-codegen
 </code></pre>
+
 <p>Linux:</p>
+
 <pre><code class="language-bash">curl -L -C - -O https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-linux-x86_64.zip
 sudo tar -C /usr/local -xzf protoc-21.12-linux-x86_64.zip
 </code></pre>
+
 <h2>Troubleshooting</h2>
+
 <h3>rust cargo ssh error</h3>
+
 <pre><code class="language-bash">cargo install protobuf-codegen
 #     Updating crates.io index
 # error: failed to fetch `https://github.com/rust-lang/crates.io-index`
@@ -57,7 +66,6 @@ ssh-add
 # Identity added: /Users/sathia/.ssh/id_rsa
 #   uzhaippu git:(master) ✗ cargo build
 </code></pre>
-
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

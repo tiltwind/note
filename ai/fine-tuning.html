@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: titlwind
 markmeta_date: 2025-02-19
@@ -19,31 +20,42 @@ markmeta_categories: ai
 markmeta_tags: ai,fine-tuning
 -->
 
-
 <h1>微调</h1>
+
 <blockquote>
 <p>注意: 部分内容来自AI生成，可能存在错误，如有发现，欢迎指正！</p>
 </blockquote>
+
 <h2>1. 什么是微调</h2>
+
 <h3>1.1. 预训练 vs 微调</h3>
+
 <ul>
-<li><p><strong>大模型训练（Pre-training）</strong>  </p>
+<li><p><strong>大模型训练（Pre-training）</strong></p>
+
 <ul>
-<li><strong>目标</strong>：通过海量通用数据（如网页、书籍）学习语言的底层模式和知识（语法、逻辑、常识）。  </li>
-<li><strong>方法</strong>：无监督或自监督学习（如预测被遮挡的词、生成下一句话）。  </li>
-<li><strong>特点</strong>：需要巨量计算资源（数千张GPU/TPU）、长时间训练（数周至数月）。  </li>
+<li><strong>目标</strong>：通过海量通用数据（如网页、书籍）学习语言的底层模式和知识（语法、逻辑、常识）。<br>
+</li>
+<li><strong>方法</strong>：无监督或自监督学习（如预测被遮挡的词、生成下一句话）。<br>
+</li>
+<li><strong>特点</strong>：需要巨量计算资源（数千张GPU/TPU）、长时间训练（数周至数月）。<br>
+</li>
 <li><strong>输出</strong>：通用基础模型（如GPT-3、BERT）。</li>
-</ul>
-</li>
-<li><p><strong>微调（Fine-tuning）</strong>  </p>
+</ul></li>
+
+<li><p><strong>微调（Fine-tuning）</strong></p>
+
 <ul>
-<li><strong>目标</strong>：在预训练模型基础上，用特定领域数据（如医学文献、法律合同）适配具体任务（分类、问答）。  </li>
-<li><strong>方法</strong>：监督学习（使用标注数据调整模型参数）。  </li>
-<li><strong>特点</strong>：资源消耗低（单卡或少量GPU）、训练时间短（几小时至几天）。  </li>
-<li><strong>输出</strong>：领域专用模型（如医疗问答机器人）。</li>
-</ul>
+<li><strong>目标</strong>：在预训练模型基础上，用特定领域数据（如医学文献、法律合同）适配具体任务（分类、问答）。<br>
 </li>
+<li><strong>方法</strong>：监督学习（使用标注数据调整模型参数）。<br>
+</li>
+<li><strong>特点</strong>：资源消耗低（单卡或少量GPU）、训练时间短（几小时至几天）。<br>
+</li>
+<li><strong>输出</strong>：领域专用模型（如医疗问答机器人）。</li>
+</ul></li>
 </ul>
+
 <table>
 <thead>
 <tr>
@@ -52,34 +64,44 @@ markmeta_tags: ai,fine-tuning
 <th><strong>微调</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td><strong>数据</strong></td>
 <td>通用数据（TB级）</td>
 <td>领域数据（GB级）</td>
 </tr>
+
 <tr>
 <td><strong>任务</strong></td>
 <td>学习语言基础能力</td>
 <td>适配具体任务（如分类、生成）</td>
 </tr>
+
 <tr>
 <td><strong>参数更新</strong></td>
 <td>所有参数从头训练</td>
 <td>部分或全部参数小幅调整</td>
 </tr>
+
 <tr>
 <td><strong>资源需求</strong></td>
 <td>千亿级算力（如超算集群）</td>
 <td>百亿级算力（如单台服务器）</td>
 </tr>
+
 <tr>
 <td><strong>典型模型</strong></td>
 <td>GPT-4、LLAMA、PaLM</td>
 <td>ChatGPT（基于GPT-3微调）</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+
 <h2>2. 什么时候需要微调</h2>
+
 <h3>2.2. 微调的好处</h3>
+
 <ul>
 <li><strong>微调可以做 RAG 能做的所有事情，但 RAG 不能</strong>：  Fine-tuning 可以通过在训练期间将外部知识直接嵌入到模型中来复制 RAG 的功能，使其能够在不依赖外部系统的情况下执行诸如回答小众问题或总结文档等任务。微调还可以将上下文和模式集成到模型中，模拟检索行为。</li>
 <li><strong>特定任务更强的掌控能力</strong>：微调将有关领域或任务知识直接嵌入到模型中，使其能够高精度地处理结构化、重复或细微差别的查询，这是 RAG 无法单独实现的。</li>
@@ -88,29 +110,45 @@ markmeta_tags: ai,fine-tuning
 <li><strong>自定义行为和语气</strong>： 微调允许精确控制模型的行为和通信方式，确保与品牌声音、法规要求或其他约束保持一致。</li>
 <li><strong>系统降级稳健性</strong>： 在组合系统中，微调模型可确保可靠任务性能的基线水平，即使 RAG 系统检索不相关或不完整的信息也是如此。</li>
 </ul>
+
 <h3>2.3. 为什么你应该结合RAG和微调呢？</h3>
+
 <ul>
 <li><strong>任务处理更专业</strong>：微调擅长于特定任务，而 RAG 则动态检索最新或外部知识。它们共同处理核心和特定于上下文的需求。</li>
 <li><strong>适应性</strong>：RAG 使系统无需不断重新训练即可保持最新状态。</li>
 <li><strong>效率</strong>：微调建立了基线，而 RAG 通过处理动态细节减少了对详尽训练的需求。</li>
 </ul>
+
 <h2>3. 微调相关概念</h2>
+
 <h3>3.1. LoRA</h3>
+
 <p>LoRA模型，全称Low-Rank Adaptation of Large Language Models，是一种用于微调大型语言模型的低秩适应技术。它最初应用于NLP领域，特别是用于微调GPT-3等模型。LoRA通过仅训练低秩矩阵，然后将这些参数注入到原始模型中，从而实现对模型的微调。这种方法不仅减少了计算需求，而且使得训练资源比直接训练原始模型要小得多，因此非常适合在资源有限的环境中使用。</p>
+
 <p>在Stable Diffusion（SD）模型的应用中，LoRA被用作一种插件，允许用户在不修改SD模型的情况下，利用少量数据训练出具有特定画风、IP或人物特征的模型。这种技术在社区使用和个人开发者中非常受欢迎。例如，可以通过LoRA模型改变SD模型的生成风格，或者为SD模型添加新的人物/IP。</p>
+
 <p>LoRA模型的使用涉及安装插件和配置参数。用户需要下载适合的LoRA模型和相应的checkpoint模型，并将其安装到相应的目录。在使用时，可以将LoRA模型与大模型结合使用，通过调整LoRA的权重来控制生成图片的结果。LoRA模型的优点包括训练速度快、计算需求低、训练权重小，因为原始模型被冻结，我们注入新的可训练层，可以将新层的权重保存为一个约3MB大小的文件，比UNet模型的原始大小小了近一千倍。</p>
+
 <p>总的来说，LoRA模型是一种高效、灵活且适用于多种场景的模型微调技术，它在保持原始模型性能的同时，允许用户根据需要进行定制化调整。</p>
+
 <blockquote>
-<p>参考: LoRA: Low-Rank Adaptation of Large Language Models, <a href="https://arxiv.org/abs/2106.09685">https://arxiv.org/abs/2106.09685</a></p>
+<p>参考: LoRA: Low-Rank Adaptation of Large Language Models, <a href="https://arxiv.org/abs/2106.09685" target="_blank">https://arxiv.org/abs/2106.09685</a></p>
 </blockquote>
+
 <h3>3.2. QLoRA</h3>
+
 <p>QLoRA是一种针对大语言模型的高效微调方法，能在有限的显存条件下，如48GB GPU上微调65B参数模型，同时保持与16位精度相当的性能。</p>
+
 <p>通过<strong>4位浮点数量化、双量化和分页优化器</strong>，QLoRA解决了显存瓶颈问题，实现了在消费级硬件上微调大型模型。但会存在精度丢失问题, Unsloth 的动态 4 位量化在很大程度上减少了精度丢失问题。</p>
+
 <p>此外，QLoRA微调的模型在聊天机器人任务中展现出与ChatGPT相当的性能，降低了计算资源的门槛。</p>
+
 <blockquote>
-<p>参考: QLoRA: Efficient Finetuning of Quantized LLMs, <a href="https://arxiv.org/abs/2305.14314">https://arxiv.org/abs/2305.14314</a></p>
+<p>参考: QLoRA: Efficient Finetuning of Quantized LLMs, <a href="https://arxiv.org/abs/2305.14314" target="_blank">https://arxiv.org/abs/2305.14314</a></p>
 </blockquote>
+
 <h2>4. 模型的选择</h2>
+
 <table>
 <thead>
 <tr>
@@ -123,7 +161,9 @@ markmeta_tags: ai,fine-tuning
 <th><strong>原因</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td><strong>基座模型</strong></td>
 <td>大规模预训练模型，具备通用能力，可适配多种下游任务</td>
 <td>文本生成、翻译、问答、代码生成等通用场景</td>
@@ -132,6 +172,7 @@ markmeta_tags: ai,fine-tuning
 <td>是</td>
 <td>通过微调可快速适应垂直领域，预训练阶段已学习通用知识</td>
 </tr>
+
 <tr>
 <td><strong>推理模型</strong></td>
 <td>专为多步骤逻辑推理设计，需生成中间思考过程或验证步骤</td>
@@ -141,6 +182,7 @@ markmeta_tags: ai,fine-tuning
 <td>有限</td>
 <td>需结合SFT+RL优化，简单微调易导致“幻觉”或推理能力退化</td>
 </tr>
+
 <tr>
 <td><strong>多模态模型</strong></td>
 <td>融合文本、图像、语音等多种模态数据的端到端模型</td>
@@ -150,6 +192,7 @@ markmeta_tags: ai,fine-tuning
 <td>部分</td>
 <td>需多模态对齐微调，但部分模态（如视觉）微调成本极高</td>
 </tr>
+
 <tr>
 <td><strong>蒸馏模型</strong></td>
 <td>通过知识蒸馏将大模型能力迁移到小模型，降低部署成本</td>
@@ -159,6 +202,7 @@ markmeta_tags: ai,fine-tuning
 <td>否</td>
 <td>蒸馏后模型压缩了知识表示，微调空间有限</td>
 </tr>
+
 <tr>
 <td><strong>视觉大模型</strong></td>
 <td>专注图像处理任务的预训练模型，如分类、检测、生成</td>
@@ -168,6 +212,7 @@ markmeta_tags: ai,fine-tuning
 <td>是</td>
 <td>可通过迁移学习适应细分场景（如特定医学影像分类）</td>
 </tr>
+
 <tr>
 <td><strong>垂直模型</strong></td>
 <td>针对特定领域（如医疗、法律、不动产）深度优化的模型，可能从头训练</td>
@@ -177,6 +222,7 @@ markmeta_tags: ai,fine-tuning
 <td>是</td>
 <td>需注入领域知识库和业务规则，微调可提升准确性与合规性</td>
 </tr>
+
 <tr>
 <td><strong>行业大模型</strong></td>
 <td>基于基座模型注入行业数据训练，兼顾通用能力与行业特性</td>
@@ -186,6 +232,7 @@ markmeta_tags: ai,fine-tuning
 <td>是</td>
 <td>行业数据分布差异大，需微调平衡通用性与专业性</td>
 </tr>
+
 <tr>
 <td><strong>代码生成模型</strong></td>
 <td>专为代码理解与生成设计的垂类模型，支持多种编程语言</td>
@@ -195,48 +242,65 @@ markmeta_tags: ai,fine-tuning
 <td>是</td>
 <td>可通过领域代码库（如Web3合约）微调提升特定语言/框架支持</td>
 </tr>
-</tbody></table>
-<p><strong>补充说明</strong>  </p>
+</tbody>
+</table>
+<p><strong>补充说明</strong></p>
+
 <ul>
-<li><strong>微调适配性</strong>：基座模型和行业模型最适合微调，因其设计目标即为下游任务适配；推理模型和蒸馏模型微调需谨慎，易破坏原有能力。  </li>
-<li><strong>趋势融合</strong>：当前模型边界逐渐模糊（如多模态模型兼具生成与推理），实际应用中常采用混合架构（如Step-1o融合文本/语音/视觉+推理能力）。  </li>
+<li><strong>微调适配性</strong>：基座模型和行业模型最适合微调，因其设计目标即为下游任务适配；推理模型和蒸馏模型微调需谨慎，易破坏原有能力。<br>
+</li>
+<li><strong>趋势融合</strong>：当前模型边界逐渐模糊（如多模态模型兼具生成与推理），实际应用中常采用混合架构（如Step-1o融合文本/语音/视觉+推理能力）。<br>
+</li>
 <li><strong>成本权衡</strong>：大模型微调依赖计算资源（如LoRA需8xA100），垂直领域可优先选择行业大模型而非从基座开始训练。</li>
 </ul>
+
 <h2>5. 微调数据格式</h2>
-<p>参考： <a href="https://www.xfyun.cn/doc/spark/%E6%95%B0%E6%8D%AE%E9%9B%86%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E.html">https://www.xfyun.cn/doc/spark/%E6%95%B0%E6%8D%AE%E9%9B%86%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E.html</a></p>
+
+<p>参考： <a href="https://www.xfyun.cn/doc/spark/%E6%95%B0%E6%8D%AE%E9%9B%86%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E.html" target="_blank">https://www.xfyun.cn/doc/spark/%E6%95%B0%E6%8D%AE%E9%9B%86%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E.html</a></p>
+
 <h2>6. 开放数据集</h2>
+
 <ul>
-<li>Registry of Open Data on AWS, <a href="https://registry.opendata.aws/">https://registry.opendata.aws/</a></li>
-<li>AI Studio数据集, <a href="https://aistudio.baidu.com/aistudio/datasetoverview">https://aistudio.baidu.com/aistudio/datasetoverview</a>, 百度AI Studio的人工智能学习与实训社区，提供开放数据集。</li>
-<li>天池数据集, <a href="https://tianchi.aliyun.com">https://tianchi.aliyun.com</a>, 阿里对外开放数据分享平台</li>
-<li>Papers With Code数据集, <a href="https://paperswithcode.com/datasets">https://paperswithcode.com/datasets</a>, 机器学习数据集</li>
-<li>Kaggle, <a href="https://www.kaggle.com/datasets">https://www.kaggle.com/datasets</a>, 包含各种有趣的数据集，如拉面评级、篮球数据等</li>
-<li>Hugging Face, <a href="https://huggingface.co/datasets">https://huggingface.co/datasets</a>,  AI社区，提供各种数据集</li>
-<li>CLUE 数据集, <a href="https://www.cluebenchmarks.com/dataSet_search.html">https://www.cluebenchmarks.com/dataSet_search.html</a>, 中文数据集搜索引擎</li>
-<li>UCI 机器学习库, <a href="https://archive-beta.ics.uci.edu/">https://archive-beta.ics.uci.edu/</a></li>
-<li>Datasets for Data Science, Machine Learning, AI &amp; Analytics, <a href="https://www.kdnuggets.com/datasets/index.html">https://www.kdnuggets.com/datasets/index.html</a></li>
-<li>DataCastle数据科学学习社区, <a href="https://www.datacastle.cn/dataset_list.html">https://www.datacastle.cn/dataset_list.html</a></li>
-</ul>
-<h2>4. 微调框架</h2>
-<h3>Kiln</h3>
-<blockquote>
-<p><a href="https://github.com/Kiln-AI">Kiln</a>, Zero-code fine-tuning for Llama, GPT4o, and Mixtral. Automatic serverless deployment of models.
-参考：<a href="https://docs.getkiln.ai/docs/fine-tuning-guide">https://docs.getkiln.ai/docs/fine-tuning-guide</a></p>
-</blockquote>
-<p>全托管，零代码，定义模型能力，生成合成数据、选择模型在线训练、在线使用训练好的模型。</p>
-<h3>Unsloth</h3>
-<blockquote>
-<p><a href="https://github.com/unslothai/unsloth">Unsloth</a>, finetune Llama 3.3, DeepSeek-R1 &amp; Reasoning LLMs 2x faster with 70% less memory.</p>
-<ul>
-<li><a href="https://unsloth.ai/blog/deepseek-r1">https://unsloth.ai/blog/deepseek-r1</a></li>
-</ul>
-</blockquote>
-<p>更快、更省内存，仅支持NVIDIA GPU。</p>
-<h2>5. 参考文章</h2>
-<ul>
-<li><a href="https://github.com/AndersonBY/deepseek-tokenizer">https://github.com/AndersonBY/deepseek-tokenizer</a>,</li>
+<li>Registry of Open Data on AWS, <a href="https://registry.opendata.aws/" target="_blank">https://registry.opendata.aws/</a></li>
+<li>AI Studio数据集, <a href="https://aistudio.baidu.com/aistudio/datasetoverview" target="_blank">https://aistudio.baidu.com/aistudio/datasetoverview</a>, 百度AI Studio的人工智能学习与实训社区，提供开放数据集。</li>
+<li>天池数据集, <a href="https://tianchi.aliyun.com" target="_blank">https://tianchi.aliyun.com</a>, 阿里对外开放数据分享平台</li>
+<li>Papers With Code数据集, <a href="https://paperswithcode.com/datasets" target="_blank">https://paperswithcode.com/datasets</a>, 机器学习数据集</li>
+<li>Kaggle, <a href="https://www.kaggle.com/datasets" target="_blank">https://www.kaggle.com/datasets</a>, 包含各种有趣的数据集，如拉面评级、篮球数据等</li>
+<li>Hugging Face, <a href="https://huggingface.co/datasets" target="_blank">https://huggingface.co/datasets</a>,  AI社区，提供各种数据集</li>
+<li>CLUE 数据集, <a href="https://www.cluebenchmarks.com/dataSet_search.html" target="_blank">https://www.cluebenchmarks.com/dataSet_search.html</a>, 中文数据集搜索引擎</li>
+<li>UCI 机器学习库, <a href="https://archive-beta.ics.uci.edu/" target="_blank">https://archive-beta.ics.uci.edu/</a></li>
+<li>Datasets for Data Science, Machine Learning, AI &amp; Analytics, <a href="https://www.kdnuggets.com/datasets/index.html" target="_blank">https://www.kdnuggets.com/datasets/index.html</a></li>
+<li>DataCastle数据科学学习社区, <a href="https://www.datacastle.cn/dataset_list.html" target="_blank">https://www.datacastle.cn/dataset_list.html</a></li>
 </ul>
 
+<h2>4. 微调框架</h2>
+
+<h3>Kiln</h3>
+
+<blockquote>
+<p><a href="https://github.com/Kiln-AI" target="_blank">Kiln</a>, Zero-code fine-tuning for Llama, GPT4o, and Mixtral. Automatic serverless deployment of models.
+参考：<a href="https://docs.getkiln.ai/docs/fine-tuning-guide" target="_blank">https://docs.getkiln.ai/docs/fine-tuning-guide</a></p>
+</blockquote>
+
+<p>全托管，零代码，定义模型能力，生成合成数据、选择模型在线训练、在线使用训练好的模型。</p>
+
+<h3>Unsloth</h3>
+
+<blockquote>
+<p><a href="https://github.com/unslothai/unsloth" target="_blank">Unsloth</a>, finetune Llama 3.3, DeepSeek-R1 &amp; Reasoning LLMs 2x faster with 70% less memory.</p>
+
+<ul>
+<li><a href="https://unsloth.ai/blog/deepseek-r1" target="_blank">https://unsloth.ai/blog/deepseek-r1</a></li>
+</ul>
+</blockquote>
+
+<p>更快、更省内存，仅支持NVIDIA GPU。</p>
+
+<h2>5. 参考文章</h2>
+
+<ul>
+<li><a href="https://github.com/AndersonBY/deepseek-tokenizer" target="_blank">https://github.com/AndersonBY/deepseek-tokenizer</a>, </li>
+</ul>
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>

@@ -11,6 +11,7 @@
     <div id="navbar"></div>
     <div id="menu"></div>
     <div class="main" id="app">
+
 <!---
 markmeta_author: titlwind
 markmeta_date: 2025-02-26
@@ -19,57 +20,76 @@ markmeta_categories: ai
 markmeta_tags: ai,vector,database
 -->
 
-
 <h1>向量数据库</h1>
+
 <blockquote>
 <p>注意: 部分内容来自AI生成，可能存在错误，如有发现，欢迎指正！</p>
 </blockquote>
+
 <hr>
+
 <h2><strong>1. 向量基础概念</strong></h2>
+
 <h3>1.1 什么是向量？</h3>
+
 <ul>
 <li><strong>定义</strong>：向量是数学中表示大小和方向的量，在计算机科学中通常表现为有序的数字列表。</li>
 <li><strong>物理意义</strong>：可以表示速度、位移、力等有方向的量。</li>
 <li><strong>计算机中的表示</strong>：<code>[v₁, v₂, ..., vₙ]</code>，例如 <code>[3, -2, 5]</code> 是一个三维向量。</li>
 </ul>
+
 <h3>1.2 向量的维度</h3>
+
 <ul>
 <li><strong>二维向量</strong>：平面中的点，如 <code>[2, 3]</code> 表示横坐标2，纵坐标3。</li>
 <li><strong>三维向量</strong>：空间中的点，如 <code>[1, 4, -1]</code>。</li>
 <li><strong>高维向量</strong>：机器学习中的特征向量，如 <code>[0.2, -0.5, 0.7, ..., 0.1]</code>（可能上千维）。</li>
 </ul>
+
 <h3>1.3. 向量的关键属性</h3>
+
 <ul>
 <li><strong>长度（模）</strong>：向量的大小，如向量 <code>[3, 4]</code> 的长度是 <code>√(3²+4²)=5</code>。</li>
 <li><strong>方向</strong>：由各分量的比值决定，如 <code>[1, 2]</code> 和 <code>[2, 4]</code> 方向相同。</li>
 </ul>
+
 <hr>
+
 <h2><strong>2. 向量运算</strong></h2>
+
 <h3>2.1. 向量加减法</h3>
+
 <ul>
 <li><strong>规则</strong>：对应分量相加减。</li>
 <li><strong>范例</strong>：</li>
 </ul>
+
 <pre><code class="language-python">  a = [1, 2, 3]
   b = [4, 5, 6]
   a + b = [1+4, 2+5, 3+6] = [5, 7, 9]
 </code></pre>
+
 <h3>2.2. 标量乘法</h3>
+
 <ul>
 <li><strong>规则</strong>：每个分量乘以标量。</li>
 <li><strong>范例</strong>：</li>
 </ul>
+
 <pre><code class="language-python">  a = [2, -1]
   k = 3
   k*a = [6, -3]
 </code></pre>
+
 <h3>2.3. 点积（内积）</h3>
+
 <ul>
 <li><strong>公式</strong>：
-$$\mathbf{a} \cdot \mathbf{b} = \sum_{i=1}^n a_i \cdot b_i = a_1b_1 + a_2b_2 + \dots + a_nb_n$$</li>
+<span class="math inline">\(\mathbf{a} \cdot \mathbf{b} = \sum_{i=1}^n a_i \cdot b_i = a_1b_1 + a_2b_2 + \dots + a_nb_n\)</span></li>
 <li><strong>几何意义</strong>：反映两个向量的方向相似性，常用于计算相似度（如余弦相似度）</li>
 <li><strong>范例</strong>：</li>
 </ul>
+
 <pre><code class="language-python">import numpy as np
 
 a = np.array([1, 2, 3])  # 三维向量
@@ -78,24 +98,26 @@ b = np.array([4, 5, 6])  # 三维向量
 dot_product = np.dot(a, b)
 print(dot_product)  # 输出：1*4 + 2*5 + 3*6 = 32
 </code></pre>
+
 <h3><strong>2.4. 外积（Outer Product）</strong></h3>
+
 <ul>
-<li><p><strong>定义</strong>: 两个向量的外积生成一个<strong>矩阵</strong>，矩阵的第 (i) 行第 (j) 列元素是第一个向量的第 (i) 个分量与第二个向量的第 (j) 个分量的乘积。</p>
-</li>
+<li><p><strong>定义</strong>: 两个向量的外积生成一个<strong>矩阵</strong>，矩阵的第 (i) 行第 (j) 列元素是第一个向量的第 (i) 个分量与第二个向量的第 (j) 个分量的乘积。</p></li>
+
 <li><p><strong>公式</strong>： 如果 a 是 m 维向量， b 是 n 维向量，则外积结果为 <code>m * n</code> 的矩阵：
-$$\mathbf{a} \otimes \mathbf{b} = 
+<span class="math inline">\(\mathbf{a} \otimes \mathbf{b} = 
 \begin{bmatrix}
-a_1b_1 &amp; a_1b_2 &amp; \dots &amp; a_1b_n \ 
-a_2b_1 &amp; a_2b_2 &amp; \dots &amp; a_2b_n \ 
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \ 
+a_1b_1 &amp; a_1b_2 &amp; \dots &amp; a_1b_n \\
+a_2b_1 &amp; a_2b_2 &amp; \dots &amp; a_2b_n \\ 
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ 
 a_mb_1 &amp; a_mb_2 &amp; \dots &amp; a_mb_n
-\end{bmatrix}$$</p>
-</li>
-<li><p><strong>条件</strong>: 无维度限制，任意两个向量均可计算外积。</p>
-</li>
-<li><p><strong>示例</strong>:</p>
-</li>
+\end{bmatrix}\)</span></p></li>
+
+<li><p><strong>条件</strong>: 无维度限制，任意两个向量均可计算外积。</p></li>
+
+<li><p><strong>示例</strong>:</p></li>
 </ul>
+
 <pre><code class="language-python">import numpy as np
 
 a = np.array([1, 2, 3])  # 三维向量
@@ -108,24 +130,29 @@ print(outer_product)
 #  [ 8 10]
 #  [12 15]]
 </code></pre>
+
 <ul>
-<li><strong>外积应用场景</strong>:<ul>
+<li><strong>外积应用场景</strong>:
+
+<ul>
 <li><strong>矩阵生成</strong>：用于构造低秩矩阵（如特征分解）。</li>
 <li><strong>机器学习</strong>：某些特征交叉场景（如分解机模型）。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
+
 <h3><strong>2.5. 逐元素乘法（Element-wise Multiplication）</strong></h3>
+
 <ul>
-<li><p><strong>定义</strong>: 两个向量的对应分量相乘，生成一个新的<strong>同维度向量</strong>。</p>
-</li>
-<li><p><strong>公式</strong>：<br>$$\mathbf{a} \odot \mathbf{b} = [a_1b_1, a_2b_2, \dots, a_nb_n]$$</p>
-</li>
-<li><p><strong>条件</strong>: 两个向量必须<strong>维度相同</strong>。</p>
-</li>
-<li><p><strong>示例</strong>:</p>
-</li>
+<li><p><strong>定义</strong>: 两个向量的对应分量相乘，生成一个新的<strong>同维度向量</strong>。</p></li>
+
+<li><p><strong>公式</strong>：<br>
+<span class="math inline">\(\mathbf{a} \odot \mathbf{b} = [a_1b_1, a_2b_2, \dots, a_nb_n]\)</span></p></li>
+
+<li><p><strong>条件</strong>: 两个向量必须<strong>维度相同</strong>。</p></li>
+
+<li><p><strong>示例</strong>:</p></li>
 </ul>
+
 <pre><code class="language-python">import numpy as np
 
 a = np.array([1, 2, 3])
@@ -134,19 +161,24 @@ b = np.array([4, 5, 6])
 elementwise_product = a * b  # 或 np.multiply(a, b)
 print(elementwise_product)  # 输出：[4, 10, 18]
 </code></pre>
+
 <ul>
-<li><strong>逐元素乘法的应用</strong><ul>
+<li><strong>逐元素乘法的应用</strong>
+
+<ul>
 <li><strong>特征工程</strong>：构造交互特征。</li>
 <li><strong>激活函数</strong>：神经网络中的逐元素操作（如 <code>ReLU</code>、<code>Sigmoid</code>）。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
+
 <h4>2.6. 余弦相似度</h4>
+
 <ul>
 <li><strong>公式</strong>：<code>cosθ = (a·b) / (|a||b|)</code></li>
 <li><strong>意义</strong>：忽略向量长度，仅比较方向相似性（范围 [-1, 1]）。</li>
 <li><strong>范例</strong>：</li>
 </ul>
+
 <pre><code class="language-python">import numpy as np
 
 def cosine_similarity(a, b):
@@ -156,108 +188,152 @@ a = np.array([1, 2, 3])
 b = np.array([4, 5, 6])
 print(cosine_similarity(a, b))  # 输出 ≈ 0.974
 </code></pre>
+
 <ul>
-<li>应用：从海量向量中快速找到与目标最相似的向量。<ul>
+<li>应用：从海量向量中快速找到与目标最相似的向量。
+
+<ul>
 <li>图片搜索（以图搜图）</li>
 <li>推荐系统（找到相似用户或商品）</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="images/vector-database-embedding-similarity.jpeg" alt="">
+
+<p><img src="images/vector-database-embedding-similarity.jpeg" alt="" />
 <em>man、king、woman 和 queen 这几个词映射到的向量空间</em></p>
+
 <hr>
+
 <h2><strong>3. 嵌入模型</strong></h2>
-<p>嵌入模型（embedding model）是自然语言处理（NLP）领域的重要工具，其核心功能是将离散的文本数据（如单词、句子或段落）转化为连续的数值向量。这些向量通常是固定维度的，维度大小由模型设计决定，常为数百到数千维。这种向量化过程能够有效捕捉文本的语义和上下文信息，为下游任务（如文本分类、相似性比较、机器翻译）提供基础。  </p>
+
+<p>嵌入模型（embedding model）是自然语言处理（NLP）领域的重要工具，其核心功能是将离散的文本数据（如单词、句子或段落）转化为连续的数值向量。这些向量通常是固定维度的，维度大小由模型设计决定，常为数百到数千维。这种向量化过程能够有效捕捉文本的语义和上下文信息，为下游任务（如文本分类、相似性比较、机器翻译）提供基础。</p>
+
 <h3>3.1 文本向量化的一般机制</h3>
-<p>嵌入模型的向量化过程通常包括以下步骤：  </p>
+
+<p>嵌入模型的向量化过程通常包括以下步骤：</p>
+
 <ol>
-<li><p><strong>文本预处理</strong>：  </p>
+<li><p><strong>文本预处理</strong>：</p>
+
 <ul>
-<li>对输入文本进行分词（如使用分词器如Jieba或BERT的WordPiece），并进行标准化（如去除停用词、小写化）。  </li>
-<li>对于中文文本，可能需要额外的分词处理，以确保准确性。</li>
-</ul>
+<li>对输入文本进行分词（如使用分词器如Jieba或BERT的WordPiece），并进行标准化（如去除停用词、小写化）。<br>
 </li>
-<li><p><strong>模型输入</strong>：  </p>
+<li>对于中文文本，可能需要额外的分词处理，以确保准确性。<br>
+</li>
+</ul></li>
+
+<li><p><strong>模型输入</strong>：</p>
+
 <ul>
-<li>将预处理后的文本转化为模型可识别的格式。例如，BERT模型要求输入为token IDs，并添加特殊标记（如[CLS]表示句子开始，[SEP]表示句子结束）。  </li>
-<li>同时，模型可能需要位置编码和注意力掩码，以处理序列信息。</li>
-</ul>
+<li>将预处理后的文本转化为模型可识别的格式。例如，BERT模型要求输入为token IDs，并添加特殊标记（如[CLS]表示句子开始，[SEP]表示句子结束）。<br>
 </li>
-<li><p><strong>嵌入生成</strong>：  </p>
+<li>同时，模型可能需要位置编码和注意力掩码，以处理序列信息。<br>
+</li>
+</ul></li>
+
+<li><p><strong>嵌入生成</strong>：</p>
+
 <ul>
-<li>模型通过多层神经网络（如Transformer架构）处理输入，生成每个token的向量表示。  </li>
-<li>对于整段文本，通常取特定标记（如[CLS]）的输出作为句子的最终嵌入向量。  </li>
-<li>向量的维度由模型预定义，例如BERT-base输出768维向量，BERT-large输出1024维向量。</li>
-</ul>
+<li>模型通过多层神经网络（如Transformer架构）处理输入，生成每个token的向量表示。<br>
 </li>
-<li><p><strong>输出与应用</strong>：  </p>
+<li>对于整段文本，通常取特定标记（如[CLS]）的输出作为句子的最终嵌入向量。<br>
+</li>
+<li>向量的维度由模型预定义，例如BERT-base输出768维向量，BERT-large输出1024维向量。<br>
+</li>
+</ul></li>
+
+<li><p><strong>输出与应用</strong>：</p>
+
 <ul>
-<li>最终输出为一个固定维度的向量，可用于后续任务，如计算余弦相似度、输入分类器或聚类算法。</li>
-</ul>
+<li>最终输出为一个固定维度的向量，可用于后续任务，如计算余弦相似度、输入分类器或聚类算法。<br>
 </li>
+</ul></li>
 </ol>
+
 <h3>3.2 <strong>范例：用BERT模型将句子转化为768维向量</strong></h3>
+
 <p><strong>输入文本</strong>：<code>&quot;今天天气很好，适合户外运动！&quot;</code></p>
+
 <h4><strong>步骤1：文本预处理</strong></h4>
+
 <ol>
-<li><strong>清洗文本</strong>：移除特殊符号、标准化格式<ul>
+<li><strong>清洗文本</strong>：移除特殊符号、标准化格式
+
+<ul>
 <li>处理结果：<code>今天天气很好适合户外运动</code></li>
-</ul>
-</li>
-<li><strong>分词</strong>（Tokenization）：<ul>
+</ul></li>
+<li><strong>分词</strong>（Tokenization）：
+
+<ul>
 <li>使用BERT的WordPiece分词器切分文本：</li>
 <li>分词结果：<code>[&quot;今天&quot;, &quot;天气&quot;, &quot;很&quot;, &quot;好&quot;, &quot;适合&quot;, &quot;户外&quot;, &quot;运动&quot;]</code></li>
-</ul>
-</li>
+</ul></li>
 </ol>
+
 <h4><strong>步骤2：添加特殊标记</strong></h4>
+
 <ol>
 <li>在句首添加<code>[CLS]</code>标记（用于分类任务的特征提取）</li>
-<li>在句尾添加<code>[SEP]</code>标记（句子分隔符）<ul>
+<li>在句尾添加<code>[SEP]</code>标记（句子分隔符）
+
+<ul>
 <li>最终Token序列：<code>[CLS] 今天 天气 很 好 适合 户外 运动 [SEP]</code></li>
-</ul>
-</li>
+</ul></li>
 </ol>
+
 <h4><strong>步骤3：映射为数值ID</strong></h4>
+
 <ol>
-<li>将每个Token转换为词汇表中的ID：<ul>
-<li>假设词汇表中：<ul>
+<li>将每个Token转换为词汇表中的ID：
+
+<ul>
+<li>假设词汇表中：
+
+<ul>
 <li><code>[CLS]</code> → 101，<code>[SEP]</code> → 102</li>
 <li><code>今天</code> → 2345，<code>天气</code> → 1234，其他类推</li>
-</ul>
-</li>
+</ul></li>
 <li>结果：<code>[101, 2345, 1234, 3456, 5678, 6789, 7890, 8901, 102]</code></li>
-</ul>
-</li>
+</ul></li>
 </ol>
+
 <h4><strong>步骤4：生成输入张量</strong></h4>
+
 <ol>
 <li><strong>Token ID张量</strong>：<code>shape = [1, 7]</code>（1个句子，7个Token）</li>
 <li><strong>注意力掩码</strong>：<code>[1, 1, 1, ..., 1]</code>（标记有效Token位置）</li>
 <li><strong>段落类型ID</strong>：<code>[0, 0, 0, ..., 0]</code>（单句任务全为0）</li>
 </ol>
+
 <h4><strong>步骤5：BERT模型处理</strong></h4>
+
 <ol>
-<li><strong>嵌入层</strong>：<ul>
+<li><strong>嵌入层</strong>：
+
+<ul>
 <li>将Token ID转换为768维向量</li>
 <li>加入位置编码（Positional Encoding）和段落编码</li>
-</ul>
-</li>
-<li><strong>Transformer编码器</strong>：<ul>
+</ul></li>
+<li><strong>Transformer编码器</strong>：
+
+<ul>
 <li>12层（BERT-base）自注意力机制处理</li>
 <li>每层输出维度：<code>[1, 7, 768]</code>（1个句子，7个Token，768维）</li>
-</ul>
-</li>
+</ul></li>
 </ol>
+
 <h4><strong>步骤6：提取句向量</strong></h4>
+
 <ol>
-<li><strong>池化策略</strong>：取<code>[CLS]</code>标记对应的768维向量<ul>
+<li><strong>池化策略</strong>：取<code>[CLS]</code>标记对应的768维向量
+
+<ul>
 <li>位置：第0个Token的输出</li>
 <li>结果：<code>vector = [0.23, -0.56, 1.2, ..., 0.78]</code>（768维浮点数）</li>
-</ul>
-</li>
+</ul></li>
 </ol>
+
 <h4><strong>步骤7：最终输出</strong></h4>
+
 <pre><code class="language-python"># 代码示例（使用HuggingFace库）
 from transformers import BertTokenizer, BertModel
 
@@ -272,13 +348,20 @@ inputs = tokenizer(text, return_tensors=&quot;pt&quot;)
 outputs = model(**inputs)
 sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 </code></pre>
+
 <h3>3.3 技术细节与模型选择</h3>
+
 <ul>
-<li><strong>模型类型</strong>：常见的嵌入模型包括Word2Vec、GloVe（基于词的嵌入）、BERT、RoBERTa、DistilBERT（基于上下文的嵌入）。  </li>
-<li><strong>维度选择</strong>：维度通常为100到3072维，取决于模型复杂度。例如，Word2Vec可能输出100维，而BERT-base输出768维。  </li>
-<li><strong>训练数据</strong>：嵌入模型通常在大型语料库（如Wikipedia、Common Crawl）上预训练，捕捉通用语义信息。</li>
+<li><strong>模型类型</strong>：常见的嵌入模型包括Word2Vec、GloVe（基于词的嵌入）、BERT、RoBERTa、DistilBERT（基于上下文的嵌入）。<br>
+</li>
+<li><strong>维度选择</strong>：维度通常为100到3072维，取决于模型复杂度。例如，Word2Vec可能输出100维，而BERT-base输出768维。<br>
+</li>
+<li><strong>训练数据</strong>：嵌入模型通常在大型语料库（如Wikipedia、Common Crawl）上预训练，捕捉通用语义信息。<br>
+</li>
 </ul>
-<p>以下是不同嵌入模型的对比表：  </p>
+
+<p>以下是不同嵌入模型的对比表：</p>
+
 <table>
 <thead>
 <tr>
@@ -289,13 +372,16 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <th>典型应用</th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td>Word2Vec</td>
 <td>100-300</td>
 <td>否</td>
 <td>中等（数十亿词）</td>
 <td>词相似性、词聚类</td>
 </tr>
+
 <tr>
 <td>BERT-base</td>
 <td>768</td>
@@ -303,6 +389,7 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <td>超大（百亿词）</td>
 <td>句子分类、问答系统</td>
 </tr>
+
 <tr>
 <td>RoBERTa</td>
 <td>768-1024</td>
@@ -310,10 +397,14 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <td>超大（千亿词）</td>
 <td>文本生成、情感分析</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+
 <h3>3.4 embedding向量纬度</h3>
+
 <p>向量维度和文本切片长度之间存在间接关系：较大维度（如768）适合较长的切片（200-500个token），而较小维度（如384）适合较短的切片（100-200个token）。
 建议用户根据具体任务实验调整切片长度，确保语义完整性和检索准确性。</p>
+
 <table>
 <thead>
 <tr>
@@ -323,142 +414,183 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <th>约等同于句子数范围</th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td>384</td>
 <td>100-200</td>
 <td>67-133</td>
 <td>1-3</td>
 </tr>
+
 <tr>
 <td>768</td>
 <td>200-500</td>
 <td>133-333</td>
 <td>2-5</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+
 <hr>
+
 <h2><strong>4. 向量索引</strong></h2>
+
 <h3><strong>4.1. Flat索引（精确搜索）</strong></h3>
+
 <ul>
-<li><strong>特性</strong><ul>
+<li><strong>特性</strong>
+
+<ul>
 <li><strong>高精度</strong>：100% 准确率，返回真实最近邻。</li>
-<li><strong>速度慢</strong>：时间复杂度为 $O(N \times d)$（N 是向量数量，d 是维度）。</li>
+<li><strong>速度慢</strong>：时间复杂度为 <span class="math inline">\(O(N \times d)\)</span>（N 是向量数量，d 是维度）。</li>
 <li><strong>内存占用高</strong>：需存储所有原始向量（例如 100 万 128 维向量占约 500MB）。</li>
-</ul>
-</li>
-<li><strong>原理</strong><ul>
+</ul></li>
+<li><strong>原理</strong>
+
+<ul>
 <li><strong>暴力搜索</strong>：直接计算查询向量与所有数据向量的距离（如欧氏距离、内积）。</li>
 <li><strong>无近似压缩</strong>：保留原始向量，不进行任何量化或降维。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
+
 <h3><strong>4.2. IVF（倒排文件索引）</strong></h3>
+
 <ul>
-<li><strong>特性</strong>：<ul>
-<li><strong>速度快于Flat</strong>：通过聚类缩小搜索范围，时间复杂度降至 $O(nprobe \times N/nlist \times d)$。</li>
-<li><strong>内存中等</strong>：需额外存储聚类中心（ $nlist \times d$ 个浮点数）。</li>
+<li><strong>特性</strong>：
+
+<ul>
+<li><strong>速度快于Flat</strong>：通过聚类缩小搜索范围，时间复杂度降至 <span class="math inline">\(O(nprobe \times N/nlist \times d)\)</span>。</li>
+<li><strong>内存中等</strong>：需额外存储聚类中心（ <span class="math inline">\(nlist \times d\)</span> 个浮点数）。</li>
 <li><strong>精度较高</strong>：召回率依赖<code>nprobe</code>参数（搜索的聚类数量）。</li>
-</ul>
-</li>
-<li><strong>原理</strong>：<ul>
+</ul></li>
+<li><strong>原理</strong>：
+
+<ul>
 <li><strong>聚类</strong>：用k-means将向量空间划分为<code>nlist</code>个聚类，每个聚类维护一个倒排列表。</li>
 <li><strong>搜索范围限制</strong>：仅搜索距离查询向量最近的<code>nprobe</code>个聚类中的向量，避免全量扫描。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
+
 <h3><strong>4.3. PQ（Product Quantization，乘积量化）</strong></h3>
+
 <ul>
-<li><strong>特性</strong><ul>
+<li><strong>特性</strong>
+
+<ul>
 <li><strong>内存占用极低</strong>：向量被压缩为短编码（如 8-64 字节）。</li>
 <li><strong>查询速度快</strong>：通过查表加速距离计算。</li>
 <li><strong>精度有损</strong>：量化过程引入近似误差。</li>
-</ul>
-</li>
-<li><strong>原理</strong><ol>
+</ul></li>
+<li><strong>原理</strong>
+
+<ol>
 <li><strong>向量分解</strong>：将 d 维向量切分为 m 个子向量（例如 128 维 → 8 个 16 维子向量）。</li>
-<li><strong>子空间量化</strong>：<ul>
+<li><strong>子空间量化</strong>：
+
+<ul>
 <li>对每个子空间独立聚类（如每子空间聚类为 256 类），生成码本（codebook）。</li>
 <li>每个子向量用其聚类中心 ID（1 字节）表示。</li>
-</ul>
-</li>
+</ul></li>
 <li><strong>编码存储</strong>：原始向量被压缩为 m 字节的编码（如 8 字节）。</li>
-<li><strong>距离计算</strong>：<ul>
-<li>预计算码本中所有聚类中心的距离表（lookup table）。</li>
-<li>查询时，通过查表累加各子空间距离，复杂度从 $O(d)) 降为 (O(m)$。</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-<h3><strong>4.4. IVF+Flat（倒排索引 + 原始向量）</strong></h3>
+<li><strong>距离计算</strong>：
+
 <ul>
-<li><strong>特性</strong><ul>
+<li>预计算码本中所有聚类中心的距离表（lookup table）。</li>
+<li>查询时，通过查表累加各子空间距离，复杂度从 <span class="math inline">\(O(d)\) 降为 \(O(m)\)</span>。</li>
+</ul></li>
+</ol></li>
+</ul>
+
+<h3><strong>4.4. IVF+Flat（倒排索引 + 原始向量）</strong></h3>
+
+<ul>
+<li><strong>特性</strong>
+
+<ul>
 <li><strong>速度中等</strong>：比 Flat 快，但比 IVF+PQ 慢。</li>
 <li><strong>内存适中</strong>：存储原始向量，但通过聚类减少搜索范围。</li>
 <li><strong>精度较高</strong>：仅在局部聚类内做精确搜索。</li>
-</ul>
-</li>
-<li><strong>原理</strong><ol>
-<li><strong>聚类（IVF）</strong>：<ul>
+</ul></li>
+<li><strong>原理</strong>
+
+<ol>
+<li><strong>聚类（IVF）</strong>：
+
+<ul>
 <li>使用 k-means 将向量空间划分为 <code>nlist</code> 个聚类。</li>
 <li>每个聚类维护一个倒排列表，存储属于该聚类的原始向量。</li>
-</ul>
-</li>
-<li><strong>搜索过程</strong>：<ul>
+</ul></li>
+<li><strong>搜索过程</strong>：
+
+<ul>
 <li>计算查询向量与所有聚类中心的距离，选择最近的 <code>nprobe</code> 个聚类。</li>
 <li>仅在这 <code>nprobe</code> 个聚类的倒排列表内进行暴力搜索。</li>
+</ul></li>
+</ol></li>
 </ul>
-</li>
-</ol>
-</li>
-</ul>
+
 <h3><strong>4.5. IVF+PQ（倒排索引 + 乘积量化）</strong></h3>
+
 <ul>
-<li><strong>特性</strong><ul>
+<li><strong>特性</strong>
+
+<ul>
 <li><strong>内存极低</strong>：向量被量化为短编码。</li>
 <li><strong>速度快</strong>：结合聚类和量化，双重加速。</li>
 <li><strong>精度中等</strong>：量化误差叠加聚类误差。</li>
-</ul>
-</li>
-<li><strong>原理</strong><ol>
+</ul></li>
+<li><strong>原理</strong>
+
+<ol>
 <li><strong>IVF层</strong>：同 IVF+Flat，将数据划分为 <code>nlist</code> 个聚类。</li>
 <li><strong>PQ层</strong>：对每个聚类内的向量进行乘积量化，生成压缩编码。</li>
-<li><strong>搜索过程</strong>：<ul>
+<li><strong>搜索过程</strong>：
+
+<ul>
 <li>定位到 <code>nprobe</code> 个聚类。</li>
 <li>对聚类内的量化编码进行查表距离计算。</li>
+</ul></li>
+</ol></li>
 </ul>
-</li>
-</ol>
-</li>
-</ul>
+
 <h3><strong>4.6. HNSW（分层可导航小世界图）</strong></h3>
+
 <ul>
-<li><strong>特性</strong><ul>
-<li><strong>速度极快</strong>：对数级时间复杂度 $O(\log N)$。</li>
+<li><strong>特性</strong>
+
+<ul>
+<li><strong>速度极快</strong>：对数级时间复杂度 <span class="math inline">\(O(\log N)\)</span>。</li>
 <li><strong>精度极高</strong>：接近暴力搜索的召回率。</li>
 <li><strong>内存高</strong>：需存储多层图结构和原始向量。</li>
-</ul>
-</li>
-<li><strong>原理</strong><ol>
-<li><strong>分层图结构</strong>：<ul>
+</ul></li>
+<li><strong>原理</strong>
+
+<ol>
+<li><strong>分层图结构</strong>：
+
+<ul>
 <li>高层（稀疏）：快速定位大致区域。</li>
 <li>底层（稠密）：细化搜索，找到最近邻。</li>
-</ul>
-</li>
-<li><strong>搜索过程</strong>：<ul>
+</ul></li>
+<li><strong>搜索过程</strong>：
+
+<ul>
 <li>从高层开始，找到距离查询点最近的节点。</li>
 <li>逐层向下，在更稠密的图中细化搜索路径。</li>
-</ul>
-</li>
-<li><strong>边连接策略</strong>：<ul>
+</ul></li>
+<li><strong>边连接策略</strong>：
+
+<ul>
 <li>每个节点与“邻近”节点连接，保证图的可导航性（Small World 特性）。</li>
+</ul></li>
+</ol></li>
 </ul>
-</li>
-</ol>
-</li>
-</ul>
+
 <h3><strong>4.7. 索引结构总结</strong></h3>
+
 <p>常见索引结构总结如下：</p>
+
 <table>
 <thead>
 <tr>
@@ -470,14 +602,17 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td><strong>Flat</strong></td>
 <td>慢</td>
 <td>高</td>
 <td>100%</td>
-<td>小数据精确搜索（&lt;10万级）</td>
+<td>小数据精确搜索（<10万级）</td>
 <td>暴力搜索：无压缩、无近似 → 高内存、高精度、低速度</td>
 </tr>
+
 <tr>
 <td><strong>IVF</strong></td>
 <td>中</td>
@@ -486,6 +621,7 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <td>百万级数据，高精度需求</td>
 <td>通过聚类划分空间，减少搜索范围 → 速度提升，内存增加（存储聚类中心），精度依赖<code>nprobe</code></td>
 </tr>
+
 <tr>
 <td><strong>PQ</strong></td>
 <td>极快</td>
@@ -494,6 +630,7 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <td>内存敏感，允许近似结果</td>
 <td>量化压缩向量 → 内存大幅降低，距离计算查表化 → 速度极快，但引入量化误差。</td>
 </tr>
+
 <tr>
 <td><strong>IVF+Flat</strong></td>
 <td>中快</td>
@@ -502,6 +639,7 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <td>百万级数据，需精确距离计算</td>
 <td>聚类缩小范围 + 原始向量计算 → 速度与内存平衡，精度保留</td>
 </tr>
+
 <tr>
 <td><strong>IVF+PQ</strong></td>
 <td>快</td>
@@ -510,6 +648,7 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <td>十亿级数据，平衡速度与内存</td>
 <td>聚类 + 量化 → 速度与内存双优化，精度损失可控</td>
 </tr>
+
 <tr>
 <td><strong>HNSW</strong></td>
 <td>极快</td>
@@ -518,9 +657,13 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <td>高精度、低延迟场景（如推荐系统）</td>
 <td>图结构分层导航 → 搜索路径短、精度高，但需存储复杂图结构 → 内存占用高</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+
 <h3><strong>4.8. 向量索引查询对内存的要求</strong></h3>
+
 <p>索引设计以内存计算为核心，所有索引类型均需将数据全量加载到内存中才能进行搜索，原因如下：</p>
+
 <table>
 <thead>
 <tr>
@@ -528,62 +671,88 @@ sentence_embedding = outputs.last_hidden_state[0, 0, :]  # shape: [768]
 <th>原因</th>
 </tr>
 </thead>
-<tbody><tr>
+
+<tbody>
+<tr>
 <td><strong>Flat</strong></td>
 <td>暴力搜索需遍历所有原始向量，直接计算距离，无法分片或延迟加载。</td>
 </tr>
+
 <tr>
 <td><strong>IVF</strong></td>
 <td>倒排列表中的向量数据需在内存中，聚类中心也需要实时访问以筛选候选聚类。</td>
 </tr>
+
 <tr>
 <td><strong>PQ</strong></td>
 <td>量化后的编码数据需全量在内存中，距离计算依赖预生成的码表和编码数据。</td>
 </tr>
+
 <tr>
 <td><strong>IVF+Flat</strong></td>
 <td>原始向量存储在倒排列表的聚类中，搜索时需遍历候选聚类的所有原始向量。</td>
 </tr>
+
 <tr>
 <td><strong>IVF+PQ</strong></td>
 <td>量化编码存储在倒排列表中，需全量加载以查表计算近似距离。</td>
 </tr>
+
 <tr>
 <td><strong>HNSW</strong></td>
 <td>图结构的节点和边需全部在内存中，否则分层导航和邻居跳转会因磁盘I/O延迟而失效。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>以下方式缓解内存压力：</p>
+
 <ol>
 <li><strong>量化压缩</strong>（如 PQ、IVF+PQ）：通过降低单向量内存占用，使十亿级数据可在单机内存中存储。</li>
 <li><strong>分布式分片</strong>：将数据分布到多台机器，每台加载部分索引（需自定义分片逻辑）。</li>
 <li><strong>内存映射文件</strong>：使用 <code>mmap</code> 将索引文件映射到虚拟内存，由操作系统按需加载（牺牲部分速度）。</li>
 </ol>
+
 <hr>
+
 <h2><strong>5. 向量数据库</strong></h2>
+
 <h3>5.1. 什么是向量数据库？</h3>
+
 <ul>
 <li>专门存储、索引和查询高维向量的数据库，支持快速最近邻搜索（ANN, Approximate Nearest Neighbor）。</li>
 </ul>
+
 <p><strong>向量在向量数据库中的本质是一种索引类型！</strong></p>
+
 <h3>5.2. 核心操作</h3>
+
 <ul>
 <li><strong>写入</strong>：存储向量及其元数据（如 <code>向量ID: 1001, 向量: [0.1, 0.5, ...], 标签: &quot;猫的图片&quot;</code>）。</li>
 <li><strong>索引</strong>：构建高效数据结构（如树、图、哈希）加速搜索。</li>
 <li><strong>查询</strong>：输入目标向量，返回最相似的 Top-K 结果。</li>
 </ul>
+
 <h3>5.3 向量数据库选型</h3>
-<p><img src="images/comparation-vector-database.png" alt="">
-<img src="images/comparation-vector-database-2.webp" alt=""></p>
+
+<p><img src="images/comparation-vector-database.png" alt="" />
+<img src="images/comparation-vector-database-2.webp" alt="" /></p>
+
 <h3>5.4. Milvus 向量数据库</h3>
+
 <p>Milvus 建立在流行的向量搜索库（包括 Faiss、HNSW、DiskANN、SCANN 等）之上，专为在包含数百万、数十亿甚至数万亿个向量的密集向量数据集上进行相似性搜索而设计。在继续之前，请熟悉嵌入检索的基本原则。</p>
+
 <p>Milvus 还支持数据分片、流式数据摄取、动态 schema、搜索组合向量和标量数据、多向量和混合搜索、稀疏向量和许多其他高级功能。该平台按需提供性能，并且可以进行优化以适应任何嵌入检索场景。建议使用 Kubernetes 部署 Milvus，以实现最佳可用性和弹性。</p>
+
 <p>Milvus 的计算节点采用共享存储架构，具有存算分离和水平扩展的特点。遵循数据面和控制面解耦的原则，Milvus 由接入层、协调器服务层、工作节点和存储层四层组成。在扩展或灾难恢复方面，这些层是相互独立的。</p>
-<p><img src="https://milvus.io/docs/v2.5.x/assets/milvus_architecture.png" alt=""></p>
+
+<p><img src="https://milvus.io/docs/v2.5.x/assets/milvus_architecture.png" alt="" /></p>
+
 <blockquote>
-<p>参考: <a href="https://milvus.io/docs/architecture_overview.md">https://milvus.io/docs/architecture_overview.md</a></p>
+<p>参考: <a href="https://milvus.io/docs/architecture_overview.md" target="_blank">https://milvus.io/docs/architecture_overview.md</a></p>
 </blockquote>
-<p>安装 milvus: <a href="https://milvus.io/docs/install_standalone-docker-compose.md">https://milvus.io/docs/install_standalone-docker-compose.md</a></p>
+
+<p>安装 milvus: <a href="https://milvus.io/docs/install_standalone-docker-compose.md" target="_blank">https://milvus.io/docs/install_standalone-docker-compose.md</a></p>
+
 <pre><code class="language-bash">mkdir milvus
 cd milvus
 
@@ -611,7 +780,9 @@ sudo docker compose down
 # Delete service data
 sudo rm -rf volumes
 </code></pre>
+
 <h3>5.5 Milvus 向量数据库使用范例</h3>
+
 <pre><code class="language-python">from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
@@ -632,15 +803,15 @@ split_docs = text_splitter.split_documents(documents)
 # 3. 使用本地 text-embedding-v2 模型将分块转化为高维向量
 # 查看SentenceTransformer支持的模型 https://huggingface.co/models?sort=likes&amp;search=SentenceTransformer
 # all-MiniLM-L6-v2 maps sentences &amp; paragraphs to a 384 dimensional dense vector space and can be used for tasks like clustering or semantic search.
-# model = SentenceTransformer(&#39;sentence-transformers/all-MiniLM-L6-v2&#39;)
+# model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 # all-mpnet-base-v2 maps sentences &amp; paragraphs to a 768 dimensional dense vector space and can be used for tasks like clustering or semantic search.
-model = SentenceTransformer(&#39;sentence-transformers/all-mpnet-base-v2&#39;)
+model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 
 texts = [doc.page_content for doc in split_docs]
 embeddings = model.encode(texts, convert_to_numpy=True)
 
 # 4. 连接 Milvus 并创建 collection
-connections.connect(host=&#39;localhost&#39;, port=&#39;19530&#39;)
+connections.connect(host='localhost', port='19530')
 
 # Dimension of the vector
 dimensions = 768
@@ -698,29 +869,36 @@ results = collection.search(
 for result in results:
     for hit in result:
         print(f&quot;Distance: {hit.distance}&quot;)
-        print(f&quot;Text: {hit.entity.get(&#39;text&#39;)[:200]}...&quot;)  # 只显示前200字符
+        print(f&quot;Text: {hit.entity.get('text')[:200]}...&quot;)  # 只显示前200字符
         print(&quot;-&quot; * 50)
 
 # 9. 断开 Milvus 连接
 connections.disconnect(&quot;default&quot;)
 </code></pre>
+
 <hr>
+
 <h2>6. 向量数据库应用场景</h2>
+
 <h3>6.1 检索增强生成 (RAG)</h3>
+
 <p>检索增强生成 （RAG） 是一种旨在优化大型语言模型 （）LLMs 输出的架构。
 通过使用向量搜索，RAG 应用程序可以将向量嵌入存储在数据库中，并在LLM生成响应时检索相关文档作为附加上下文，从而提高答案的质量和相关性。</p>
-<p><img src="images/vector-database-rag.jpeg" alt=""></p>
+
+<p><img src="images/vector-database-rag.jpeg" alt="" /></p>
+
 <p>以上是检索增强生成 (RAG) 的经典模式，将个人/企业的知识库向量化存入向量数据库后，在和大模型沟通时，先查询向量数据库获得相关的知识库资料，
 补充到提示词中一起提交给大模型，可以得到更个性化更准确的答案。</p>
+
 <pre><code class="language-python">
 user_question = &quot;这些文档讨论的主要技术是什么？&quot;
 
 # 提取向量数据库查询 top-k 结果
-# contexts = [hit.entity.get(&#39;text&#39;) for hit in results[0]]
+# contexts = [hit.entity.get('text') for hit in results[0]]
 contexts = []
 for result in results:
     for hit in result:
-        contexts.append(hit.entity.get(&#39;text&#39;))
+        contexts.append(hit.entity.get('text'))
 
 
 &quot;&quot;&quot;构建RAG提示模板&quot;&quot;&quot;
@@ -757,22 +935,28 @@ response = requests.post(
 )
 
 print(response.json()[&quot;choices&quot;][0][&quot;message&quot;][&quot;content&quot;])
+
 </code></pre>
+
 <h3>6.2. 语义搜索(Semantic search)</h3>
+
 <p>语义搜索是一种搜索技术，它根据查询的含义返回结果，而不是简单地匹配关键字。
 它使用嵌入来解释不同语言和各种类型数据（例如文本、图像和音频）的含义。
 然后，向量搜索算法使用这些嵌入来查找满足用户查询的最相关数据。</p>
+
 <h3>6.3. 推荐引擎(Recommendation engine)</h3>
+
 <p>推荐引擎是一个系统，可主动推荐与用户相关且个性化的内容、产品或服务。
 它通过创建表示用户行为和偏好的嵌入来实现这一点。
 这些嵌入可帮助系统识别其他用户已与之互动或表现出兴趣的类似项目。
 这增加了推荐对用户既相关又有吸引力的可能性。</p>
-<h2>Reference</h2>
-<ul>
-<li>什么是向量数据库, <a href="https://www.nvidia.cn/glossary/vector-database/">https://www.nvidia.cn/glossary/vector-database/</a></li>
-<li>向量数据库：AI时代的机遇与挑战, <a href="https://zhuanlan.zhihu.com/p/18822987637">https://zhuanlan.zhihu.com/p/18822987637</a></li>
-</ul>
 
+<h2>Reference</h2>
+
+<ul>
+<li>什么是向量数据库, <a href="https://www.nvidia.cn/glossary/vector-database/" target="_blank">https://www.nvidia.cn/glossary/vector-database/</a></li>
+<li>向量数据库：AI时代的机遇与挑战, <a href="https://zhuanlan.zhihu.com/p/18822987637" target="_blank">https://zhuanlan.zhihu.com/p/18822987637</a></li>
+</ul>
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
 </body>
