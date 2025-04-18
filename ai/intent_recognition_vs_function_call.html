@@ -129,7 +129,7 @@ markmeta_tags: ai,intent-recognition, function-call
 
 <h2><strong>3. 典型架构对比</strong></h2>
 
-<h3><strong>(1) 完全大模型驱动（端到端）</strong></h3>
+<h3><strong>3.1. 完全大模型驱动（端到端）</strong></h3>
 
 <pre><code class="language-text">用户输入 → 大模型 → 意图 + 参数 → 函数调用 → 结果
 </code></pre>
@@ -140,7 +140,7 @@ markmeta_tags: ai,intent-recognition, function-call
 <li><strong>风险</strong>：模型可能误解析意图或参数（如将“打开空调”误识别为“调整温度”）。</li>
 </ul>
 
-<h4><strong>(2) 分层架构（意图识别 + 参数引擎）</strong></h4>
+<h3><strong>3.2. 分层架构（意图识别 + 参数引擎）</strong></h3>
 
 <pre><code class="language-text">用户输入 → 大模型（意图识别） → 规则引擎（参数提取） → 函数调用 → 结果
 </code></pre>
