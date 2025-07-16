@@ -82,8 +82,11 @@ open python-3.13.2-macos11.pkg
 
 which python3
 #  /usr/local/bin/python3
+</code></pre>
 
-python3 -m pip --version
+<p>install pip:</p>
+
+<pre><code class="language-bash">python3 -m pip --version
 # pip 24.3.1 from /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pip (python 3.13)
 
 
@@ -113,7 +116,6 @@ pip install --trusted-host pypi.tuna.tsinghua.edu.cn certifi
 
 # sudo vi /etc/profile
 export REQUESTS_CA_BUNDLE=$(python -c &quot;import certifi; print(certifi.where())&quot;)
-
 </code></pre>
 
 <p>linux install:</p>
@@ -2166,7 +2168,9 @@ async def run():
 
 <h2>23. Python GC</h2>
 
-<h2>24. pip 包管理</h2>
+<h2>24. 包管理</h2>
+
+<h3>24.1. pip</h3>
 
 <p>install pip, pip 是 Python 包管理工具，该工具提供了对Python 包的查找、下载、安装、卸载的功能:</p>
 
@@ -2222,6 +2226,18 @@ pip install pipreqs
 # 使用 pipreqs 分析依赖
 # 通过扫描项目目录中的 Python 文件，分析 import 语句，识别项目实际使用的包。然后生成一个 requirements.txt，只包含项目代码中直接引用的依赖。
 pipreqs .
+
+</code></pre>
+
+<h3>24.2. uv</h3>
+
+<p>uv - An extremely fast Python package and project manager, written in Rust.
+A single tool to replace pip, pip-tools, pipx, poetry, pyenv, twine, virtualenv, and more. 10-100x faster than pip.</p>
+
+<p>install uv:</p>
+
+<pre><code class="language-bash"># https://docs.astral.sh/uv/getting-started/installation/
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 </code></pre>
 

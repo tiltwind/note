@@ -76,10 +76,13 @@ time sudo ./make.bash
 
 <h2>go tools</h2>
 
-<pre><code class="language-bash"># golang tools
+<pre><code class="language-bash"># golang debug
+go install github.com/go-delve/delve/cmd/dlv@v1.24.2
+
+# golang tools
 # cd $GOPATH/src/github.com/golang/tools &amp;&amp; git pull -v &amp;&amp; go install ./...
 go install golang.org/x/tools/cmd/...@latest
-
+go install golang.org/x/tools/gopls/...@latest
 
 # golangci-lint
 # cd $GOPATH/src/github.com/golangci/golangci-lint &amp;&amp; git pull -v &amp;&amp; go install ./...

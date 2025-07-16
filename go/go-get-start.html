@@ -375,6 +375,29 @@ a, b, c := 5, 10, 15
 	for j:=1; j &lt;= 10; j++ {
         println(j)
 	}
+
+    // Go 1.22 新特性: for range over int
+    for i := range 10 {
+        println(i) // 0 to 9
+    }
+
+    // Go 1.22 修复: 循环变量在闭包中的捕获
+    var funcs []func()
+    for i := 0; i &lt; 3; i++ {
+        funcs = append(funcs, func() { println(i) })
+    }
+    for _, f := range funcs {
+        f() // prints 0,1,2 (instead of 3,3,3 in older versions)
+    }
+
+    // Go 1.23 新特性: 迭代器支持，使用 iter 包
+    import &quot;iter&quot;
+
+    func All(seq iter.Seq[int]) {
+        for v := range seq {
+            println(v)
+        }
+    }
 }
 </code></pre>
 
@@ -1063,6 +1086,53 @@ func readFile() {
 }
 </code></pre>
 
+<h3>18.4. iter 包 (Go 1.23)</h3>
+
+<p>// 支持迭代器操作</p>
+
+<pre><code class="language-golang">import &quot;iter&quot;
+
+func YieldEven(yield func(int) bool) {
+    for i := 0; i &lt; 10; i += 2 {
+        if !yield(i) {
+            return
+        }
+    }
+}
+
+for v := range YieldEven {
+    println(v) // 0,2,4,6,8
+}
+</code></pre>
+
+<h3>18.5. structs 包 (Go 1.23)</h3>
+
+<p>// 修改结构体属性</p>
+
+<pre><code class="language-golang">import &quot;structs&quot;
+
+type Person struct {
+    Name string
+    Age  int
+}
+
+p := Person{Name: &quot;Alice&quot;, Age: 30}
+
+structs.Set(&amp;p, &quot;Age&quot;, 31)
+println(p.Age) // 31
+</code></pre>
+
+<h3>18.6. unique 包 (Go 1.23)</h3>
+
+<p>// 规范化可比较值</p>
+
+<pre><code class="language-golang">import &quot;unique&quot;
+
+h1 := unique.Make(&quot;hello&quot;)
+h2 := unique.Make(&quot;hello&quot;)
+print(h1 == h2) // true
+</code></pre>
+
 <h2>19. Go 测试</h2>
 
 <p>Go 测试代码会单独放到以 <code>_test</code> 结尾的测试文件中。</p>
@@ -1553,6 +1623,7 @@ func main() {
 <li>2022-02-16, wongoo, 初版</li>
 <li>2022-02-17, wongoo, 增加泛型、select用法、内部包 internal、包初始化函数</li>
 <li>2022-05-19, wongoo, 升级go版本号, helloworld 例子修改</li>
+<li>2025-07-16, wongoo, 添加 Go 1.22 和 1.23 语言特性更新，包括 for range over int、循环变量捕获修复、迭代器支持、泛型类型别名，以及新包 iter、structs、unique</li>
 </ol>
 </div>
 <script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
