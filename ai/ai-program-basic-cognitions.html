@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
+    <title>Index</title>
+</head>
+<body class="markdown-body">
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="main" id="app">
+
+<!---
+markmeta_author: titlwind
+markmeta_date: 2025-08-08
+markmeta_title: AI编程的基本认知
+markmeta_categories: ai
+markmeta_tags: ai,program,cognition
+-->
+
+<h1>AI编程的基本认知</h1>
+
+<p>『AI编程』有很多应用场景：</p>
+
+<ul>
+<li>各种使用人群：有完全不了解编程的、有一点编程知识的、以及专业的开发人员</li>
+<li>多种实现形式： 从基础到高级的可能包括：代码补全、方法实现、模块实现、系统实现、需求实现。</li>
+<li>对结果不同的要求程度：没有要求（只要有结果）、有一定要求（能用就行）、有严格要求（必须符合需求细节、满足可维护性、可扩展性等）</li>
+</ul>
+
+<p>以下基本认知针对特定的场景：<strong>专业开发人员、模块级别以上的实现、对结果有严格的要求</strong>。</p>
+
+<h2>1. <strong>自然语言作为编程语言</strong></h2>
+
+<p>将自然语言作为比编程语言（如C、Python、C++、Go、Java等）更高级的编程语言。</p>
+
+<p>自然语言作为编程语言的特点：</p>
+
+<ul>
+<li><strong>模糊性</strong>：同一句话在不同上下文可有多重解释；<br>
+
+
+<ul>
+<li>例1：英语单词 “bank” 既指“银行”又指“河岸”。<br>
+</li>
+<li>例2：“取消订单” 是撤销未付款还是退货已付款，需上下文判定。</li>
+</ul></li>
+<li><strong>不完整性</strong>：往往省略实现细节；<br>
+
+
+<ul>
+<li>例1：“生成报告并发邮件” 未说明报告格式及收件人。<br>
+</li>
+<li>例2：“把图片压小点” 未指定目标尺寸与压缩质量。</li>
+</ul></li>
+<li><strong>抽象性</strong>：只表达高层目标而非底层实现；<br>
+
+
+<ul>
+<li>例1：“实现安全登录” 涉及加密、鉴权、异常处理等技术细节。<br>
+</li>
+<li>例2：“让系统更快” 可能需要缓存、并发优化或算法改进。</li>
+</ul></li>
+</ul>
+
+<h2>2. <strong>编程的复杂度高</strong></h2>
+
+<p>编程任务的复杂性远超一般AI任务（如图像分类、文本摘要），其本质是<strong>多维度系统熵</strong>与<strong>人类认知局限</strong>的冲突。</p>
+
+<p>▶ 编程任务 vs 其他AI任务复杂度对比</p>
+
+<table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th>编程任务</th>
+<th>典型AI任务（如文本摘要）</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>系统耦合性</strong></td>
+<td>模块间动态依赖，牵一发动全身</td>
+<td>输入输出独立映射</td>
+</tr>
+
+<tr>
+<td><strong>错误传播性</strong></td>
+<td>单个变量错误可导致系统崩溃</td>
+<td>局部错误不影响整体结果</td>
+</tr>
+
+<tr>
+<td><strong>解决路径</strong></td>
+<td>多解但无最优解（只有trade-off）</td>
+<td>存在明确评估指标（如ROUGE）</td>
+</tr>
+
+<tr>
+<td><strong>环境依赖性</strong></td>
+<td>受OS/编译器/硬件深度制约</td>
+<td>运行环境抽象统一</td>
+</tr>
+
+<tr>
+<td><strong>需求不确定性</strong></td>
+<td>需求频繁变更，边界模糊难定义</td>
+<td>任务目标明确，评估标准固定</td>
+</tr>
+
+<tr>
+<td><strong>可验证性</strong></td>
+<td>需多层测试验证（单元/集成/端到端）</td>
+<td>主要通过数据集指标验证</td>
+</tr>
+</tbody>
+</table>
+
+<h2>3. <strong>编程具有个性化特点</strong></h2>
+
+<ul>
+<li><strong>代码风格个性化</strong>：变量命名（<code>user_list</code> vs <code>usrArr</code>）、异常处理（<code>try-catch</code>嵌套层级）、注释密度（每行注释 vs 关键节点注释）形成个人标识。<br>
+</li>
+<li><strong>思维模式个性化</strong>：同是排序需求，有人首选<code>快速排序</code>（空间效率导向），有人强制<code>堆排序</code>（稳定性优先）。</li>
+<li><strong>技术价值观个性化</strong>：激进派为性能容忍代码晦涩（如位运算替代乘除法）, 保守派为可读性牺牲30%性能（禁止超过三层的lambda嵌套）。</li>
+<li><strong>上下文私有性</strong>：
+
+<ul>
+<li><strong>历史包袱</strong>：某段“糟糕代码”实为兼容已停运的旧系统，此信息仅原开发者知晓。<br>
+</li>
+<li><strong>隐性约束</strong>：团队约定禁用某库（因License纠纷），但未写入文档。</li>
+<li><strong>技术依赖独特性</strong>: 依赖的技术版本、运行环境是独特的</li>
+</ul></li>
+</ul>
+
+<h2>4. <strong>人与AI持续交互达成一致</strong></h2>
+
+<p><strong>交互的本质特征</strong>：</p>
+
+<ul>
+<li>渐进式理解 ：AI需要通过多轮对话逐步理解开发者真实意图</li>
+<li>上下文累积 ：每次交互都在前一轮基础上深化理解</li>
+<li>认知对齐 ：人类思维模式与AI推理逻辑的逐步同步</li>
+</ul>
+
+<p><strong>交互过程的阶段</strong>：</p>
+
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>人的状态</th>
+<th>AI的状态</th>
+<th>主要任务</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>需求澄清</td>
+<td>模糊表达初始想法</td>
+<td>模糊理解需求</td>
+<td>澄清需求细节，定义边界和约束</td>
+</tr>
+
+<tr>
+<td>方案探讨</td>
+<td>评估可行性</td>
+<td>提供多种实现路径</td>
+<td>权衡技术选型</td>
+</tr>
+
+<tr>
+<td>细节完善</td>
+<td>补充具体要求</td>
+<td>优化实现细节</td>
+<td>确保可执行性</td>
+</tr>
+
+<tr>
+<td>验证调整</td>
+<td>测试反馈</td>
+<td>根据结果修正</td>
+<td>达成最终一致</td>
+</tr>
+</tbody>
+</table>
+<p><strong>成功交互的关键要素</strong>：</p>
+
+<ul>
+<li>明确的沟通协议 ：建立双方都理解的表达方式</li>
+<li>渐进式验证 ：小步快跑，及时确认理解正确性</li>
+<li>上下文保持 ：维护对话历史和决策依据</li>
+<li>容错机制 ：允许试错和迭代改进</li>
+</ul>
+
+<h2>5. <strong>总结</strong></h2>
+
+<p>AI编程的四个基本认知构成了一个认知框架：</p>
+
+<ul>
+<li><strong>语言层面</strong>：自然语言作为编程语言具有模糊性、不完整性和抽象性，需要通过多轮交互来精确表达需求。</li>
+<li><strong>复杂度层面</strong>：编程任务的多维度系统熵远超传统AI任务，涉及系统耦合、错误传播、环境依赖等复杂因素。</li>
+<li><strong>个性化层面</strong>：每个开发者的代码风格、思维模式和技术价值观都不同，AI需要适应这种个性化差异。</li>
+<li><strong>协作层面</strong>：人与AI需要通过持续交互达成一致，建立渐进式理解与认知对齐机制。</li>
+</ul>
+
+<p>这四个认知相互关联，共同揭示了AI编程的本质特征。AI编程目前仍然在快速的发展过程中，这些基本认知可以用于指导实践的方向决策。</p>
+</div>
+<script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
+</body>
+</html>
