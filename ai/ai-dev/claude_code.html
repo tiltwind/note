@@ -99,9 +99,141 @@ sudo npm install -g @anthropic-ai/claude-code@latest
 <li>共享诊断信息：IDE 中的诊断错误（如 lint 错误、语法错误等）可以在你工作时自动与 Claude Code 共享，帮助它更好地理解问题。</li>
 </ul>
 
-<h2>4. 感受</h2>
+<h2>4. Agents（子代理）</h2>
+
+<p>Claude Code 的 <strong>Sub-agents（子代理）</strong> 功能，可以根据特定任务创建专属的AI助手，它们拥有独立的上下文和精密的工具权限，非常适合处理代码审查、调试、UI设计等专业性强的任务。</p>
+
+<p>几个典型场景：</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"><strong>场景</strong></th>
+<th align="left"><strong>主代理 (Claude)</strong></th>
+<th align="left"><strong>子代理 (Sub-agent)</strong></th>
+<th align="left"><strong>优势</strong></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>代码审查</strong></td>
+<td align="left">接收编写新功能的指令</td>
+<td align="left">被<strong>自动委派</strong>或<strong>显式调用</strong>，专门检查代码规范、安全性</td>
+<td align="left"><strong>上下文隔离</strong>：主对话线程不被审查细节干扰，保持清晰</td>
+</tr>
+
+<tr>
+<td align="left"><strong>博客写作</strong></td>
+<td align="left">负责撰写文章核心内容</td>
+<td align="left">被调用以生成博客封面图或SVG图标</td>
+<td align="left"><strong>专业化处理</strong>：每个代理专注于其最擅长的领域，输出质量更高</td>
+</tr>
+
+<tr>
+<td align="left"><strong>复杂探索</strong></td>
+<td align="left">将任务（如为项目生成文档）分解</td>
+<td align="left"><strong>并行启动</strong>多个子代理，分别处理不同模块</td>
+<td align="left"><strong>高效并行</strong>：将潜在耗时的单线程任务拆解为高效并行流程</td>
+</tr>
+</tbody>
+</table>
+
+<h3>🛠️ 如何配置与使用 Sub-agents</h3>
+
+<h4>创建 Sub-agent</h4>
+
+<ol>
+<li><strong>打开管理界面</strong>：在 Claude Code 会话中输入命令 <code>/agents</code>。</li>
+<li><strong>创建新代理</strong>：选择 &ldquo;Create New Agent&rdquo;。</li>
+<li><strong>定义代理属性</strong>：你需要配置以下几个核心要素：
 
 <ul>
+<li><strong><code>name</code></strong>：代理的唯一标识符（小写字母+连字符），如 <code>code-reviewer</code>。</li>
+<li><strong><code>description</code></strong>：清晰描述代理的用途和触发场景，这决定了Claude何时会自动委派任务。</li>
+<li><strong><code>tools</code></strong>：授予其必要的工具权限列表（如 <code>Read, Grep, Bash</code>），遵循<strong>权限最小化</strong>原则以保证安全。</li>
+<li><strong><code>system prompt</code></strong>：在Markdown文件中编写详细的行为规范、工作流程和约束条件，这是代理的&rdquo;灵魂&rdquo;。</li>
+</ul></li>
+</ol>
+
+<p>配置路径:</p>
+
+<ul>
+<li>Project (.claude/agents/)</li>
+<li>Personal (~/.claude/agents/)</li>
+</ul>
+
+<p>参考社区 sub-agents 配置:</p>
+
+<ul>
+<li><a href="https://github.com/vijaythecoder/awesome-claude-agents" target="_blank">https://github.com/vijaythecoder/awesome-claude-agents</a></li>
+<li><a href="https://github.com/0xfurai/claude-code-subagents" target="_blank">https://github.com/0xfurai/claude-code-subagents</a></li>
+<li><a href="https://github.com/zhsama/claude-sub-agent" target="_blank">https://github.com/zhsama/claude-sub-agent</a></li>
+</ul>
+
+<h4>调用 Sub-agent</h4>
+
+<ul>
+<li><strong>自动委派</strong>：当你提出的任务描述与某个子代理的 <code>description</code> 匹配时，Claude Code 会自动将任务委派给它。</li>
+<li><strong>显式调用</strong>：你可以直接在对话中通过自然语言指定，例如：<strong><code>&gt; 使用 code-reviewer 子代理检查我最近的更改</code></strong> 或 <strong><code>&gt; 让 debugger 子代理分析这个测试失败</code></strong>。</li>
+</ul>
+
+<h3>💡 进阶技巧与最佳实践</h3>
+
+<ul>
+<li><strong>链式调用</strong>：对于复杂任务，你可以串联多个子代理。例如，你可以发出指令：<strong><code>&gt; 先用 code-analyzer 查找性能问题，再用 optimizer 修复</code></strong>。这能让不同专家按顺序协作，提升任务完成的准确性。</li>
+<li><strong>迭代优化</strong>：Sub-agent 的效果并非一蹴而就。一个有效的建议是&rdquo;<strong>Recommended: Generate with Claude first, then customize</strong>&ldquo;。即先让 Claude 在普通聊天中尝试执行该专业任务，然后将表现优秀的回答作为子代理系统提示词的初版，再不断根据实际使用效果进行编辑和优化。</li>
+<li><strong>安全第一</strong>：在配置 <code>tools</code> 时，务必坚持权限最小化原则。例如，一个只负责审查代码的代理，通常只应授予其 <code>Read</code> 权限，从根本上杜绝它越界修改代码的可能。</li>
+</ul>
+
+<p>希望这份指南能帮助你快速上手 Claude Code 的 Sub-agents 功能。如果你在创建第一个子代理时遇到问题，比如不确定某个任务应该配置哪些工具权限，可以随时追问。</p>
+
+<h2>5. 自定义命令</h2>
+
+<p>在 Claude Code 中创建自定义命令（Custom Commands）可以让你把一些复杂或常用的指令固化下来，极大地提升工作效率。下面我将为你介绍如何创建和使用它们，并提供一个包含多种场景的实用范例表格。</p>
+
+<p>自定义命令通过创建特定的 Markdown (<code>.md</code>) 文件来实现，你需要根据命令的适用范围，将其放在正确的目录下：</p>
+
+<ul>
+<li><strong>项目级命令</strong>：仅在当前项目内可用。
+创建路径：<code>项目根目录/.claude/commands/你的命令名.md</code></li>
+<li><strong>全局命令</strong>：在你所有的项目中都可用。
+创建路径：<code>~/.claude/commands/你的命令名.md</code> (你的用户主目录下)</li>
+</ul>
+
+<p>创建文件并编辑后，<strong>重启 Claude Code</strong> 即可通过输入 <code>/</code> 来看到并使用你新创建的命令。</p>
+
+<h3>💡 高级用法与技巧</h3>
+
+<p>除了上面表格中的基础用法，自定义命令还支持一些高级功能，可以让你的命令更加强大和智能。</p>
+
+<ul>
+<li><strong>参数传递</strong>：在你的命令提示词中，可以使用 <strong><code>$ARGUMENTS</code></strong> 作为占位符来接收用户输入。例如，一个查询天气的命令提示词可以是：<code>查询 $ARGUMENTS 的天气</code>。当你使用 <code>/weather 北京</code> 时，Claude 收到的指令就是&rdquo;查询 北京 的天气&rdquo;。也支持类似 Shell 脚本的 <strong><code>$1</code></strong>, <strong><code>$2</code></strong> 位置参数。</li>
+<li><strong>执行 Bash 命令</strong>：在自定义命令中，你可以通过 <strong>!<code>command</code></strong> 的语法在执行时运行 Bash 命令，并将其输出作为上下文。这在获取 Git 状态、文件列表等信息时非常有用。请注意，这通常需要在 Frontmatter 中通过 <code>allowed-tools</code> 字段授予相应的 <code>Bash</code> 工具权限。</li>
+<li><strong>文件引用</strong>：在命令中，使用 <strong><code>@文件名</code></strong> 可以引用当前工作目录下的文件内容。例如，<code>请总结 @README.md 的主要内容</code>。</li>
+<li><strong>使用 Frontmatter 精细控制</strong>：在 Markdown 文件顶部的 <code>---</code> 区域内（称为 Frontmatter），你可以设置更多选项：
+
+<ul>
+<li><code>description</code>：命令的简短描述，会在命令列表中显示。</li>
+<li><code>argument-hint</code>：参数的提示信息，例如 <code>[commit message]</code>。</li>
+<li><code>allowed-tools</code>：明确此命令可以使用的工具列表，例如 <code>Bash(git add:*)</code>，遵循权限最小化原则。</li>
+<li><code>model</code>：指定执行此命令时使用的模型。</li>
+</ul></li>
+</ul>
+
+<h3>⚠️ 温馨提示</h3>
+
+<ul>
+<li><strong>权限安全</strong>：在授予 <code>allowed-tools</code> 权限，尤其是 <code>Bash</code> 和 <code>Edit</code>（文件编辑）时，请务必谨慎，确保命令本身是安全可靠的。</li>
+<li><strong>迭代优化</strong>：自定义命令的效果可能需要你根据实际使用反馈，不断调整和优化提示词，就像优化其他 AI 提示词一样。</li>
+</ul>
+
+<p>希望这些范例和说明能帮助你更好地利用 Claude Code 的自定义命令功能。如果你对实现某个特定功能的命令有疑问，或者想了解更复杂的组合用法，随时可以再问我。</p>
+
+<h2>A. 感受</h2>
+
+<ul>
+<li>2025-11-10: claude code 模型在编码上的表现还是最优秀的</li>
 <li>2025-09-10： 需要结合IDE有比较好的用户体验,但token消耗太快是一个比较大的问题</li>
 </ul>
 </div>
