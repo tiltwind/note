@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
+    <title>Index</title>
+</head>
+<body class="markdown-body">
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="main" id="app">
+
+<!--
+markmeta_author: titlwind
+markmeta_date: 2025-12-02
+markmeta_title: Eino Guide
+markmeta_categories: ai
+markmeta_tags: ai,agent
+-->
+
+<h1>Eino Guide —— LLM 应用开发指南</h1>
+
+<p>面向专业 Go 开发者的从入门到深入的 Eino 开发手册。通过简洁文字与带解释说明的代码片段，帮助你快速上手并逐步掌握编排、智能体、流式处理、调试与生产实践。</p>
+
+<h2>目录</h2>
+
+<ul>
+<li>1. 概览与定位</li>
+<li>2. 快速上手</li>
+<li>3. 编排基础（Chain / Graph / Workflow）</li>
+<li>4. 智能体（ReAct Agent）与工具（Tool）</li>
+<li>5. 流式与并发</li>
+<li>6. 可靠性与调试（错误、超时、追踪与评估）</li>
+<li>7. 生产实践（配置、部署、安全）</li>
+<li>8. 进阶主题（循环图、多模型、性能优化）</li>
+<li>9. 测试与评估</li>
+<li>10. API 速查与参考链接</li>
+<li>11. 与 Google ADK 的对比</li>
+</ul>
+
+<hr>
+
+<h2>1. 概览与定位</h2>
+
+<ul>
+<li>Eino 是一个用 Go 编写的 LLM 应用开发框架，强调简洁、可扩展、可靠与有效。</li>
+<li>提供组件抽象与实现、强大的编排框架（类型检查、流式处理、并发管理、切面注入、选项赋值）、简明 API，以及 DevOps 工具与最佳实践。</li>
+<li>编排 API 分为三类：
+
+<ul>
+<li>Chain：简单链式有向图，仅前进。</li>
+<li>Graph：循环或非循环有向图，灵活强大。</li>
+<li>Workflow：非循环图，支持在结构体字段级别进行数据映射。</li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h2>2. 快速上手</h2>
+
+<h3>2.1 安装与准备</h3>
+
+<ul>
+<li>获取依赖：根据实际版本选择对应的模块路径与适配器（例如 OpenAI）。</li>
+<li>环境变量：准备你的模型密钥（勿硬编码到代码中）。</li>
+</ul>
+
+<pre><code class="language-go">cfg := Config{APIKey: &quot;&lt;安全来源&gt;&quot;}
+model, _ := openai.NewChatModel(ctx, cfg)
+messages := []*Message{
+    SystemMessage(&quot;你是一名乐于助人的助手&quot;),
+    UserMessage(&quot;未来的 AI 应用会是什么样？&quot;),
+}
+resp, _ := model.Generate(ctx, messages)
+</code></pre>
+
+<h3>2.2 使用 Chain 组合模板与模型</h3>
+
+<pre><code class="language-go">chain, _ := NewChain[map[string]any, *Message]().
+           AppendChatTemplate(prompt).
+           AppendChatModel(model).
+           Compile(ctx)
+out, _ := chain.Invoke(ctx, map[string]any{&quot;query&quot;: &quot;你的名字是？&quot;})
+</code></pre>
+
+<hr>
+
+<h2>3. 编排基础（Chain / Graph / Workflow）</h2>
+
+<h3>3.1 Chain：最简有向链</h3>
+
+<ul>
+<li>使用场景：线性、一步接一步，没有分支与循环。</li>
+<li>特性：最易上手，适合模板→模型的直连流程。</li>
+</ul>
+
+<pre><code class="language-go">ch, _ := NewChain[map[string]any, *Message]().
+    AppendChatTemplate(prompt).
+    AppendChatModel(chatModel).
+    Compile(ctx)
+out, _ := ch.Invoke(ctx, map[string]any{&quot;query&quot;: &quot;今天天气如何？&quot;})
+</code></pre>
+
+<h3>3.2 Graph：灵活的有向图（支持循环）</h3>
+
+<ul>
+<li>使用场景：需要条件分支、循环或复杂拓扑时。</li>
+<li>常用节点类型：ChatTemplateNode、ChatModelNode、ToolsNode、LambdaNode。</li>
+<li>分支：根据模型输出判断走向（如调用工具或直接给出答案）。</li>
+</ul>
+
+<pre><code class="language-go">g := NewGraph[map[string]any, *Message]()
+_ = g.AddChatTemplateNode(&quot;node_template&quot;, chatTpl)
+_ = g.AddChatModelNode(&quot;node_model&quot;, chatModel)
+_ = g.AddToolsNode(&quot;node_tools&quot;, tools)
+_ = g.AddLambdaNode(&quot;node_converter&quot;, takeOne)
+_ = g.AddEdge(START, &quot;node_template&quot;)
+_ = g.AddEdge(&quot;node_template&quot;, &quot;node_model&quot;)
+_ = g.AddBranch(&quot;node_model&quot;, branch)
+_ = g.AddEdge(&quot;node_tools&quot;, &quot;node_converter&quot;)
+_ = g.AddEdge(&quot;node_converter&quot;, END)
+compiled, _ := g.Compile(ctx)
+_, _ := compiled.Invoke(ctx, map[string]any{&quot;query&quot;: &quot;周末北京天气&quot;})
+</code></pre>
+
+<h3>3.3 Workflow：字段级映射的非循环图</h3>
+
+<ul>
+<li>使用场景：需要在结构体字段之间进行灵活的数据映射、组合多个 Lambda/Model。</li>
+</ul>
+
+<pre><code class="language-go">wf := NewWorkflow[[]*schema.Message, *schema.Message]()
+wf.AddChatModelNode(&quot;model&quot;, m).AddInput(START)
+wf.AddLambdaNode(&quot;lambda1&quot;, InvokableLambda(lambda1)).
+    AddInput(&quot;model&quot;, MapFields(&quot;Content&quot;, &quot;Input&quot;))
+wf.AddLambdaNode(&quot;lambda2&quot;, InvokableLambda(lambda2)).
+    AddInput(&quot;model&quot;, MapFields(&quot;Role&quot;, &quot;Role&quot;))
+wf.AddLambdaNode(&quot;lambda3&quot;, InvokableLambda(lambda3)).
+    AddInput(&quot;lambda1&quot;, MapFields(&quot;Output&quot;, &quot;Query&quot;)).
+    AddInput(&quot;lambda2&quot;, MapFields(&quot;Output&quot;, &quot;MetaData&quot;))
+wf.End().AddInput(&quot;lambda3&quot;)
+r, _ := wf.Compile(ctx)
+_, _ := r.Invoke(ctx, []*schema.Message{ schema.UserMessage(&quot;kick start this workflow!&quot;) })
+</code></pre>
+
+<hr>
+
+<h2>4. 智能体（ReAct Agent）与工具（Tool）</h2>
+
+<h3>4.1 ReAct Agent 概览</h3>
+
+<ul>
+<li>由 ChatModel 与若干 Tool 组成，Agent 能自主决定是调用 Tool 还是直接给出答案。</li>
+<li>工具执行结果会被作为新的消息输入到模型中，形成多轮决策。</li>
+<li>Eino 在 <code>flow/agent/react</code> 提供了开箱即用的实现（可直接复用）。</li>
+</ul>
+
+<h3>4.2 示例：简单的 ReAct Agent</h3>
+
+<pre><code class="language-go">tools := []Tool{WeatherTool{}}
+agent := flowagentreact.New(chatModel, tools)
+out, _ := agent.Invoke(ctx, []*Message{ UserMessage(&quot;这个周末北京天气？&quot;) })
+</code></pre>
+
+<h3>4.3 自定义 Tool 设计要点</h3>
+
+<ul>
+<li>输入/输出类型要与编排节点契合，简洁明了。</li>
+<li>避免在 Tool 内部持久化敏感信息；参数校验与错误处理要充分。</li>
+<li>保障可观察性：合理日志与可选的追踪埋点。</li>
+</ul>
+
+<hr>
+
+<h2>5. 流式与并发</h2>
+
+<ul>
+<li>编排框架原生支持流式处理与并发管理，适合实时反馈与高吞吐场景。</li>
+<li>流式响应：在生成阶段不断输出增量内容，提升交互体验。</li>
+<li>并发管理：在图或工作流中并行执行独立节点。</li>
+</ul>
+
+<pre><code class="language-go">stream, _ := chatModel.GenerateStream(ctx, []*Message{UserMessage(&quot;讲一个短故事&quot;)})
+for chunk := range stream.Ch() {
+    fmt.Print(chunk.Content)
+}
+_ = stream.Err()
+</code></pre>
+
+<hr>
+
+<h2>6. 可靠性与调试（错误、超时、追踪与评估）</h2>
+
+<ul>
+<li>错误处理：对外返回明确错误；内部区分重试型与非重试型错误。</li>
+<li>超时控制：通过 <code>context.Context</code> 设置每步超时，避免阻塞。</li>
+<li>追踪与评估：利用 Eino DevOps 工具进行可视化开发、在线追踪与效果评估。</li>
+</ul>
+
+<pre><code class="language-go">ctxWithTimeout, cancel := context.WithTimeout(ctx, 5*time.Second)
+defer cancel()
+out, err := r.Invoke(ctxWithTimeout, In{})
+</code></pre>
+
+<hr>
+
+<h2>7. 生产实践（配置、部署、安全）</h2>
+
+<ul>
+<li>配置管理：通过环境变量、配置中心或密钥管理系统注入敏感配置。</li>
+<li>部署：将编排逻辑封装为服务，提供 HTTP/gRPC 接口；合理设置资源与并发限额。</li>
+<li>安全：不在日志中输出密钥；对外接口进行鉴权与速率限制；隔离外部 Tool 的访问权限。</li>
+</ul>
+
+<hr>
+
+<h2>8. 进阶主题（循环图、多模型、性能优化）</h2>
+
+<ul>
+<li>循环图：Graph 支持循环，用于多轮对话与自我反思。</li>
+<li>多模型编排：在分支中选择不同模型，或根据任务类型路由到不同模型。</li>
+<li>性能优化：批量请求、缓存常用中间结果、合理并行与背压控制。</li>
+</ul>
+
+<pre><code class="language-go">if role == &quot;draft&quot; { return fast }
+return accurate
+</code></pre>
+
+<hr>
+
+<h2>9. 测试与评估</h2>
+
+<ul>
+<li>单元测试：为每个节点与 Tool 编写可控输入输出的测试。</li>
+<li>集成测试：覆盖关键路径与异常分支；模拟外部服务不可用场景。</li>
+<li>评估：对对话质量设定指标，结合 DevOps 工具进行线上效果评估与迭代。</li>
+</ul>
+
+<pre><code class="language-go">return &quot;question&quot;, nil
+</code></pre>
+
+<hr>
+
+<h2>10. API 速查与参考链接</h2>
+
+<ul>
+<li>核心概念：Message、ChatTemplate、BaseChatModel、ToolsNode、LambdaNode、Chain、Graph、Workflow、Runnable。</li>
+<li>常用操作：AddNode / AddEdge / AddBranch / Compile / Invoke / InvokeStream。</li>
+<li>参考：
+
+<ul>
+<li>Eino 官方文档：<code>https://www.cloudwego.io/zh/docs/eino/</code></li>
+<li>源码与示例：<code>https://github.com/cloudwego/eino/blob/v0.7.4/README.zh_CN.md</code></li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h2>11. 与 Google ADK 的对比</h2>
+
+<p><strong>定位与语言</strong></p>
+
+<ul>
+<li>Eino：核心语言为 <code>Go</code>，聚焦 Go 生态的 LLM/AI 应用开发，强调简洁、可扩展、可靠与有效。</li>
+<li>ADK：多语言支持（<code>Python</code>、<code>Go</code>、<code>Java</code>），优化 <code>Gemini</code> 与 Google 生态，同时宣称模型与部署环境无关。</li>
+</ul>
+
+<p><strong>编排与架构</strong></p>
+
+<ul>
+<li>Eino：提供 <code>Chain</code>、<code>Graph</code>（支持循环）、<code>Workflow</code>（字段级映射，Alpha）三类编排；组件抽象丰富（ChatModel、Tool、Retriever 等），可实现 <code>ReAct</code> 与多 Agent 协作。</li>
+<li>ADK：支持顺序、并行、循环等确定性流程与 <code>LLM</code> 驱动的动态路由；原生多 Agent 架构，模块化且易于扩展与委托。</li>
+</ul>
+
+<p><strong>流式与工具</strong></p>
+
+<ul>
+<li>Eino：内建透明的流处理机制，支持 <code>Invoke</code>、<code>Stream</code>、<code>Collect</code>、<code>Transform</code> 的范式，自动处理拼接与分发。</li>
+<li>ADK：支持 <code>Streaming Agent</code> 与双向流（Bidi-streaming），便于音频与 WebSockets 等实时场景；工具生态覆盖 Google 与第三方服务。</li>
+</ul>
+
+<p><strong>DevOps/MLOps</strong></p>
+
+<ul>
+<li>Eino：通过回调/切面扩展日志、追踪与指标，文档中提及 DevOps（可视化开发、调试、评估）。</li>
+<li>ADK：提供部署就绪（Vertex AI Agent Engine、Cloud Run、GKE）、可观测性（Cloud Trace、AgentOps、Phoenix）、内置评估与安全保障的完整工具链。</li>
+</ul>
+
+<p><strong>优劣势（简述）</strong></p>
+
+<ul>
+<li>Eino 优势：<code>Go</code> 高并发与可靠性、编译期强类型检查、透明流处理；劣势：语言栈受限、部分高级功能（如 Workflow）成熟度在提升中。</li>
+<li>ADK 优势：多语言与完整 MLOps/DevOps 体系、原生多 Agent 架构与生态集成；劣势：对非 Google 生态用户的集成复杂度、Python 版本要求与性能需场景评估。</li>
+</ul>
+
+<p><strong>选择建议</strong></p>
+
+<ul>
+<li>团队以 <code>Go</code> 为主、追求高并发稳定后端与类型安全：选 <code>Eino</code>。</li>
+<li>需要多语言与生产级 MLOps/DevOps、一体化部署与评估：选 <code>ADK</code>。</li>
+<li>构建复杂多 Agent 协作、深度集成 Google 生态：优先 <code>ADK</code>。</li>
+</ul>
+
+<p><strong>总结</strong></p>
+
+<ul>
+<li><code>Eino</code> 聚焦 Go 生态的“快、稳、强”。</li>
+<li><code>ADK</code> 面向工程化的“全、广、深”。</li>
+</ul>
+
+<h2>附录：实践建议速览</h2>
+
+<ul>
+<li>从 Chain 入手，快速打通模板→模型→输出的闭环。</li>
+<li>在 Graph 中加入分支与工具，逐步演化为可实用的 ReAct Agent。</li>
+<li>使用 Workflow 做字段映射，清晰表达数据依赖与组合关系。</li>
+<li>全程以 <code>context.Context</code> 控制超时与取消，确保可靠性。</li>
+<li>接入 DevOps 工具进行可视化调试与评估，建立持续改进闭环。</li>
+</ul>
+
+<h2>APPENDIX. 参考</h2>
+
+<p>— 本文档示例为概念性代码，导入路径与具体类型以所选版本与适配器的实际实现为准；涉及密钥的部分请务必通过安全的配置来源注入并进行合规处理。</p>
+</div>
+<script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
+</body>
+</html>
