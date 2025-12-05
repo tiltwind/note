@@ -30,7 +30,60 @@ markmeta_tags: ai,claude-code
 sudo npm install -g @anthropic-ai/claude-code@latest
 </code></pre>
 
-<h3>1.1. 路由</h3>
+<h2>1.1 使用deepseek模型</h2>
+
+<p>配置环境变量，直接使用 DeepSeek API 接入 Claude Code。</p>
+
+<pre><code class="language-bash">export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
+export ANTHROPIC_AUTH_TOKEN=${DEEPSEEK_API_KEY}
+export API_TIMEOUT_MS=600000
+export ANTHROPIC_MODEL=deepseek-chat
+export ANTHROPIC_SMALL_FAST_MODEL=deepseek-chat
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+
+# 启动
+claude
+</code></pre>
+
+<h2>1.2 使用deepseek模型(自定义命令)</h2>
+
+<p>通过创建自定义脚本，实现独立的 DeepSeek 调用命令，互不影响。</p>
+
+<pre><code class="language-bash">mkdir -p ~/claude-model/bin
+# 将 bin 目录加入 PATH，例如在 ~/.zshrc 中添加:
+# export PATH=&quot;$HOME/claude-model/bin:$PATH&quot;
+</code></pre>
+
+<p><strong>创建脚本</strong> <code>~/claude-model/bin/claude-deepseek</code></p>
+
+<pre><code class="language-bash">#!/usr/bin/env bash
+# Wrapper for Claude Code CLI using DeepSeek API
+
+CLAUDE_BIN=&quot;$(which claude)&quot;
+
+# 配置 DeepSeek 环境变量
+export ANTHROPIC_BASE_URL=&quot;https://api.deepseek.com/anthropic&quot;
+export ANTHROPIC_AUTH_TOKEN=&quot;YOUR_DEEPSEEK_API_KEY&quot;
+export ANTHROPIC_MODEL=&quot;deepseek-chat&quot;
+export ANTHROPIC_SMALL_FAST_MODEL=&quot;deepseek-chat&quot;
+export API_TIMEOUT_MS=600000
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+
+# 使用独立的配置目录，避免与原版配置冲突
+export CLAUDE_CONFIG_DIR=&quot;$HOME/.claude-deepseek&quot;
+
+exec &quot;$CLAUDE_BIN&quot; &quot;$@&quot;
+</code></pre>
+
+<p><strong>赋予权限并使用</strong></p>
+
+<pre><code class="language-bash">chmod +x ~/claude-model/bin/claude-deepseek
+
+# 使用新命令
+claude-deepseek
+</code></pre>
+
+<h2>1.3. 路由代理访问方式</h2>
 
 <pre><code class="language-bash">sudo npm install -g @musistudio/claude-code-router@latest
 </code></pre>
@@ -45,7 +98,7 @@ sudo npm install -g @anthropic-ai/claude-code@latest
   &quot;Providers&quot;: [
     {
       &quot;name&quot;: &quot;deepseek&quot;,
-      &quot;api_base_url&quot;: &quot;https://api.deepseek.com/chat/completions&quot;,
+      &quot;api_base_url&quot;: &quot;https://api.deepseek.com/anthropic&quot;,
       &quot;api_key&quot;: &quot;sk-xxx&quot;,
       &quot;models&quot;: [&quot;deepseek-chat&quot;, &quot;deepseek-reasoner&quot;],
       &quot;transformer&quot;: {
@@ -229,6 +282,49 @@ sudo npm install -g @anthropic-ai/claude-code@latest
 </ul>
 
 <p>希望这些范例和说明能帮助你更好地利用 Claude Code 的自定义命令功能。如果你对实现某个特定功能的命令有疑问，或者想了解更复杂的组合用法，随时可以再问我。</p>
+
+<h2>6. 配置 MCP (Model Context Protocol)</h2>
+
+<p>MCP (Model Context Protocol) 是一种开放标准，允许 AI 助手（如 Claude）安全地连接到本地或远程的数据源和工具。通过配置 MCP 服务器，你可以让 Claude 访问数据库、文件系统、API 等外部资源。</p>
+
+<p>项目目录下创建 <code>.mcp.json</code> 。</p>
+
+<p>配置文件的基本结构如下：</p>
+
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;server-name&quot;: {
+      &quot;command&quot;: &quot;executable-command&quot;,
+      &quot;args&quot;: [&quot;arg1&quot;, &quot;arg2&quot;],
+      &quot;env&quot;: {
+        &quot;ENV_VAR&quot;: &quot;value&quot;
+      }
+    }
+  }
+}
+</code></pre>
+
+<p>以下是几个常见的 MCP 服务器配置范例：</p>
+
+<h4>6. Chrome DevTools (浏览器调试)</h4>
+
+<p>允许 Claude 控制 Chrome 浏览器进行调试、页面分析等。
+需要先安装：<code>npm install -g chrome-devtools-mcp</code></p>
+
+<p>配置:</p>
+
+<pre><code class="language-json">&quot;mcp__chrome-devtools&quot;: {
+  &quot;command&quot;: &quot;npx&quot;,
+  &quot;args&quot;: [
+    &quot;-y&quot;,
+    &quot;chrome-devtools-mcp@latest&quot;
+  ]
+}
+</code></pre>
+
+<h3>6.3 调试与验证</h3>
+
+<p>配置完成后，重启 Claude Code。你可以通过询问 Claude &ldquo;列出当前可用的 MCP 工具&rdquo; 来验证服务器是否加载成功。</p>
 
 <h2>A. 感受</h2>
 
