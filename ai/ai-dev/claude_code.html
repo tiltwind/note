@@ -287,7 +287,12 @@ claude-deepseek
 
 <p>MCP (Model Context Protocol) 是一种开放标准，允许 AI 助手（如 Claude）安全地连接到本地或远程的数据源和工具。通过配置 MCP 服务器，你可以让 Claude 访问数据库、文件系统、API 等外部资源。</p>
 
-<p>项目目录下创建 <code>.mcp.json</code> 。</p>
+<p>配置路径:</p>
+
+<ul>
+<li>用户级别: <code>~/.claude.json</code> 文件的 mcpServers 字段</li>
+<li>项目级别: 项目目录下 <code>.mcp.json</code> 文件</li>
+</ul>
 
 <p>配置文件的基本结构如下：</p>
 
@@ -304,6 +309,15 @@ claude-deepseek
 }
 </code></pre>
 
+<p>命令添加:</p>
+
+<pre><code class="language-bash"># 通过 -s user 指定用户级别
+claude mcp add &lt;MCP服务器名称&gt; -s user &lt;启动命令&gt;
+claude mcp remove &lt;MCP服务器名称&gt; -s user
+
+claude mcp add chrome-devtools -s user -- npx chrome-devtools-mcp@latest
+</code></pre>
+
 <p>以下是几个常见的 MCP 服务器配置范例：</p>
 
 <h4>6. Chrome DevTools (浏览器调试)</h4>
@@ -311,7 +325,9 @@ claude-deepseek
 <p>允许 Claude 控制 Chrome 浏览器进行调试、页面分析等。
 需要先安装：<code>npm install -g chrome-devtools-mcp</code></p>
 
-<p>配置:</p>
+<p>添加: <code>claude mcp add chrome-devtools -s user -- npx chrome-devtools-mcp@latest</code></p>
+
+<p>手动配置:</p>
 
 <pre><code class="language-json">&quot;mcp__chrome-devtools&quot;: {
   &quot;command&quot;: &quot;npx&quot;,
@@ -325,6 +341,108 @@ claude-deepseek
 <h3>6.3 调试与验证</h3>
 
 <p>配置完成后，重启 Claude Code。你可以通过询问 Claude &ldquo;列出当前可用的 MCP 工具&rdquo; 来验证服务器是否加载成功。</p>
+
+<h3>6.3 调试与验证</h3>
+
+<p>配置完成后，重启 Claude Code。你可以通过询问 Claude &ldquo;列出当前可用的 MCP 工具&rdquo; 来验证服务器是否加载成功。</p>
+
+<h2>7. Plugins (插件)</h2>
+
+<p>Claude Code 的插件系统（Plugins）允许你扩展其能力，包括自定义命令、Agents、Skills 和 MCP 服务器等。</p>
+
+<h3>7.1 安装与使用</h3>
+
+<h4>7.1.1 发现插件</h4>
+
+<p>你可以通过以下两种方式查看市场上有哪些可用的插件：</p>
+
+<ol>
+<li><p><strong>命令行交互界面</strong>：
+在 Claude Code 中输入 <code>/plugin</code> 命令，会打开一个交互式界面。使用 <code>Tab</code> 键在不同标签页之间切换（如 Discover, Installed, Marketplaces）。在 <strong>Discover</strong> 标签页中，你可以浏览所有已添加市场的插件列表。</p></li>
+
+<li><p><strong>网页浏览</strong>：
+访问非官方的插件索引站 <a href="https://claude-plugins.dev/" target="_blank">claude-plugins.dev</a> 浏览社区插件，或者直接查看 <a href="https://github.com/anthropics/claude-code/tree/main/plugins" target="_blank">Anthropic 官方 GitHub 仓库</a>。</p></li>
+</ol>
+
+<h4>7.1.2 安装插件</h4>
+
+<p>安装插件最简单的方法是使用 <code>/plugin install</code> 命令。</p>
+
+<p><strong>推荐安装方式：项目级别 (Project Scope)</strong>
+建议使用 <code>--scope project</code> 参数将插件安装到当前项目。这样做的好处是：</p>
+
+<ul>
+<li><strong>隔离性</strong>：不同项目可以使用不同版本的插件，避免冲突。</li>
+<li><strong>团队共享</strong>：配置会保存在项目的 <code>.claude/settings.json</code> 中，团队成员拉取代码后可以获得一致的开发环境。</li>
+</ul>
+
+<p><strong>基本语法</strong>：</p>
+
+<pre><code class="language-bash">/plugin install &lt;plugin-id&gt; --scope project
+</code></pre>
+
+<p><strong>示例</strong>：
+安装官方提供的 Frontend Design 插件到当前项目：</p>
+
+<pre><code class="language-bash">/plugin install frontend-design@claude-code-plugins --scope project
+</code></pre>
+
+<p>或者</p>
+
+<pre><code class="language-bash">/plugin install @anthropics/claude-code-plugins/frontend-design --scope project
+</code></pre>
+
+<p>如果不加 <code>--scope project</code>，默认会安装到<strong>用户级别 (User Scope)</strong>，即对该用户的所有项目生效。</p>
+
+<h3>7.2 常用插件推荐</h3>
+
+<table>
+<thead>
+<tr>
+<th align="left">插件名</th>
+<th align="left">ID</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>Frontend Design</strong></td>
+<td align="left"><code>frontend-design@claude-code-plugins</code></td>
+<td align="left">专注于生成高质量、非通用的前端界面代码，包含设计审美和最佳实践。</td>
+</tr>
+
+<tr>
+<td align="left"><strong>Commit Commands</strong></td>
+<td align="left"><code>@anthropics/claude-code-plugins/commit-commands</code></td>
+<td align="left">包含 git 提交、推送和创建 PR 的相关命令。</td>
+</tr>
+
+<tr>
+<td align="left"><strong>Code Review</strong></td>
+<td align="left"><code>@anthropics/claude-code-plugins/code-review</code></td>
+<td align="left">自动化的代码审查插件，提供基于置信度的审查意见。</td>
+</tr>
+</tbody>
+</table>
+
+<h3>7.3 使用建议</h3>
+
+<ol>
+<li><strong>按需安装</strong>：不要一次性安装过多插件，以免造成环境混乱或上下文过载。根据当前项目的需求选择合适的插件。</li>
+<li><strong>查看文档</strong>：许多插件（特别是官方插件）在 GitHub 上有详细的 <code>SKILL.md</code> 或说明文档，安装前建议阅读以了解其具体能力和触发方式。</li>
+<li><strong>插件管理</strong>：
+
+<ul>
+<li>列出已安装插件：<code>/plugin list</code> (或使用 <code>npx claude-plugins list</code>)</li>
+<li>移除插件：<code>/plugin remove &lt;plugin-id&gt;</code></li>
+<li>更新插件：通常需要重新安装最新版本。</li>
+</ul></li>
+</ol>
+
+<blockquote>
+<p><strong>提示</strong>：插件本质上是 Skills、Prompts 和工具配置的集合。如果你发现某个插件特别好用，可以研究其源码（通常是开源的），学习如何编写更好的 System Prompts 和 Skills。</p>
+</blockquote>
 
 <h2>A. 感受</h2>
 
