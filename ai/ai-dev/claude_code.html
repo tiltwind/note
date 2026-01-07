@@ -535,7 +535,7 @@ claude mcp add chrome-devtools -s user -- npx chrome-devtools-mcp@latest
 
 <p><strong>目录结构示例</strong>：</p>
 
-<pre><code class="language-text">.claude/
+<pre><code>.claude/
 └── skills/
     └── my-custom-skill/      &lt;-- Skill 文件夹名称
         ├── SKILL.md          &lt;-- 核心定义文件 (必须)
@@ -550,7 +550,7 @@ claude mcp add chrome-devtools -s user -- npx chrome-devtools-mcp@latest
 
 <p><strong>基本模板</strong>：</p>
 
-<pre><code class="language-markdown">---
+<pre><code>---
 name: skill-name-id            # 唯一标识符，只能包含小写字母、数字和连字符
 description: 简短描述这个 Skill 是做什么的，以及 Claude 何时应该使用它。 # 关键字段！Claude 根据此描述决定是否调用
 allowed-tools: [Read, Grep]    # (可选) 限制该 Skill 运行时允许使用的工具，提高安全性
@@ -579,31 +579,38 @@ allowed-tools: [Read, Grep]    # (可选) 限制该 Skill 运行时允许使用�
 <li>写入内容：</li>
 </ol>
 
-<pre><code class="language-markdown">---
+<pre><code>---
 name: vue-component-gen
 description: Generate Vue 3 components following team best practices. Use this whenever the user asks to create or refactor a Vue component.
 ---
+</code></pre>
 
-# Vue 3 Component Generator
+<h1>Vue 3 Component Generator</h1>
 
-## Instructions
-When generating Vue 3 components, you MUST follow these rules:
+<h2>Instructions</h2>
 
-1.  **Syntax**: Always use `&lt;script setup lang=&quot;ts&quot;&gt;`.
-2.  **Naming**: Use PascalCase for component filenames (e.g., `UserProfile.vue`).
-3.  **Structure**:
-    - `&lt;script setup&gt;` first
-    - `&lt;template&gt;` second
-    - `&lt;style scoped&gt;` last
-4.  **Props**: Use interface-based prop definitions with `defineProps&lt;Props&gt;()`.
+<p>When generating Vue 3 components, you MUST follow these rules:</p>
 
-## Examples
+<ol>
+<li><strong>Syntax</strong>: Always use <code>&lt;script setup lang=&quot;ts&quot;&gt;</code>.</li>
+<li><strong>Naming</strong>: Use PascalCase for component filenames (e.g., <code>UserProfile.vue</code>).</li>
+<li><strong>Structure</strong>:
 
-User: &quot;Create a button component&quot;
+<ul>
+<li><code>&lt;script setup&gt;</code> first</li>
+<li><code>&lt;template&gt;</code> second</li>
+<li><code>&lt;style scoped&gt;</code> last</li>
+</ul></li>
+<li><strong>Props</strong>: Use interface-based prop definitions with <code>defineProps&lt;Props&gt;()</code>.</li>
+</ol>
 
-Output:
-\`\`\`vue
-&lt;script setup lang=&quot;ts&quot;&gt;
+<h2>Examples</h2>
+
+<p>User: &ldquo;Create a button component&rdquo;</p>
+
+<p>Output:</p>
+
+<pre><code class="language-vue">&lt;script setup lang=&quot;ts&quot;&gt;
 interface Props {
   label: string;
   disabled?: boolean;
@@ -629,7 +636,6 @@ button {
   /* styles */
 }
 &lt;/style&gt;
-\`\`\`
 </code></pre>
 
 <h3>8.5 如何使用</h3>
