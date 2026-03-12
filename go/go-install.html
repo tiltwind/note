@@ -27,19 +27,19 @@ markmeta_tags: golang,installation
 <p>Mac:</p>
 
 <pre><code class="language-bash"># intel
-curl -C - -O https://dl.google.com/go/go1.25.0.darwin-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.25.0.darwin-amd64.tar.gz
+curl -C - -O https://dl.google.com/go/go1.26.0.darwin-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.26.0.darwin-amd64.tar.gz
 
 # ARM
-curl -C - -O https://dl.google.com/go/go1.25.0.darwin-arm64.tar.gz
-sudo tar -C /usr/local -xzf go1.25.0.darwin-arm64.tar.gz
+curl -C - -O https://dl.google.com/go/go1.26.0.darwin-arm64.tar.gz
+sudo tar -C /usr/local -xzf go1.26.0.darwin-arm64.tar.gz
 </code></pre>
 
 <p>Linux:</p>
 
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.25.0.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.25.0.linux-amd64.tar.gz
-sudo tar -C /tmp/go/local -xzf go1.25.0.linux-amd64.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.26.0.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.26.0.linux-amd64.tar.gz
+sudo tar -C /tmp/go/local -xzf go1.26.0.linux-amd64.tar.gz
 </code></pre>
 
 <p>config env:</p>
@@ -68,8 +68,8 @@ export GOPRIVATE=gitlab.homeking365.com
 
 <p>Install from source:</p>
 
-<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.25.0.src.tar.gz
-tar -C /usr/local -xzf go1.25.0.src.tar.gz
+<pre><code class="language-bash">curl -C - -O https://dl.google.com/go/go1.26.0.src.tar.gz
+tar -C /usr/local -xzf go1.26.0.src.tar.gz
 cd /usr/local/go/src
 time sudo ./make.bash
 </code></pre>
@@ -77,7 +77,7 @@ time sudo ./make.bash
 <h2>go tools</h2>
 
 <pre><code class="language-bash"># golang debug
-go install github.com/go-delve/delve/cmd/dlv@v1.25.0
+go install github.com/go-delve/delve/cmd/dlv@v1.26.0
 
 # golang tools
 # cd $GOPATH/src/github.com/golang/tools &amp;&amp; git pull -v &amp;&amp; go install ./...

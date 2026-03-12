@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="//vogo.github.io/markhtml/css/markhtml.css">
+    <title>Index</title>
+</head>
+<body class="markdown-body">
+    <div id="navbar"></div>
+    <div id="menu"></div>
+    <div class="main" id="app">
+
+<!--
+markmeta_author: tiltwind
+markmeta_date: 2026-02-27
+markmeta_title: 人在AI开发中的角色演进
+markmeta_categories: ai
+markmeta_tags: ai,ai-dev,cognitive-change
+-->
+
+<h1>人在AI开发中的角色演进</h1>
+
+<p>随着大语言模型能力的飞速进化，我对 AI 开发的认知也经历了深刻的变化。
+从最初把 AI 当作一个&rdquo;智能补全器&rdquo;，到如今可以将完整需求交给 AI Agent 自主完成，每一次跃迁都伴随着开发模式的重构和工程师角色的重新定义。</p>
+
+<p>本文以 <strong>人的角色演进</strong> 为主轴，梳理这一变化历程。
+每一次阶段跃迁的本质，是人&rdquo;放下&rdquo;了某项具体工作，将其交给 AI，同时承担起更高层次的职责。</p>
+
+<pre><code>编码者  --&gt;  审查者  --&gt;  指挥者  --&gt;  验收者  --&gt;  Tech Lead
+     放下键盘     放下红笔     放下操控杆     放下单任务
+</code></pre>
+
+<h2>1. 编码者：人写代码，AI 加速打字</h2>
+
+<blockquote>
+<p>2021 – 2023，以 GitHub Copilot 为代表</p>
+</blockquote>
+
+<h3>1.1 AI 能力</h3>
+
+<ul>
+<li>基于上下文的行级/块级代码补全</li>
+<li>根据注释生成简单函数体</li>
+<li>模式匹配：识别重复代码模式并自动续写</li>
+<li>能力边界明确：只能在光标处做局部预测，无法理解跨文件关系</li>
+</ul>
+
+<h3>1.2 开发模式</h3>
+
+<p>工程师在 IDE 中编写代码，AI 在光标处实时提供补全建议，工程师按 Tab 接受或忽略。本质上是 <strong>&ldquo;人写代码，AI 加速敲键盘&rdquo;</strong>。</p>
+
+<pre><code>工程师编写代码  --&gt;  AI 实时补全建议  --&gt;  工程师接受/忽略  --&gt;  继续编写
+</code></pre>
+
+<h3>1.3 工程师核心关注点</h3>
+
+<ul>
+<li><strong>编写代码本身</strong>：逻辑设计、架构决策、代码质量全部由人负责</li>
+<li><strong>判断补全质量</strong>：快速判断 AI 建议是否正确</li>
+<li><strong>保持编码节奏</strong>：AI 是加速器，不是决策者</li>
+</ul>
+
+<h3>1.4 典型范例</h3>
+
+<pre><code class="language-python"># 工程师输入注释
+# 计算两个日期之间的工作日天数
+
+# AI 自动补全函数体
+def count_workdays(start_date, end_date):
+    count = 0
+    current = start_date
+    while current &lt;= end_date:
+        if current.weekday() &lt; 5:  # Monday = 0, Friday = 4
+            count += 1
+        current += timedelta(days=1)
+    return count
+</code></pre>
+
+<p>工程师写注释或函数签名，AI 补全实现。工程师需要逐行审查补全内容是否正确。</p>
+
+<h3>1.5 典型挑战</h3>
+
+<ul>
+<li>补全质量不稳定，接受错误补全反而引入 Bug</li>
+<li>过度依赖补全可能导致基础编码能力退化</li>
+<li>AI 只见过公开代码，对私有业务逻辑无能为力</li>
+</ul>
+
+<h3>1.6 认知</h3>
+
+<ul>
+<li>AI 是一个 <strong>效率工具</strong>，和 IDE 的 snippet、模板生成没有本质区别</li>
+<li>AI 不理解业务，只是&rdquo;见过类似的代码&rdquo;</li>
+<li>核心价值：减少重复劳动，加快编码速度</li>
+<li>工程师的技能壁垒不受影响</li>
+</ul>
+
+<blockquote>
+<p><strong>跃迁驱动力</strong>：随着 LLM 能力增强，工程师发现 AI 不仅能补全一行，还能生成整个函数甚至文件。手动逐行编写开始显得低效——为什么不让 AI 直接写，我来审查？</p>
+</blockquote>
+
+<h2>2. 审查者：AI 写代码，人逐行审查</h2>
+
+<blockquote>
+<p>2023 – 2024，以 ChatGPT/Claude 对话式编程、Cursor Chat 为代表</p>
+</blockquote>
+
+<h3>2.1 AI 能力</h3>
+
+<ul>
+<li>理解自然语言需求描述，生成完整的代码文件</li>
+<li>能修改现有代码，进行重构和 Bug 修复</li>
+<li>支持多轮对话，逐步细化需求</li>
+<li>开始具备跨文件理解能力，但上下文窗口有限</li>
+</ul>
+
+<h3>2.2 开发模式</h3>
+
+<p>工程师用自然语言描述需求，AI 生成或修改代码，工程师逐行 Review 并手动应用修改。核心是 <strong>&ldquo;人描述需求，AI 写代码，人审查每一行&rdquo;</strong>。</p>
+
+<pre><code>工程师描述需求  --&gt;  AI 生成/修改代码  --&gt;  工程师逐行 Review  --&gt;  手动应用修改  --&gt;  反馈调整  --&gt;  循环
+</code></pre>
+
+<blockquote>
+<p><strong>关于 Vibe Coding</strong>：Andrej Karpathy 于 2025 年提出 Vibe Coding 概念——&rdquo;完全放弃理解代码，拥抱直觉&rdquo;。这实际上是审查者阶段的 <strong>反模式</strong>：放弃了 Review 职责的审查者。Simon Willison 进一步区分了 Vibe Coding（不审查、凭感觉）和 Vibe Engineering（利用 AI 但结合测试、Review 等工程实践）。本阶段的正确做法是后者。</p>
+</blockquote>
+
+<h3>2.3 工程师核心关注点</h3>
+
+<ul>
+<li><strong>Review 每一行代码</strong>：AI 会产生幻觉，生成看似正确但实际有问题的代码</li>
+<li><strong>指导 AI 修改方向</strong>：通过多轮对话引导 AI 逼近期望结果</li>
+<li><strong>维护代码一致性</strong>：AI 生成的代码风格、命名、架构可能和项目不一致</li>
+<li><strong>管理上下文</strong>：对话过长后 AI 会&rdquo;忘记&rdquo;前面的约定</li>
+</ul>
+
+<h3>2.4 典型范例</h3>
+
+<pre><code>工程师：帮我写一个用户注册的 API，使用 Go + Gin 框架，需要验证邮箱格式和密码强度。
+
+AI：[生成 200 行代码]
+
+工程师：（Review 后发现）密码校验逻辑不对，应该要求至少包含大小写字母和数字，
+       而且错误返回格式不符合我们项目的统一响应格式，请参考 xxx.go 的写法。
+
+AI：[修改后重新生成]
+
+工程师：（继续 Review）这次密码校验对了，但你把邮箱验证的正则改错了...
+</code></pre>
+
+<p>每一轮生成都需要工程师仔细审查，往往需要 3-5 轮对话才能得到满意的结果。</p>
+
+<h3>2.5 典型挑战</h3>
+
+<ul>
+<li><strong>Review 疲劳</strong>：逐行审查 AI 输出的认知负荷极高，METR 研究（2025）发现这实际可能增加 19% 的时间开销</li>
+<li><strong>幻觉代码</strong>：AI 生成的代码&rdquo;看起来对&rdquo;但逻辑有隐蔽错误，比人手写的 Bug 更难发现</li>
+<li><strong>上下文丢失</strong>：长对话后 AI 会遗忘早期约定，导致反复纠正</li>
+<li><strong>生产力悖论</strong>：开发者主观感觉效率提升，但客观度量可能并未提升</li>
+</ul>
+
+<h3>2.6 认知</h3>
+
+<ul>
+<li>AI 是一个 <strong>能力很强但不可靠的结对程序员</strong>，必须时刻监督</li>
+<li>生成代码不等于正确代码，<strong>Review 成本很高</strong></li>
+<li>AI 适合处理 &ldquo;已知模式&rdquo; 的代码，创新性工作仍需人主导</li>
+<li>开始意识到：给 AI 的需求越清晰，产出质量越高</li>
+<li>工程师的核心技能从&rdquo;写代码&rdquo;开始向&rdquo;审代码 + 描述需求&rdquo;迁移</li>
+</ul>
+
+<blockquote>
+<p><strong>跃迁驱动力</strong>：逐行 Review 的疲劳感和低效率成为核心痛点。工程师开始思考：能不能让 AI 先出方案，我审方案而不是审代码？能不能让 AI 像一个可指挥的 Agent，而不是一个需要逐字检查的打字员？</p>
+</blockquote>
+
+<h2>3. 指挥者：人审核方案，实时操控 Agent</h2>
+
+<blockquote>
+<p>2024 – 2025，以 Cursor Agent、Claude Code、Windsurf 等 IDE Agent 为代表</p>
+</blockquote>
+
+<h3>3.1 AI 能力</h3>
+
+<ul>
+<li>从对话式问答升级为 <strong>Agent 模式</strong>：AI 能自主执行多步操作（读文件、改代码、运行命令）</li>
+<li>支持 Plan 模式：先输出执行计划，确认后再执行</li>
+<li>具备较强的项目上下文理解能力（通过 CLAUDE.md、.cursorrules 等机制）</li>
+<li>能在多个文件之间协调修改，保持一致性</li>
+<li>支持结构化工作流：Spec  &ndash;&gt;  Plan  &ndash;&gt;  Task  &ndash;&gt;  Code</li>
+</ul>
+
+<h3>3.2 开发模式</h3>
+
+<p>工程师像指挥者（Conductor）一样与 Agent 紧密协作：定义需求或 Spec，审核 Agent 的执行计划，在关键节点给予指令调整。<strong>&ldquo;人审方案、指挥行动，AI 执行落地&rdquo;</strong>。</p>
+
+<pre><code>工程师定义需求/Spec  --&gt;  AI 生成 Plan  --&gt;  工程师审核 Plan  --&gt;  AI 执行（读写文件、运行命令） --&gt;  工程师在关键节点调整方向  --&gt;  微调交付
+</code></pre>
+
+<p>信任度在这个阶段呈渐进式增长：</p>
+
+<ul>
+<li><strong>权限模式</strong>：Agent 每步操作都需要人确认（早期）</li>
+<li><strong>半自主模式</strong>：只在关键操作时确认（中期）</li>
+<li><strong>YOLO 模式</strong>：完全信任 Agent 自主执行（后期）</li>
+</ul>
+
+<h3>3.3 工程师核心关注点</h3>
+
+<ul>
+<li><strong>审核 Plan 的正确性</strong>：确保 AI 理解了真正的需求，方案合理</li>
+<li><strong>提供完整的背景知识</strong>：通过 CLAUDE.md、项目规范等让 AI 做出正确决策</li>
+<li><strong>实时方向调整</strong>：在 Agent 执行过程中观察并纠偏</li>
+<li><strong>需求拆分</strong>：将大需求拆分为 Agent 能可靠完成的模块级任务</li>
+<li><strong>轻量级代码 Review</strong>：不再逐行审查，重点看架构决策和边界情况</li>
+</ul>
+
+<h3>3.4 典型范例</h3>
+
+<pre><code>工程师：请根据 user-api.yml OpenAPI 定义，开发用户管理页面 static/views/system/user，
+       包括搜索、列表展示、详情、新增、编辑、删除功能。
+       详情、新增、编辑、删除分别点击按钮弹框进行操作。
+
+AI Agent：[进入 Plan 模式，输出执行计划]
+    1. 分析 user-api.yml 中的接口定义...
+    2. 创建 User.html 模板，包含搜索栏和表格...
+    3. 创建 User.js，实现数据加载、分页、CRUD 操作...
+    4. 创建 User.css，样式与项目风格保持一致...
+
+工程师：（审核 Plan）Plan 没问题，执行吧。
+       另外搜索要支持按角色筛选，Plan 里漏了。
+
+AI Agent：[更新 Plan 并执行，自主完成文件创建和代码编写]
+</code></pre>
+
+<p>工程师的重心从&rdquo;逐行 Review 代码&rdquo;转移到&rdquo;审核计划是否符合需求&rdquo;，效率大幅提升。</p>
+
+<h3>3.5 典型挑战</h3>
+
+<ul>
+<li><strong>上下文管理负担</strong>：Agent 的表现高度依赖提供的上下文质量，维护 CLAUDE.md 等规范本身是额外工作</li>
+<li><strong>Plan 与执行的偏差</strong>：AI 的 Plan 看起来合理，但执行时可能偏离</li>
+<li><strong>信任度校准困难</strong>：过度信任导致问题遗漏，信任不足则退化回审查者模式</li>
+<li><strong>放大效应</strong>：DORA 2025 研究发现，AI 不会修复已有问题，反而放大团队现有的优势或短板</li>
+</ul>
+
+<h3>3.6 认知</h3>
+
+<ul>
+<li>AI 已经是一个 <strong>可指挥的 Agent</strong>，能自主执行多步操作</li>
+<li><strong>需求质量决定产出质量</strong>：给 AI 足够清晰的背景和需求，它能交付高质量代码</li>
+<li>工程师的核心价值从&rdquo;写代码&rdquo;转向 <strong>&ldquo;定义需求 + 架构决策 + 方案审核&rdquo;</strong></li>
+<li>代码 Review 从 &ldquo;逐行审查&rdquo; 变为 &ldquo;抽查 + 运行验证&rdquo;</li>
+<li>开始思考：能否让 AI 自己验证自己，从而不需要人实时操控？</li>
+</ul>
+
+<blockquote>
+<p><strong>跃迁驱动力</strong>：实时操控 Agent 仍然是&rdquo;一人一 Agent&rdquo;的串行模式，人是瓶颈。工程师开始思考：能否前置定义好约束和验收标准，让 Agent 自驱完成并自我验证，从而解放人的实时关注？</p>
+</blockquote>
+
+<h2>4. 验收者：人定义约束，只看结果</h2>
+
+<blockquote>
+<p>2025 – 2026，以 TDD 驱动、自动化测试约束、CI 质量门禁为代表</p>
+</blockquote>
+
+<h3>4.1 AI 能力</h3>
+
+<ul>
+<li>TDD 驱动：AI 先根据需求生成测试用例，再编写实现代码，形成&rdquo;红-绿-重构&rdquo;闭环</li>
+<li>自我纠错：运行测试失败后能分析原因并自动修复，直到全部通过</li>
+<li>端到端验证：AI 能自主运行单元测试、集成测试、E2E 测试，确保功能正确</li>
+<li>支持 Hook、CI 集成，代码提交前自动通过 lint、静态分析、测试等质量门禁</li>
+<li>人可以同时管理多个 Agent 任务，因为不需要实时关注每个 Agent 的过程</li>
+</ul>
+
+<h3>4.2 开发模式</h3>
+
+<p>工程师的工作被 <strong>前置</strong> 和 <strong>后置</strong> 两段化：前置定义需求、验收标准和约束规则，后置检查测试是否通过、功能是否符合预期。中间过程由 Agent 自驱完成。<strong>&ldquo;人定义约束，AI 在约束内自主交付，人只验收结果&rdquo;</strong>。</p>
+
+<pre><code>工程师定义需求 + 验收标准 + 约束规则  --&gt;  [人退出过程]  --&gt;  AI 生成测试  --&gt;  AI 编写实现  --&gt;  自动运行测试  --&gt;  失败则自动修复  --&gt;  全部通过  --&gt;  人验收结果
+</code></pre>
+
+<p>对应 Addy Osmani 的 <strong>Orchestrator</strong> 角色：前端装载（写 Spec、设约束）、后端验收（看测试结果）、中间不介入。一个 Orchestrator 可以并行管理的总工作量远超实时操控单个 Agent 的模式。</p>
+
+<h3>4.3 工程师核心关注点</h3>
+
+<ul>
+<li><strong>定义清晰的需求和验收标准</strong>：这是驱动一切的源头</li>
+<li><strong>设计验证约束</strong>：定义测试策略、质量门禁、架构约束规则</li>
+<li><strong>维护约束基础设施</strong>：测试框架、CI/CD Pipeline、lint 规则、开发规范</li>
+<li><strong>验收最终产出</strong>：不看代码细节，只看测试是否通过、功能是否符合预期</li>
+<li><strong>并行管理多个任务</strong>：同时发出多个需求，分别验收</li>
+</ul>
+
+<h3>4.4 典型范例</h3>
+
+<pre><code>工程师：实现订单超时自动取消功能。
+
+       验收标准：
+       1. 订单创建 30 分钟后未支付，自动标记为&quot;已取消&quot;
+       2. 取消时释放库存
+       3. 发送取消通知给用户
+       4. 并发场景下不会重复取消
+
+       约束：
+       - 使用延迟队列实现
+       - 编写单元测试覆盖所有边界情况
+       - 编写集成测试验证完整流程
+       - 所有测试通过后提交
+
+AI Agent：
+  [步骤1: 分析需求，生成测试用例 - 15个单元测试 + 3个集成测试]
+  [步骤2: 运行测试  --&gt;  全部失败（红）]
+  [步骤3: 编写实现代码]
+  [步骤4: 运行测试  --&gt;  2个失败  --&gt;  分析原因  --&gt;  修复  --&gt;  全部通过（绿）]
+  [步骤5: 运行 lint + 静态分析  --&gt;  通过]
+  [完成: 所有验收标准已通过验证]
+</code></pre>
+
+<p>工程师无需查看代码，测试和质量门禁就是&rdquo;自动化审查员&rdquo;。</p>
+
+<h3>4.5 典型挑战</h3>
+
+<ul>
+<li><strong>约束设计能力要求高</strong>：验收标准写得不好，AI 交付的就是&rdquo;通过了但不对&rdquo;的代码</li>
+<li><strong>测试本身的质量</strong>：AI 生成的测试可能覆盖不全或断言过于宽松</li>
+<li><strong>难以约束的维度</strong>：性能、安全性、可维护性等难以用自动化测试完全覆盖</li>
+<li><strong>过度信任自动化</strong>：测试全绿不等于没有问题，边界情况可能恰好是测试未覆盖的</li>
+</ul>
+
+<h3>4.6 认知</h3>
+
+<ul>
+<li>AI 是一个 <strong>可自驱的开发者</strong>，测试就是它的&rdquo;监督者&rdquo;</li>
+<li><strong>代码正确性由测试保证</strong>，而非人工 Review</li>
+<li>工程师的核心价值转向 <strong>&ldquo;需求定义 + 约束设计 + 结果验收&rdquo;</strong></li>
+<li>软件质量的保障方式从 &ldquo;人工 Review&rdquo; 转向 <strong>&ldquo;自动化验证&rdquo;</strong></li>
+<li>核心认知：<strong>好的约束 &gt; 好的代码</strong>，约束体系的质量决定了产出质量</li>
+</ul>
+
+<blockquote>
+<p><strong>跃迁驱动力</strong>：单 Agent 的&rdquo;自己写自己审&rdquo;仍然有局限——谁来验证约束本身是否完备？系统级的复杂变更超出单 Agent 能力范围。工程师开始需要多个 Agent 分工协作、互相制衡。</p>
+</blockquote>
+
+<h2>5. Tech Lead：人管理 AI 工程团队</h2>
+
+<blockquote>
+<p>2026+，以多 Agent 协作、角色分工、项目级自主交付为代表</p>
+</blockquote>
+
+<h3>5.1 AI 能力</h3>
+
+<ul>
+<li>多 Agent 协作：不同角色的 Agent（架构师、开发者、测试员、审查员）组成团队</li>
+<li>Agent 编排与调度：Orchestrator Agent 负责任务分解、分配和协调</li>
+<li>跨模块协作：多个 Agent 并行处理不同模块，自动处理模块间依赖和接口对齐</li>
+<li>Agent 间互审：Code Agent 写的代码由 Review Agent 审查，Test Agent 独立编写测试</li>
+<li>项目级理解：Agent Team 能维护项目全局上下文，处理跨系统、跨服务的复杂变更</li>
+</ul>
+
+<h3>5.2 开发模式</h3>
+
+<p>工程师像 Tech Lead 一样给出项目级需求，Agent Team 自主完成从架构设计到代码交付的全过程。
+各角色 Agent 分工协作、互相验证，形成内部的 Review 和制衡机制。<strong>&ldquo;人是 Tech Lead，AI 是工程团队&rdquo;</strong>。</p>
+
+<pre><code>工程师给出项目需求  --&gt;  Orchestrator Agent 分解任务
+   --&gt;  Architect Agent 设计架构
+   --&gt;  Dev Agent(s) 并行编码
+   --&gt;  Test Agent 独立编写测试并验证
+   --&gt;  Review Agent 审查代码质量
+   --&gt;  发现问题则反馈给 Dev Agent 修复
+   --&gt;  全部通过  --&gt;  交付
+</code></pre>
+
+<h3>5.3 工程师核心关注点</h3>
+
+<ul>
+<li><strong>定义项目目标和业务需求</strong>：从功能级上升到项目级</li>
+<li><strong>架构决策与技术选型</strong>：重大架构决策仍需人拍板</li>
+<li><strong>审核 Agent Team 的分工和方案</strong>：确认任务分解和架构设计合理</li>
+<li><strong>验收最终交付物</strong>：关注系统整体行为，而非单个模块</li>
+</ul>
+
+<h3>5.4 典型范例</h3>
+
+<pre><code>工程师：我们需要为系统增加多租户支持。要求：
+       1. 数据层面完全隔离，每个租户独立 schema
+       2. API 层通过 header 识别租户
+       3. 现有功能全部兼容，不影响已有租户
+       4. 需要租户管理后台（CRUD + 配额管理）
+
+Agent Team：
+  [Orchestrator: 分解为 4 个子任务，分配给不同 Agent]
+  [Architect Agent: 设计多租户架构方案，输出架构文档]
+  [Dev Agent 1: 改造数据层，实现 schema 隔离和动态路由]
+  [Dev Agent 2: 改造 API 中间件，实现租户识别和注入]
+  [Dev Agent 3: 开发租户管理后台页面和 API]
+  [Test Agent: 为每个模块独立编写测试，编写跨模块集成测试]
+  [Review Agent: 审查各模块代码，检查接口一致性和安全性]
+  [Dev Agent 1: 根据 Review 反馈修复数据层隔离漏洞]
+  [集成验证: 全部模块联调测试通过]
+  [完成: 输出变更摘要和部署指南]
+</code></pre>
+
+<p>工程师只需在关键节点（架构方案确认、最终验收）介入，中间过程由 Agent Team 自主运转。</p>
+
+<h3>5.5 典型挑战</h3>
+
+<ul>
+<li><strong>协调成本</strong>：多 Agent 之间的信息同步和冲突解决是新的工程问题</li>
+<li><strong>一致性保障</strong>：不同 Agent 对同一概念的理解可能产生偏差</li>
+<li><strong>可观测性</strong>：Agent Team 的决策过程需要对人透明，否则出了问题难以溯源</li>
+<li><strong>当前成熟度</strong>：多 Agent 编排仍处于早期实验阶段（如 Claude Agent SDK、OpenAI Swarm），距离可靠的生产级使用仍有距离</li>
+</ul>
+
+<h3>5.6 认知</h3>
+
+<ul>
+<li>AI 不再是单兵作战，而是一个 <strong>可协作的工程团队</strong></li>
+<li><strong>分工和制衡机制</strong> 解决了单 Agent 的&rdquo;自己写自己审&rdquo;问题</li>
+<li>工程师的角色从&rdquo;约束设计者&rdquo;上升为 <strong>&ldquo;Tech Lead / 产品负责人&rdquo;</strong></li>
+<li>软件工程的瓶颈从&rdquo;编码产能&rdquo;转向 <strong>&ldquo;需求定义和架构决策&rdquo;</strong></li>
+<li>核心认知：<strong>管理 AI 团队和管理人类团队一样，需要清晰的目标、合理的分工和有效的制衡</strong></li>
+</ul>
+
+<h2>6. 阶段对比总结</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left">维度</th>
+<th align="left">编码者</th>
+<th align="left">审查者</th>
+<th align="left">指挥者</th>
+<th align="left">验收者</th>
+<th align="left">Tech Lead</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>时间</strong></td>
+<td align="left">2021-2023</td>
+<td align="left">2023-2024</td>
+<td align="left">2024-2025</td>
+<td align="left">2025-2026</td>
+<td align="left">2026+</td>
+</tr>
+
+<tr>
+<td align="left"><strong>代表工具</strong></td>
+<td align="left">Copilot</td>
+<td align="left">ChatGPT, Cursor Chat</td>
+<td align="left">Cursor Agent, Claude Code</td>
+<td align="left">Claude Code + TDD + CI</td>
+<td align="left">Multi-Agent 编排框架</td>
+</tr>
+
+<tr>
+<td align="left"><strong>AI 角色</strong></td>
+<td align="left">打字助手</td>
+<td align="left">结对程序员</td>
+<td align="left">可指挥的 Agent</td>
+<td align="left">自驱开发者</td>
+<td align="left">工程团队</td>
+</tr>
+
+<tr>
+<td align="left"><strong>人做什么</strong></td>
+<td align="left">写代码</td>
+<td align="left">Review 每行代码</td>
+<td align="left">审核 Plan、实时指挥</td>
+<td align="left">定义约束、验收结果</td>
+<td align="left">定义目标、架构决策</td>
+</tr>
+
+<tr>
+<td align="left"><strong>人不再做什么</strong></td>
+<td align="left">—</td>
+<td align="left">不再亲手写</td>
+<td align="left">不再逐行 Review</td>
+<td align="left">不再实时操控</td>
+<td align="left">不再管单个任务</td>
+</tr>
+
+<tr>
+<td align="left"><strong>交互粒度</strong></td>
+<td align="left">行/块</td>
+<td align="left">文件</td>
+<td align="left">模块/功能</td>
+<td align="left">需求/验收标准</td>
+<td align="left">项目/系统</td>
+</tr>
+
+<tr>
+<td align="left"><strong>信任度</strong></td>
+<td align="left">不信任</td>
+<td align="left">低信任（逐行验证）</td>
+<td align="left">中信任（Plan 级验证）</td>
+<td align="left">高信任（结果级验证）</td>
+<td align="left">委托信任</td>
+</tr>
+
+<tr>
+<td align="left"><strong>质量保障</strong></td>
+<td align="left">人工编写</td>
+<td align="left">人工逐行 Review</td>
+<td align="left">审核 Plan + 抽查代码</td>
+<td align="left">自动化测试驱动</td>
+<td align="left">Agent 互审 + 自动化</td>
+</tr>
+
+<tr>
+<td align="left"><strong>典型挑战</strong></td>
+<td align="left">补全质量不稳定</td>
+<td align="left">Review 疲劳</td>
+<td align="left">上下文管理、信任校准</td>
+<td align="left">约束设计能力要求高</td>
+<td align="left">协调成本、一致性</td>
+</tr>
+
+<tr>
+<td align="left"><strong>角色跃迁</strong></td>
+<td align="left">—</td>
+<td align="left">放下键盘</td>
+<td align="left">放下红笔</td>
+<td align="left">放下操控杆</td>
+<td align="left">放下单任务</td>
+</tr>
+</tbody>
+</table>
+
+<h2>7. 对未来的展望</h2>
+
+<h3>7.1 下一阶段：意图编程（Intent Programming）</h3>
+
+<p>随着 AI 能力继续增强，下一个阶段可能进入 <strong>意图编程</strong> 时代：</p>
+
+<ul>
+<li><strong>工程师只需表达业务意图</strong>，不再需要拆分需求、定义验收标准、设计约束</li>
+<li>AI 能自主理解业务上下文，自动推导验收标准和约束条件</li>
+<li>AI 具备 Online Learning 能力，能从团队的反馈中持续学习和进化</li>
+<li>工程师的角色进一步转变为 <strong>&ldquo;产品思维者&rdquo;</strong> — 思考 What 和 Why，所有 How 交给 AI</li>
+</ul>
+
+<pre><code>工程师：&quot;我们的用户流失率在注册后第3天达到峰值，需要改善新用户引导体验。&quot;
+
+AI：[自主分析用户行为数据  --&gt;  设计引导方案  --&gt;  实现功能  --&gt;  A/B测试  --&gt;  输出结果报告]
+</code></pre>
+
+<h3>7.2 当前的现实约束</h3>
+
+<p>通往意图编程的路上仍有显著障碍：</p>
+
+<ul>
+<li><strong>可靠性</strong>：AI 的输出仍不稳定，2025 年行业焦点正从&rdquo;追求速度&rdquo;转向&rdquo;追求质量&rdquo;</li>
+<li><strong>安全性</strong>：约 45% 的 AI 生成代码存在安全隐患，自动化安全审计尚不成熟</li>
+<li><strong>可观测性</strong>：AI 的决策过程仍是黑箱，出了问题难以溯源和复现</li>
+<li><strong>标准化</strong>：MCP（Model Context Protocol）等协议正在推动工具与 Agent 的标准化通信，但生态仍在早期</li>
+<li><strong>组织适配</strong>：DORA 2025 的核心发现是 AI 放大团队现状——流程混乱的团队引入 AI 只会更混乱</li>
+</ul>
+
+<h3>7.3 终局：AI 原生软件工程</h3>
+
+<p>终局不是 AI 替代程序员，而是 <strong>软件工程的范式彻底改变</strong>：</p>
+
+<ul>
+<li><strong>代码成为中间编译产物</strong>：就像今天没人关心编译器生成的机器码，未来也不会有人关心 AI 生成的代码</li>
+<li><strong>需求即程序</strong>：自然语言描述的需求直接等价于可执行的软件，中间不再需要&rdquo;编码&rdquo;这个环节</li>
+<li><strong>持续自适应</strong>：软件能根据运行时数据和用户反馈自动演化，不再需要人工迭代</li>
+<li><strong>验证变成唯一工程活动</strong>：人唯一要做的是定义&rdquo;什么是正确的&rdquo;，而非&rdquo;如何做到正确&rdquo;</li>
+</ul>
+
+<h3>7.4 带来的影响</h3>
+
+<p><strong>对个人</strong>：</p>
+
+<ul>
+<li>编程技能的价值从&rdquo;编码能力&rdquo;迁移到&rdquo;问题定义能力&rdquo;和&rdquo;系统思维&rdquo;</li>
+<li>软件工程师的门槛不再是&rdquo;会写代码&rdquo;，而是&rdquo;能精确定义需求和约束&rdquo;</li>
+<li>学习路径改变：理解业务、定义问题、设计验证策略 &gt; 学习语法和框架</li>
+</ul>
+
+<p><strong>对团队</strong>：</p>
+
+<ul>
+<li>团队规模可能大幅缩减，少数人 + AI Agent 即可完成过去需要大团队的工作</li>
+<li>协作方式从&rdquo;分工写代码&rdquo;变为&rdquo;协作定义需求和约束&rdquo;</li>
+<li>Code Review 将逐步被 Spec Review 和验收测试取代</li>
+</ul>
+
+<p><strong>对行业</strong>：</p>
+
+<ul>
+<li>软件开发成本大幅降低，更多创意能变为现实</li>
+<li>&ldquo;程序员&rdquo;这个职业会演化，核心竞争力从技术实现转向领域理解和问题建模</li>
+<li>软件的创造门槛降低，但高质量软件的设计门槛不会降低 — 理解用户、定义正确的问题始终是最难的事</li>
+</ul>
+
+<h2>参考</h2>
+
+<ul>
+<li>Andrej Karpathy, &ldquo;Vibe Coding&rdquo; — <a href="https://x.com/karpathy/status/1886192184808149383" target="_blank">https://x.com/karpathy/status/1886192184808149383</a></li>
+<li>Simon Willison, &ldquo;Not all AI-assisted programming is vibe coding&rdquo; — <a href="https://simonwillison.net/2025/Mar/19/vibe-coding/" target="_blank">https://simonwillison.net/2025/Mar/19/vibe-coding/</a></li>
+<li>GitHub Blog, Spec-Driven Development — <a href="https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/" target="_blank">https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/</a></li>
+<li>Anthropic, Claude Code Best Practices — <a href="https://docs.anthropic.com/en/docs/claude-code/best-practices" target="_blank">https://docs.anthropic.com/en/docs/claude-code/best-practices</a></li>
+<li>Steve Yegge, Developer-Agent Evolution Model — <a href="https://steve-yegge.medium.com/the-future-of-coding-agents-e9451a84207c" target="_blank">https://steve-yegge.medium.com/the-future-of-coding-agents-e9451a84207c</a></li>
+<li>Addy Osmani, &ldquo;Conductors to Orchestrators&rdquo; — <a href="https://addyosmani.com/blog/future-agentic-coding/" target="_blank">https://addyosmani.com/blog/future-agentic-coding/</a></li>
+<li>DORA 2025 State of AI-Assisted Software Development — <a href="https://dora.dev/research/2025/dora-report/" target="_blank">https://dora.dev/research/2025/dora-report/</a></li>
+<li>METR, AI Experienced OS Developer Productivity Study — <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank">https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/</a></li>
+<li>Nicholas Zakas, &ldquo;From Coder to Orchestrator&rdquo; — <a href="https://humanwhocodes.com/blog/2026/01/coder-orchestrator-future-software-engineering/" target="_blank">https://humanwhocodes.com/blog/2026/01/coder-orchestrator-future-software-engineering/</a></li>
+<li>GitHub Octoverse 2025, The New Identity of a Developer — <a href="https://github.blog/news-insights/octoverse/the-new-identity-of-a-developer-what-changes-and-what-doesnt-in-the-ai-era/" target="_blank">https://github.blog/news-insights/octoverse/the-new-identity-of-a-developer-what-changes-and-what-doesnt-in-the-ai-era/</a></li>
+</ul>
+</div>
+<script src="//vogo.github.io/markhtml/js/markhtml.js"></script>
+</body>
+</html>
